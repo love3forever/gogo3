@@ -1,13 +1,13 @@
 <template>
   <div class="topbar">
-    <h1 class="inbl"><a href="/#">网易云音乐</a></h1>
+    <h1 style="display:none">网易云音乐</h1>
+    <a href="/#"><img src="../assets/topbar2_01.png" style="background-repeat: no-repeat"></a>
     <ul class="inbl">
       <li class="inbl" v-for="item in title"><a href="/#">{{item}}</a></li>
     </ul>
-    <div class="wrap">
+    <div class="wrap" id="search">
       <input name="search" placeholder="单曲/歌手/专辑/歌单/MV/用户">
-      <div class="wrap">
-        
+      <div class="wrap">   
       </div>
     </div>
     <a href="/#"></a>
@@ -59,12 +59,18 @@ li {
 }
 
 a {
-  text-decoration:none
+  text-decoration:none;
+  font-size: 13px;
+  color: rgb(221,220,220);
 }
 
 input {
-  width: 210px;
-  border-radius: 10px;
+  font-size: 10px;
+  width: 150px;
+  height: 15px;
+  border: 0;
+  line-height: 6px;
+  background: none;
 }
 
 .wrap{
@@ -78,5 +84,11 @@ input {
   position: absolute;
   top: 10px;
   left: -50px;
+}
+#search{
+  width: 210px;
+  height: 31px;
+  background-image: url(../assets/topbar2_03.png);
+  background-repeat: no-repeat;
 }
 </style>
