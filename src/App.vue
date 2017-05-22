@@ -22,8 +22,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-image: url(assets/topbar2_02.png);
-  background-repeat: repeat-x;
+  background-image: url(assets/topbar.png);
+  background-repeat: none;
+  background-attachment:fixed;
+  background-position: 0px -80px;
   height: 70px;
 }
 </style>
