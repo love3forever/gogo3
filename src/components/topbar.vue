@@ -2,8 +2,8 @@
   <div class="topbar">
     <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
     <ul class="inbl" id="btnlist">
-      <li class="inbl" v-for="(item,index) in title" @mouseover="mouseInbtn()" @mouseout="mouseOutbtn()" :class="[btnIn ? 'btnInact' :'']">
-        <a href="/#"><span>{{item}}</span></a>
+      <li v-for="(item,index) in title" :pop="item[0]" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="['inbl',title[index][1] ? 'btnInact' :'']" @mouse="callback">
+        <a href="/#"><span>{{item[0]}}</span></a>
       </li>
     </ul>
     <div class="wrap" id="search">
@@ -30,18 +30,35 @@ export default {
   name: 'topbar',
   data () {
     return {
-      btnIn:false,
       logHide:true,
-      title: ['发现音乐','我的音乐','朋友','商城','音乐人','下载客户端'],
+      title: [
+                ['发现音乐',true,true],
+                ['我的音乐',false,false],
+                ['朋友',false,false],
+                ['商城',false,false],
+                ['音乐人',false,false],
+                ['下载客户端',false,false],
+              ],
       log:['手机号登录','微信登录','QQ登录','新浪微博登录','网易邮箱账号登录']
     }
   },
   methods:{
     mouseInbtn:function(index){
-      this.btnIn=true;
+      console.log('Mouse in')
+      console.log(this.title[index][1]);
+      this.title[index][1]=true;
+      console.log(this.title[index][1]);
+      this.title[index][0] = 'selected'
     },
     mouseOutbtn:function(index){
-       this.btnIn=false;
+      console.log('Mouse out')
+       this.title[index][1]=false;
+       console.log(this.title[index][1])
+    },
+    mouseClick:function(index){
+      // this.title.forEach(value,num){
+
+      // }
     },
     showLogmethods:function(){
       this.logHide = false;
@@ -65,8 +82,10 @@ export default {
 .btnInact{
   background-image: url(../assets/topbar.png);
   background-repeat: none;
-  background-attachment:fixed;
+  background-attachment:scroll;
   background-position: 0px -470px;
+  background-size: 96px 622px;
+  
 }
 .logo{
   display: inline-block;
@@ -104,12 +123,11 @@ ul {
   padding: 0;
 }
 li {
-  padding: 0 15px;
-  text-align: left;
+  margin: 0;
 }
 a {
   text-decoration:none;
-  font-size: 13px;
+  font-size: 14px;
   color: rgb(221,220,220);
 }
 input {
@@ -163,5 +181,11 @@ input {
   background-repeat: no-repeat;
   background-attachment:scroll;
   background-position: 0 -550px; 
+}
+#btnlist li{
+  width: 96px;
+}
+#btnlist span{
+  display: inline-block;
 }
 </style>
