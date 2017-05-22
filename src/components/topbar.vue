@@ -2,7 +2,7 @@
   <div class="topbar">
     <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
     <ul class="inbl" id="btnlist">
-      <li v-for="(item,index) in title" :pop="item[0]" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="['inbl',title[index][1] ? 'btnInact' :'']" @mouse="callback">
+      <li class="inbl" v-for="(item,index) in title" track-by="$index" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="{ 'btnInact': item[1], 'btnCliact': item[2]}">
         <a href="/#"><span>{{item[0]}}</span></a>
       </li>
     </ul>
@@ -31,34 +31,28 @@ export default {
   data () {
     return {
       logHide:true,
-      title: [
-                ['发现音乐',true,true],
-                ['我的音乐',false,false],
-                ['朋友',false,false],
-                ['商城',false,false],
-                ['音乐人',false,false],
-                ['下载客户端',false,false],
-              ],
+      title: [['发现音乐',false,true],['我的音乐',false,false],['朋友',false,false],['商城',false,false],['音乐人',false,false],['下载客户端',false,false]],
       log:['手机号登录','微信登录','QQ登录','新浪微博登录','网易邮箱账号登录']
     }
   },
   methods:{
     mouseInbtn:function(index){
-      console.log('Mouse in')
-      console.log(this.title[index][1]);
-      this.title[index][1]=true;
-      console.log(this.title[index][1]);
-      this.title[index][0] = 'selected'
+      this.$set(this.title[index], 1, true);
+      this.title[index].splice(1, 1, true);
     },
     mouseOutbtn:function(index){
-      console.log('Mouse out')
-       this.title[index][1]=false;
-       console.log(this.title[index][1])
+      this.$set(this.title[index], 1, false);
+      this.title[index].splice(1, 1, false);
     },
     mouseClick:function(index){
-      // this.title.forEach(value,num){
-
-      // }
+      for (var i=0;i<this.title.length;i++){
+        if (this.title[i][2]===true){
+          this.$set(this.title[i], 2, false);
+          this.title[i].splice(2, 1, false);
+        }
+      }
+      this.$set(this.title[index], 2, true);
+      this.title[index].splice(2, 1, true);
     },
     showLogmethods:function(){
       this.logHide = false;
@@ -80,10 +74,11 @@ export default {
   align-items:center;
 }
 .btnInact{
-  background-image: url(../assets/topbar.png);
-  background-repeat: none;
-  background-attachment:scroll;
-  background-position: 0px -470px;
+  background: url(../assets/topbar.png) no-repeat scroll 0px -470px;
+  background-size: 96px 622px;
+}
+.btnCliact{
+  background: url(../assets/topbar.png) no-repeat scroll  0px -155px;
   background-size: 96px 622px;
   
 }
@@ -150,10 +145,7 @@ input {
   top: 30%;
   width: 12px;
   height: 7px;
-  background-image: url(../assets/topbar.png);
-  background-repeat: no-repeat;
-  background-attachment:scroll;
-  background-position:-228px -380px;
+  background: url(../assets/topbar.png) no-repeat scroll -228px -380px;
 }
 .logbtnShow{
   position: absolute;
@@ -161,10 +153,7 @@ input {
   top: 30%;
   width: 12px;
   height: 7px;
-  background-image: url(../assets/topbar.png);
-  background-repeat: no-repeat;
-  background-attachment:scroll;
-  background-position:-228px -418px;
+  background: url(../assets/topbar.png) no-repeat scroll -228px -418px;
 }
 #logmethods{
   width: 150px;
@@ -177,10 +166,7 @@ input {
   height: 31px;
   margin-left: 80px;
   margin-right: 20px;
-  background-image: url(../assets/topbar.png);
-  background-repeat: no-repeat;
-  background-attachment:scroll;
-  background-position: 0 -550px; 
+  background: url(../assets/topbar.png)  no-repeat scroll 0 -550px;
 }
 #btnlist li{
   width: 96px;
