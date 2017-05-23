@@ -1,0 +1,4 @@
+requests==2.9.1
+Flask-restful==0.3.5
+lxml==3.7.3
+bs4==0.0.1
