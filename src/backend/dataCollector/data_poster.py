@@ -92,14 +92,15 @@ def parse_playlist_cntc(data):
         creator_img = cntc_creator_soup.select('img')[0]['src']
         creator_url = cntc_creator_soup.select('span > a')[0]['href']
         creator_name = cntc_creator_soup.select('span > a')[0].string
-
+        created_time = cntc_creator_soup.select('.time')[0].string
         cntc = {
             'cntcTitle': cntc_title,
             'cntcCreator': {
                 'name': creator_name,
                 'url': creator_url,
                 'img': creator_img
-            }
+            },
+            'cntcCreatedTime': created_time,
         }
         print(cntc)
         return cntc
