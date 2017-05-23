@@ -3,11 +3,11 @@
     <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
     <ul class="inbl" id="btnlist">
       <li class="inbl" v-for="(item,index) in title" track-by="$index" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="{ 'btnInact': item[1], 'btnCliact': item[2]}">
-        <a href="/#"><span>{{item[0]}}</span></a>
+        <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[2]}"></sub></a>
       </li>
     </ul>
     <div class="wrap" id="search">
-      <span class="wrap" style="margin-top:3px;"><input name="search" placeholder="单曲/歌手/专辑/歌单/MV/用户"></span>
+      <span class="wrap" style="margin:2% 0;"><input name="search" placeholder="单曲/歌手/专辑/歌单/MV/用户"></span>
       <div class="wrap">   
       </div>
     </div>
@@ -126,11 +126,10 @@ a {
   color: rgb(221,220,220);
 }
 input {
-  width: 150px;
-  height: 10px;
+  width: 155px;
+  height: 12px;
   border: 0;
   font-size: 11px;
-  line-height: 5px;
   background: none;
   outline:none;
 }
@@ -171,7 +170,22 @@ input {
 #btnlist li{
   width: 96px;
 }
+#btnlist a{
+  width: 100%;
+}
 #btnlist span{
   display: inline-block;
+  width: 100%;
+  background: url(../assets/topbar.png) no-repeat scroll  -143.8px -328px;
+}
+#btnlist sub{
+  display: inline-block;
+  width: 14px;
+  height: 9px;
+  margin-bottom: -12px;
+  background: url(../assets/topbar.png) no-repeat scroll  -226px 0;
+}
+.subHide{
+  visibility: hidden;
 }
 </style>
