@@ -2,12 +2,12 @@
   <div class="topbar">
     <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
     <ul class="inbl" id="btnlist">
-      <li class="inbl" v-for="(item,index) in title" @mouseover="mouseInbtn()" @mouseout="mouseOutbtn()" :class="[btnIn ? 'btnInact' :'']">
-        <a href="/#"><span>{{item}}</span></a>
+      <li class="inbl" v-for="(item,index) in title" track-by="$index" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="{ 'btnInact': item[1], 'btnCliact': item[2]}">
+        <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[2]}"></sub></a>
       </li>
     </ul>
     <div class="wrap" id="search">
-      <span class="wrap" style="margin-top:3px;"><input name="search" placeholder="单曲/歌手/专辑/歌单/MV/用户"></span>
+      <span class="wrap" style="margin:2% 0;"><input name="search" placeholder="单曲/歌手/专辑/歌单/MV/用户"></span>
       <div class="wrap">   
       </div>
     </div>
@@ -30,18 +30,29 @@ export default {
   name: 'topbar',
   data () {
     return {
-      btnIn:false,
       logHide:true,
-      title: ['发现音乐','我的音乐','朋友','商城','音乐人','下载客户端'],
+      title: [['发现音乐',false,true],['我的音乐',false,false],['朋友',false,false],['商城',false,false],['音乐人',false,false],['下载客户端',false,false]],
       log:['手机号登录','微信登录','QQ登录','新浪微博登录','网易邮箱账号登录']
     }
   },
   methods:{
     mouseInbtn:function(index){
-      this.btnIn=true;
+      this.$set(this.title[index], 1, true);
+      this.title[index].splice(1, 1, true);
     },
     mouseOutbtn:function(index){
-       this.btnIn=false;
+      this.$set(this.title[index], 1, false);
+      this.title[index].splice(1, 1, false);
+    },
+    mouseClick:function(index){
+      for (var i=0;i<this.title.length;i++){
+        if (this.title[i][2]===true){
+          this.$set(this.title[i], 2, false);
+          this.title[i].splice(2, 1, false);
+        }
+      }
+      this.$set(this.title[index], 2, true);
+      this.title[index].splice(2, 1, true);
     },
     showLogmethods:function(){
       this.logHide = false;
@@ -63,10 +74,13 @@ export default {
   align-items:center;
 }
 .btnInact{
-  background-image: url(../assets/topbar.png);
-  background-repeat: none;
-  background-attachment:fixed;
-  background-position: 0px -470px;
+  background: url(../assets/topbar.png) no-repeat scroll 0px -470px;
+  background-size: 96px 622px;
+}
+.btnCliact{
+  background: url(../assets/topbar.png) no-repeat scroll  0px -155px;
+  background-size: 96px 622px;
+  
 }
 .logo{
   display: inline-block;
@@ -104,20 +118,18 @@ ul {
   padding: 0;
 }
 li {
-  padding: 0 15px;
-  text-align: left;
+  margin: 0;
 }
 a {
   text-decoration:none;
-  font-size: 13px;
+  font-size: 14px;
   color: rgb(221,220,220);
 }
 input {
-  width: 150px;
-  height: 10px;
+  width: 155px;
+  height: 12px;
   border: 0;
   font-size: 11px;
-  line-height: 5px;
   background: none;
   outline:none;
 }
@@ -132,10 +144,7 @@ input {
   top: 30%;
   width: 12px;
   height: 7px;
-  background-image: url(../assets/topbar.png);
-  background-repeat: no-repeat;
-  background-attachment:scroll;
-  background-position:-228px -380px;
+  background: url(../assets/topbar.png) no-repeat scroll -228px -380px;
 }
 .logbtnShow{
   position: absolute;
@@ -143,10 +152,7 @@ input {
   top: 30%;
   width: 12px;
   height: 7px;
-  background-image: url(../assets/topbar.png);
-  background-repeat: no-repeat;
-  background-attachment:scroll;
-  background-position:-228px -418px;
+  background: url(../assets/topbar.png) no-repeat scroll -228px -418px;
 }
 #logmethods{
   width: 150px;
@@ -159,9 +165,27 @@ input {
   height: 31px;
   margin-left: 80px;
   margin-right: 20px;
-  background-image: url(../assets/topbar.png);
-  background-repeat: no-repeat;
-  background-attachment:scroll;
-  background-position: 0 -550px; 
+  background: url(../assets/topbar.png)  no-repeat scroll 0 -550px;
+}
+#btnlist li{
+  width: 96px;
+}
+#btnlist a{
+  width: 100%;
+}
+#btnlist span{
+  display: inline-block;
+  width: 100%;
+  background: url(../assets/topbar.png) no-repeat scroll  -143.8px -328px;
+}
+#btnlist sub{
+  display: inline-block;
+  width: 14px;
+  height: 9px;
+  margin-bottom: -12px;
+  background: url(../assets/topbar.png) no-repeat scroll  -226px 0;
+}
+.subHide{
+  visibility: hidden;
 }
 </style>
