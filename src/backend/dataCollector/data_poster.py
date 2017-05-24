@@ -7,14 +7,16 @@
 import json
 from requests import Session
 from bs4 import BeautifulSoup
-from params_dicts import get_user_follows_param, get_user_fans_param
+from params_dicts import get_user_follows_param, get_user_fans_param, get_playlist_comments_param
 from encrypter import encrypted_request
+from functools import wraps
 
 host_url = 'https://music.163.com/{}'
 indexURL = 'https://music.163.com/discover'
 playlist_URL = 'https://music.163.com/playlist?id={}'
 user_follows_URL = 'http://music.163.com/weapi/user/getfollows/{}?csrf_token='
 user_fans_URL = 'http://music.163.com/weapi/user/getfolloweds?csrf_token='
+playlist_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/A_PL_0_{}?csrf_token='
 session = Session()
 
 
@@ -118,35 +120,50 @@ def parse_playlist_cntc(data):
         return None
 
 
+def data_poster(uid, postURL, keyword, getparamFunc):
+    ##########################################
+    # uid: 唯一标识符，可以为用户id，歌单id等
+    # postURL: 发送post请求的目标url
+    # keyword: 返回值目标数据的key
+    # getparamFunc: 获取不同请求类型的请求参数的方法
+    ##########################################
+    if hasattr(getparamFunc, '__call__'):
+        post_param = getparamFunc(uid)
+        data_list = []
+        data_flag = True
+        data_times = 0
+        while data_flag:
+            post_param['offset'] = str(data_times * 100)
+            encrtyed_param = encrypted_request(post_param)
+            response_data = post_data_to_web(postURL, encrtyed_param)
+            if response_data[keyword]:
+                data_list.extend(response_data[keyword])
+            data_times += 1
+            data_flag = response_data['more']
+        return data_list
+    else:
+        print('{} should be callable'.format(str(getparamFunc)))
+
+
 def get_user_follows(userid):
-    post_params = get_user_follows_param(userid)
-    follows_list = []
-    follows_flag = True
-    follows_times = 0
-    while follows_flag:
-        post_params['offset'] = str(follows_times * 100)
-        encrtyed_params = encrypted_request(post_params)
-        follows_data = post_data_to_web(
-            user_follows_URL.format(userid), encrtyed_params)
-        follows_list.extend(follows_data['follow'])
-        follows_times += 1
-        follows_flag = follows_data['more']
-    return follows_list
+    # 根据用户id获取关注列表
+    return data_poster(userid, user_follows_URL.format(userid),
+                       'follow', get_user_follows_param)
 
 
 def get_user_fans(userid):
-    post_params = get_user_fans_param(userid)
-    fans_list = []
-    fans_flag = True
-    fans_times = 0
-    while fans_flag:
-        post_params['offset'] = str(fans_times * 100)
-        encrtyed_params = encrypted_request(post_params)
-        fans_data = post_data_to_web(user_fans_URL, encrtyed_params)
-        fans_list.extend(fans_data['followeds'])
-        fans_times += 1
-        fans_flag = fans_data['more']
-    return fans_list
+    # 根据用户id获取粉丝列表
+    return data_poster(userid, user_fans_URL, 'followeds', get_user_fans_param)
+
+
+def get_playlist_comments(playlistId):
+    # 根据歌单id获取评论
+    return data_poster(playlistId, playlist_comments_URL.format(
+        playlistId), 'comments', get_playlist_comments_param)
+
+
 
 if __name__ == '__main__':
-    pass
+    result = get_playlist_comments('460989048')
+    print(len(result))
+    print(type(data_poster))
