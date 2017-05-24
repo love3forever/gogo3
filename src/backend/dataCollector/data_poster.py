@@ -4,14 +4,17 @@
 # @Author  : eclipse (eclipse_sv@163.com)
 # @Link    : https://eclipsesv.com
 # @Version : $Id$
-
-import os
+import json
 from requests import Session
 from bs4 import BeautifulSoup
+from params_dicts import get_user_follows_param, get_user_fans_param
+from encrypter import encrypted_request
 
 host_url = 'https://music.163.com/{}'
 indexURL = 'https://music.163.com/discover'
 playlist_URL = 'https://music.163.com/playlist?id={}'
+user_follows_URL = 'http://music.163.com/weapi/user/getfollows/{}?csrf_token='
+user_fans_URL = 'http://music.163.com/weapi/user/getfolloweds?csrf_token='
 session = Session()
 
 
@@ -20,6 +23,14 @@ def get_data_from_web(url):
     if url:
         origin_data = session.get(url)
         return origin_data or None
+    else:
+        return None
+
+
+def post_data_to_web(url, params):
+    result_data = session.post(url, data=params)
+    if result_data:
+        return json.loads(result_data.text) or None
     else:
         return None
 
@@ -102,7 +113,40 @@ def parse_playlist_cntc(data):
             },
             'cntcCreatedTime': created_time,
         }
-        print(cntc)
         return cntc
     else:
         return None
+
+
+def get_user_follows(userid):
+    post_params = get_user_follows_param(userid)
+    follows_list = []
+    follows_flag = True
+    follows_times = 0
+    while follows_flag:
+        post_params['offset'] = str(follows_times * 100)
+        encrtyed_params = encrypted_request(post_params)
+        follows_data = post_data_to_web(
+            user_follows_URL.format(userid), encrtyed_params)
+        follows_list.extend(follows_data['follow'])
+        follows_times += 1
+        follows_flag = follows_data['more']
+    return follows_list
+
+
+def get_user_fans(userid):
+    post_params = get_user_fans_param(userid)
+    fans_list = []
+    fans_flag = True
+    fans_times = 0
+    while fans_flag:
+        post_params['offset'] = str(fans_times * 100)
+        encrtyed_params = encrypted_request(post_params)
+        fans_data = post_data_to_web(user_fans_URL, encrtyed_params)
+        fans_list.extend(fans_data['followeds'])
+        fans_times += 1
+        fans_flag = fans_data['more']
+    return fans_list
+
+if __name__ == '__main__':
+    pass
