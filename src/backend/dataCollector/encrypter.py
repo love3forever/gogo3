@@ -14,9 +14,6 @@ modulus = '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3
 nonce = '0CoJUm6Qyw8W8jud'
 pubKey = '010001'
 
-post_data = {"userId": "77159064", "offset": "0",
-             "total": "true", "limit": "20", "csrf_token": ""}
-
 
 def createSecretKey(size):
     return (''.join(map(lambda xx: (hex(ord(xx))[2:]),
@@ -48,6 +45,3 @@ def encrypted_request(text):
         'encSecKey': encSecKey
     }
     return data
-
-
-print(encrypted_request(post_data))
