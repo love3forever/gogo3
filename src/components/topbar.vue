@@ -1,33 +1,41 @@
 <template>
-  <div class="topbar">
-    <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
-    <ul class="inbl" id="btnlist">
-      <li class="inbl" v-for="(item,index) in title" track-by="$index" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="{ 'btnInact': item[1], 'btnCliact': item[2]}">
-        <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[2]}"></sub></a>
-      </li>
-    </ul>
-    <div class="wrap" id="search">
-      <span class="wrap" style="margin:2% 0;"><input name="search" placeholder="单曲/歌手/专辑/歌单/MV/用户"></span>
-      <div class="wrap">   
+  <nav>
+    <div class="topbar">
+      <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
+      <ul class="inbl" id="btnlist">
+        <li class="inbl" v-for="(item,index) in title" track-by="$index" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="{ 'btnInact': item[1], 'btnCliact': item[2]}">
+          <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[2]}"></sub></a>
+        </li>
+      </ul>
+      <div class="wrap" id="search">
+        <span class="wrap" style="margin:2% 0;"><input name="search" placeholder="单曲/歌手/专辑/歌单/MV/用户"></span>
+        <div class="wrap">   
+        </div>
+      </div>
+      <a href="/#"></a>
+      <div class="wrap" id="logwrap" @mouseover="showLogmethods" @mouseout="hideLogmethods">
+        <a href="">登录</a><span :class="[logHide ? 'logbtnHide' :'logbtnShow']"></span>
+        <div id="logmethods" class="wrap" v-if="!logHide">
+          <ul>
+            <li v-for="item in log">
+              <a href="/#">{{item}}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-    <a href="/#"></a>
-    <div class="wrap" id="logwrap" @mouseover="showLogmethods" @mouseout="hideLogmethods">
-      <a href="">登录</a><span :class="[logHide ? 'logbtnHide' :'logbtnShow']"></span>
-      <div id="logmethods" :class="[logHide ? 'isHide' :'wrap']">
-        <ul>
-          <li v-for="item in log">
-            <a href="/#">{{item}}</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+    <bottombar :isshow="title[0][2]"></bottombar>
+    <div class="nobtnbar" v-if="!title[0][2]"></div>
+  </nav>
 </template>
-
 <script>
+import bottombar from './bottombar'
+
 export default {
   name: 'topbar',
+  components: {
+    bottombar
+  },
   data () {
     return {
       logHide:true,
@@ -67,7 +75,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>  
 .topbar{
-  height: 100%;
+  height: 70px;
+  background: url(../assets/topbar.png) repeat-x scroll 0px -80px;
   display: -webkit-flex; 
   display: flex;
   justify-content:center;
@@ -86,7 +95,7 @@ export default {
   display: inline-block;
   width: 162px;
   height: 46px;  
-  margin: 0;
+  margin: 0 20px 0 0;
   background: url(../assets/topbar.png) no-repeat scroll 0 0;
 }
 .logo a{
@@ -138,20 +147,17 @@ input {
   position: relative;
   padding-right: 20px;
 }
-.logbtnHide{
+#logwrap span{
   position: absolute;
   right: 0;
   top: 30%;
   width: 12px;
   height: 7px;
+}
+.logbtnHide{
   background: url(../assets/topbar.png) no-repeat scroll -228px -380px;
 }
 .logbtnShow{
-  position: absolute;
-  right: 0;
-  top: 30%;
-  width: 12px;
-  height: 7px;
   background: url(../assets/topbar.png) no-repeat scroll -228px -418px;
 }
 #logmethods{
@@ -187,5 +193,9 @@ input {
 }
 .subHide{
   visibility: hidden;
+}
+.nobtnbar{
+  height: 5px;
+  background: url(../assets/topbar.png) repeat-x scroll 0px -230px;
 }
 </style>
