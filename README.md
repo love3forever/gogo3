@@ -1,6 +1,7 @@
 # gogo3
 
 [![Build Status](https://travis-ci.org/love3forever/gogo3.svg?branch=master)](https://travis-ci.org/love3forever/gogo3)
+[![codecov](https://codecov.io/gh/love3forever/gogo3/branch/master/graph/badge.svg)](https://codecov.io/gh/love3forever/gogo3)
 
 > A Vue.js project
 

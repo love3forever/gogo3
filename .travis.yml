@@ -6,4 +6,7 @@ before_script:
   - pip install -r src/backend/requirements.txt
 
 script:
-  - python src/backend/tester.py
+  - coverage run src/backend/tester.py
+
+after_success:
+  - codecov
