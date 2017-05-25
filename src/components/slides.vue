@@ -1,5 +1,5 @@
 <template>
-  <div class="slides" >
+  <div class="slides" :style="'background:'+imgData[colorchange][3]">
     <div class="flagwrap">
       <div style="width:100%;height:100%;">
         <a href="/#" style="display:inline-block;width:100%;height:100%;"> 
@@ -25,6 +25,7 @@ export default {
   name: 'slides',
   data () {
     return {
+      colorchange:0,
       mouseInimg:false,
       mouseIndown:false,
       tabflagbtn:{
@@ -37,9 +38,9 @@ export default {
         ['./static/03.jpg',false,false,'rgb(226,198,194)'],
         ['./static/04.jpg',false,false,'rgb(252,248,237)'],
         ['./static/05.jpg',false,false,'rgb(235,246,248)'],
-        ['./static/06.jpg',false,false,'rgb(206,4,0)'],
+        ['./static/06.jpg',false,false,'rgb(186,19,3)'],
         ['./static/07.jpg',false,false,'rgb(0,0,0)'],
-        ['./static/08.jpg',false,false,'rgb(253,253,253)'],
+        ['./static/08.jpg',false,false,'rgb(244,245,247)'],
       ],
     }
   },
@@ -73,6 +74,7 @@ export default {
       }
       this.$set(this.imgData[index], 2, true);
       this.imgData[index].splice(2, 1, true);
+      this.colorchange=index;
     },
     slide:function(side){
       var current =null;
@@ -93,17 +95,18 @@ export default {
           front=current-1;
         }; 
         this.tabbClick(front);
+        this.colorchange=front;
       };
     },
     itertation:function(index){
       this.$set(this.imgData[index], 2, false);
       this.imgData[index].splice(2, 1, false);
-
       var nextIndex=0;
       if (index!==this.imgData.length-1){
         nextIndex=index+1;
       }; 
       this.tabbClick(nextIndex);
+      this.colorchange=nextIndex;
     },
     downIn:function(){
       this.mouseIndown=true;
@@ -194,13 +197,13 @@ export default {
 @keyframes fade-in {
     0% {opacity: 0;}/*初始状态 透明度为0*/
     10% {opacity: 1;}/*结束状态 透明度为1*/
-    90% {opacity: 1;}/*过渡状态 透明度为0*/
+    90% {opacity: 1;}/*过渡状态 透明度为1*/
     100% {opacity: 0;}/*结束状态 透明度为1*/
 }
 @-webkit-keyframes fade-in {/*针对webkit内核*/
     0% {opacity: 0;}/*初始状态 透明度为0*/
     10% {opacity: 1;}/*结束状态 透明度为1*/
-    90% {opacity: 1;}/*过渡状态 透明度为0*/
+    90% {opacity: 1;}/*过渡状态 透明度为1*/
     100% {opacity: 0;}/*结束状态 透明度为1*/
 }
 .slidepause{
