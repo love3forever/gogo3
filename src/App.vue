@@ -1,17 +1,18 @@
 <template>
   <div id="app">
     <topbar></topbar>
-    
+    <slides></slides>
   </div>
 </template>
 
 <script>
 import topbar from './components/topbar'
+import slides from './components/slides'
 
 export default {
   name: 'app',
   components: {
-    topbar
+    topbar,slides
   }
 }
 </script>
