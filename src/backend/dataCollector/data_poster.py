@@ -5,6 +5,7 @@
 # @Link    : https://eclipsesv.com
 # @Version : $Id$
 import json
+import time
 from requests import Session
 from bs4 import BeautifulSoup
 from params_dicts import get_user_follows_param, get_user_fans_param, get_playlist_comments_param
@@ -17,14 +18,22 @@ playlist_URL = 'https://music.163.com/playlist?id={}'
 user_follows_URL = 'http://music.163.com/weapi/user/getfollows/{}?csrf_token='
 user_fans_URL = 'http://music.163.com/weapi/user/getfolloweds?csrf_token='
 playlist_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/A_PL_0_{}?csrf_token='
+playlist_detail_URL = 'http://music.163.com/api/playlist/detail?id={}'
+song_comments_URL = 'http://music.163.com/api/v1/resource/comments/R_SO_4_{}/?rid=R_SO_4_{}&offset={}&total=true&limit=100'
+song_detail_URL = 'http://music.163.com/api/song/detail?ids=[{}]'
 session = Session()
 
 
 def get_data_from_web(url):
     # 根据url获取原始数据
+    time.sleep(1)
     if url:
         origin_data = session.get(url)
-        return origin_data or None
+        if origin_data.status_code == 200:
+            return origin_data
+        else:
+            print(origin_data.status_code)
+            return None
     else:
         return None
 
@@ -162,8 +171,40 @@ def get_playlist_comments(playlistId):
         playlistId), 'comments', get_playlist_comments_param)
 
 
+def get_playlist_detail(playlistId):
+    pass
+
+
+def get_song_detail(songId):
+    # 根据歌曲Id获取详情
+    detail_url = song_detail_URL.format(songId)
+    detail_data = get_data_from_web(detail_url)
+    if detail_data.status_code == 200:
+        detail_result = json.loads(detail_data.content)
+        return detail_result
+    else:
+        return None
+
+
+def get_song_comments(songId):
+    data_list = []
+    data_flag = True
+    data_times = 0
+    while data_flag:
+        comments_url = song_comments_URL.format(
+            songId, songId, 100 * data_times)
+        response_data = get_data_from_web(comments_url)
+        if response_data:
+            response_data = json.loads(response_data.content)
+            if response_data['comments']:
+                data_list.extend(response_data['comments'])
+            data_times += 1
+            data_flag = response_data['more']
+        else:
+            return None
+    return data_list
 
 if __name__ == '__main__':
-    result = get_playlist_comments('460989048')
+    result = get_song_comments('5272145')
     print(len(result))
-    print(type(data_poster))
+    print(result)
