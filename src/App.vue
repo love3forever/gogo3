@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <topbar></topbar>
-    <bottombar></bottombar>
+    <slides></slides>
   </div>
 </template>
 
 <script>
 import topbar from './components/topbar'
-import bottombar from './components/bottombar'
+import slides from './components/slides'
 
 export default {
   name: 'app',
   components: {
-    topbar,bottombar
+    topbar,slides
   }
 }
 </script>
@@ -24,7 +24,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background: url(assets/topbar.png) repeat-x fixed 0px -80px;
-  height: 70px;
 }
 </style>
