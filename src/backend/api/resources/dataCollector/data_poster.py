@@ -172,7 +172,13 @@ def get_playlist_comments(playlistId):
 
 
 def get_playlist_detail(playlistId):
-    pass
+    detail_url = playlist_detail_URL.format(playlistId)
+    detail_origin_data = get_data_from_web(detail_url)
+    if detail_origin_data:
+        detail_result = json.loads(detail_origin_data.content)
+        return detail_result
+    else:
+        return None
 
 
 def get_song_detail(songId):
