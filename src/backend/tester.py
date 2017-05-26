@@ -7,7 +7,8 @@
 
 import unittest
 from dataCollector.data_poster import indexURL, get_data_from_web,\
-    parse_index_data, get_playlist_data, get_user_follows, get_user_fans
+    parse_index_data, get_playlist_data, get_user_follows, get_user_fans,\
+    get_playlist_comments, get_song_detail, get_song_comments
 
 
 class Test_Data_Poster(unittest.TestCase):
@@ -44,6 +45,15 @@ class Test_User_Poster(unittest.TestCase):
 
     def test_get_user_fans(self):
         assert get_user_fans('77159064') is not None
+
+    def test_get_playlist_comments(self):
+        assert get_playlist_comments('625086991') is not None
+
+    def test_get_song_comments(self):
+        assert get_song_comments('18374880') is not None
+
+    def test_get_song_detail(self):
+        assert get_song_detail('get_song_detail') is not None
 
 
 if __name__ == '__main__':
