@@ -44,23 +44,27 @@ export default {
     }
   },
   methods:{
+    /**   
+     * 受JS限制，Vue 不能检测以下变动的数组：
+     * 1.arr[index]=newValue; 2.arr.length = newLength;
+     * 上述两种情况可用arr.splice()解决，其中1.还可以使用vue.set方法
+     */
+    changeArrData:function(arr,index,newValue){
+      arr.splice(index, 1, newValue);//this.$set(arr, index, newValue);
+    },
     mouseInbtn:function(index){
-      this.$set(this.title[index], 1, true);
-      this.title[index].splice(1, 1, true);
+      this.changeArrData(this.title[index], 1, true);
     },
     mouseOutbtn:function(index){
-      this.$set(this.title[index], 1, false);
-      this.title[index].splice(1, 1, false);
+      this.changeArrData(this.title[index], 1, false);
     },
-    mouseClick:function(index){
-      for (var i=0;i<this.title.length;i++){
-        if (this.title[i][2]===true){
-          this.$set(this.title[i], 2, false);
-          this.title[i].splice(2, 1, false);
-        }
-      }
-      this.$set(this.title[index], 2, true);
-      this.title[index].splice(2, 1, true);
+    mouseClick:function(index){//获取之前被激活的按钮->取消激活->激活当前按钮
+      var current = this.title.map(function(item){
+        return item[2];
+      }).indexOf(true);
+
+      this.changeArrData(this.title[current], 2, false);
+      this.changeArrData(this.title[index], 2, true);
     },
     showLogmethods:function(){
       this.logHide = false;
