@@ -6,21 +6,12 @@
 # @Version : $Id$
 from flask.blueprints import Blueprint
 from flask_restful import Resource, Api, abort
-from flask import make_response, jsonify
+from flask import jsonify
 from dataCollector import data_poster
+from common_funcs import output
 
 playlist_blueprint = Blueprint(__name__, 'playlist')
 playlistAPI = Api(playlist_blueprint)
-
-
-def output(data, headers=None):
-    resp = make_response(data)
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    resp.headers['Access-Control-Allow-Methods'] = 'POST'
-    resp.headers[
-        'Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
-    resp.headers['Content-Type'] = 'application/json;charset=UTF-8'
-    return resp
 
 
 class PlaylistDetail(Resource):

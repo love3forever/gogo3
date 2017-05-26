@@ -56,7 +56,7 @@ class Test_User_Poster(unittest.TestCase):
         assert get_song_comments('18374880') is not None
 
     def test_get_song_detail(self):
-        assert get_song_detail('get_song_detail') is not None
+        assert get_song_detail('18374880') is not None
 
 
 class Test_Playlist_Api(unittest.TestCase):
@@ -74,6 +74,14 @@ class Test_Playlist_Api(unittest.TestCase):
 
     def test_playlist_comments(self):
         rv = self.app.get('/api/v1/playlist/comments/625086991')
+        assert rv.status_code == 200
+
+    def test_song_detail(self):
+        rv = self.app.get('/api/v1/song/detail/18374880')
+        assert rv.status_code == 200
+
+    def test_song_comments(self):
+        rv = self.app.get('/api/v1/song/comments/18374880')
         assert rv.status_code == 200
 
 
