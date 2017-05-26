@@ -2,17 +2,23 @@
   <div id="app">
     <topbar></topbar>
     <slides></slides>
+    <div class="main">
+      <mainleft></mainleft>
+      <mainright></mainright>
+    </div>
   </div>
 </template>
 
 <script>
 import topbar from './components/topbar'
 import slides from './components/slides'
+import mainleft from './components/mainleft'
+import mainright from './components/mainright'
 
 export default {
   name: 'app',
   components: {
-    topbar,slides
+    topbar,slides,mainleft,mainright
   }
 }
 </script>
@@ -24,5 +30,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.main{
+  position: relative;
+  width: 980px;
+  height: 1000px;
+  margin: 0 auto;
 }
 </style>
