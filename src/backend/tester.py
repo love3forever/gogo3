@@ -84,6 +84,14 @@ class Test_Playlist_Api(unittest.TestCase):
         rv = self.app.get('/api/v1/song/comments/18374880')
         assert rv.status_code == 200
 
+    def test_user_follows(self):
+        rv = self.app.get('/api/v1/user/77159064/follows')
+        assert rv.status_code == 200
+
+    def test_user_fans(self):
+        rv = self.app.get('/api/v1/user/77159064/fans')
+        assert rv.status_code == 200
+
 
 if __name__ == '__main__':
     unittest.main()
