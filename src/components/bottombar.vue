@@ -14,7 +14,9 @@ export default {
   props:['isshow'],
   data () {
     return {
-      subtitle: [['推荐',false,true],['排行榜',false,false],['歌单',false,false],['主播电台',false,false],['歌手',false,false],['新碟上架',false,false]],
+      subtitle: [//按钮:[名称,是否mouseover,是否click,]
+        ['推荐',false,true],['排行榜',false,false],['歌单',false,false],['主播电台',false,false],['歌手',false,false],['新碟上架',false,false]
+      ],
     }
   },
   methods:{
@@ -39,12 +41,6 @@ export default {
       
       this.changeArrData(this.subtitle[current], 2, false);
       this.changeArrData(this.subtitle[index], 2, true);
-    },
-    showLogmethods:function(){
-      this.logHide = false;
-    },
-    hideLogmethods:function(){
-     this.logHide = true;
     }
   }
 }
