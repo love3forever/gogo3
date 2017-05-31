@@ -10,25 +10,38 @@
         <a class="viewall" href="">查看全部></a>
       </h3>
       <ul>
-        <li class="singer-wrap" :class="{'singer-Active':item[1]}" v-for="(item,index) in singerData" @mouseover="singerIn(index)" @mouseout="singerOut(index)">
+        <li class="singer-wrap" :class="{'singer-Active':singer[1]}" v-for="(singer,index) in singerData" @mouseover="singerIn(index)" @mouseout="singerOut(index)">
           <a class="singer" href="/#">
             <div class="head">
-              <img :src="item[0]">
+              <img :src="singer[0]">
             </div>
             <div class="info">
-              <h4><span>{{item[3]}}</span></h4>
-              <p>{{item[4]}}</p>
+              <h4><span>{{singer[3]}}</span></h4>
+              <p>{{singer[4]}}</p>
             </div>
           </a>
         </li>
       </ul>
       <a href="/#" class="singer-apply" :class="{'apply-Active':applyActive}"  @mouseover="btnIn('applyActive')" @mouseout="btnOut('applyActive')" >申请成为音乐人</a>
     </div>
-    <div class="right-bottom"></div>
+    <div class="right-bottom">
+      <h3><span>热门DJ</span></h3>
+      <ul>
+        <li class="dj-wrap" v-for="dj in djData">
+          <a href="/#" class="dj"><img :src="dj[0]"></a>
+          <div class="info dj-info">
+            <p><a href="/#" class='dj-Name'>{{dj[1]}}</a><sub class="dj-v"></sub></p>
+            <p class="p-over">{{dj[2]}}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import { mouseBtnEv } from '../js/generalChangeVal.js'
+
 export default {
   name: 'slides',
   data () {
@@ -42,26 +55,36 @@ export default {
         ['./static/singer04.jpg',false,false,'李志','个体音乐人李志'],
         ['./static/singer05.jpg',false,false,'马頔麻油叶','民谣音乐人'],
       ],
+      djData:[//DJ:[图片,姓名,描述]
+        ['./static/dj01.jpg','陈立','美食家陈立教授'],
+        ['./static/dj02.jpg','DJ艳秋','著名音乐节目主持人'],
+        ['./static/dj03.jpg','国家大剧院古典音乐频道','国家大剧院古典音乐官方'],
+        ['./static/dj04.jpg','谢谢收听','南京电视台主持人王馨'],
+        ['./static/dj05.jpg','DJ晓苏','独立DJ,CRI环球旅游广播特邀DJ'],
+      ],
     }
   },
   methods:{
-   btnIn: function(key){//后续写成全局复用
+   btnIn: function(key){
     this[key] = true;
    },
    btnOut:function(key){
     this[key] = false;
    },
    singerIn:function(index){
-    this.singerData[index].splice(1, 1, true);
+    mouseBtnEv.setNewVal(this.singerData[index], 1, true);
    },
    singerOut:function(index){
-    this.singerData[index].splice(1, 1, false);
+    mouseBtnEv.setNewVal(this.singerData[index], 1, false);
    },
   },
 }  
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>  
+a{
+  text-decoration:none;
+}
 .mainright{
   position: absolute;
   top: 0;
@@ -69,13 +92,13 @@ export default {
   width: 250px;
   height: 100%;
   border: 1px solid rgb(204,204,204);
+  color: rgb(102,102,102);
 }
 .right-top{
   height: 126px;
   background: url(../assets/index.png) no-repeat scroll 0 0;
 }
 .right-top p{
-  color: rgb(102,102,102);
   font-size: 13.33px;
   text-align:left;
   width: 205px;
@@ -100,7 +123,7 @@ export default {
   margin-top: 15px;
   text-align:left;
 }
-.right-center h3{
+.right-center h3,.right-bottom h3{
   position: relative;
   width: 210px;
   height: 24px;
@@ -118,7 +141,7 @@ export default {
   position: absolute;
   right: 0;
 }
-.right-center ul{
+.right-center ul,.right-bottom ul{
   margin: 6px 0 14px 20px;
   padding: 0;
 }
@@ -162,6 +185,7 @@ h4{
 }
 .info p{
   margin: 0;
+
 }
 .singer-apply{
   display: inline-block;
@@ -176,5 +200,47 @@ h4{
 }
 .apply-Active{
   background: none;
+}
+.right-bottom{
+  color: rgb(102,102,102);
+  margin-top: 30px;
+  font-size: 12px;
+  text-align: left;
+}
+.dj-wrap{
+  list-style-type:none;
+  width: 210px;
+  height: 40px;
+  margin-top: 14px;
+  padding: 0;
+}
+.dj-info{
+  padding-left: 7px;
+  width: 160px;
+}
+.dj-info p{
+  margin-bottom: 4px;
+}
+.dj{
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+.dj-v{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: url(../assets/icon.png) repeat-x scroll 0 0;
+}
+.dj-Name{
+  color: black;
+}
+a.dj-Name:hover,a.viewall:hover{
+  text-decoration: underline;
+}
+.p-over{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
