@@ -30,6 +30,7 @@
 </template>
 <script>
 import bottombar from './bottombar'
+import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'topbar',
@@ -45,28 +46,25 @@ export default {
   },
   methods:{
     mouseInbtn:function(index){
-      this.$set(this.title[index], 1, true);
-      this.title[index].splice(1, 1, true);
+      mouseBtnEv.setNewVal(this.title[index], 1, true);
     },
     mouseOutbtn:function(index){
-      this.$set(this.title[index], 1, false);
-      this.title[index].splice(1, 1, false);
+      mouseBtnEv.setNewVal(this.title[index], 1, false);
     },
-    mouseClick:function(index){
-      for (var i=0;i<this.title.length;i++){
-        if (this.title[i][2]===true){
-          this.$set(this.title[i], 2, false);
-          this.title[i].splice(2, 1, false);
-        }
-      }
-      this.$set(this.title[index], 2, true);
-      this.title[index].splice(2, 1, true);
+    mouseClick:function(index){//获取之前被激活的按钮->取消激活->激活当前按钮
+      var current = this.title.map(function(item){
+        return item[2];
+      }).indexOf(true);
+
+      mouseBtnEv.setNewVal(this.title[current], 2, false);
+      mouseBtnEv.setNewVal(this.title[index], 2, true);
     },
     showLogmethods:function(){
-      this.logHide = false;
+      mouseBtnEv.setNewVal(this,'logHide', false);
     },
     hideLogmethods:function(){
-     this.logHide = true;
+      //this.logHide = false;
+      mouseBtnEv.setNewVal(this,'logHide', true);
     }
   }
 }

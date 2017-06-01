@@ -9,38 +9,32 @@
 </template>
 
 <script>
+import { mouseBtnEv } from '../js/generalChangeVal.js'
+
 export default {
   name: 'bottombar',
   props:['isshow'],
   data () {
     return {
-      subtitle: [['推荐',false,true],['排行榜',false,false],['歌单',false,false],['主播电台',false,false],['歌手',false,false],['新碟上架',false,false]],
+      subtitle: [//按钮:[名称,是否mouseover,是否click,]
+        ['推荐',false,true],['排行榜',false,false],['歌单',false,false],['主播电台',false,false],['歌手',false,false],['新碟上架',false,false]
+      ],
     }
   },
-    methods:{
+  methods:{
     mouseInbtn:function(index){
-      this.$set(this.subtitle[index], 1, true);
-      this.subtitle[index].splice(1, 1, true);
+      mouseBtnEv.setNewVal(this.subtitle[index], 1, true);
     },
     mouseOutbtn:function(index){
-      this.$set(this.subtitle[index], 1, false);
-      this.subtitle[index].splice(1, 1, false);
+      mouseBtnEv.setNewVal(this.subtitle[index], 1, false);
     },
-    mouseClick:function(index){
-      for (var i=0;i<this.subtitle.length;i++){
-        if (this.subtitle[i][2]===true){
-          this.$set(this.subtitle[i], 2, false);
-          this.subtitle[i].splice(2, 1, false);
-        }
-      }
-      this.$set(this.subtitle[index], 2, true);
-      this.subtitle[index].splice(2, 1, true);
-    },
-    showLogmethods:function(){
-      this.logHide = false;
-    },
-    hideLogmethods:function(){
-     this.logHide = true;
+    mouseClick:function(index){//获取之前被激活的按钮->取消激活->激活当前按钮
+      var current = this.subtitle.map(function(item){
+        return item[2];
+      }).indexOf(true);
+      
+      mouseBtnEv.setNewVal(this.subtitle[current], 2, false);
+      mouseBtnEv.setNewVal(this.subtitle[index], 2, true);
     }
   }
 }

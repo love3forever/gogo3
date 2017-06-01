@@ -3,7 +3,7 @@
     <div class="flagwrap">
       <div style="width:100%;height:100%;">
         <a href="/#" style="display:inline-block;width:100%;height:100%;"> 
-          <img id="flag" @webkitAnimationIteration="itertation(index)" class="fade" :class="{'slidepause':mouseInimg}" @mouseover="imgon" @mouseout="imgout" v-for="(item,index) in imgData" :src="item[0]" v-if="item[2]">
+          <img id="flag" @webkitAnimationEnd="itertation(index)" class="fade" :class="{'slidepause':mouseInimg}" @mouseover="btnIn('mouseInimg')" @mouseout="btnOut('mouseInimg')" v-for="(item,index) in imgData" :src="item[0]" v-if="item[2]">
         </a>  
         <a class="tabflag tabl" id="tabl" @mouseover="tabflagon('tabl')" @mouseout="tabflagout('tabl')" @click="slide('tabl')" :class="{'tabl-active':tabflagbtn.tabl}" href="/#"></a>
         <a class="tabflag tabr" id="tabr" @mouseover="tabflagon('tabr')" @mouseout="tabflagout('tabr')" @click="slide('tabr')" :class="{'tabr-active':tabflagbtn.tabr}" href="/#"></a>
@@ -12,7 +12,7 @@
         </div>
       </div>
       <div id="downloadwarp">
-        <a href="/#" :class="{'down-Active':mouseIndown}" @mouseover="downIn" @mouseout="downOut"></a>
+        <a href="/#" :class="{'down-Active':mouseIndown}" @mouseover="btnIn('mouseIndown')" @mouseout="btnOut('mouseIndown')"></a>
         <p>PC 安卓 iPhone WP iPad Mac 六大客户端</p>
       </div>
     </div>
@@ -21,18 +21,17 @@
 </template>
 
 <script>
+import { mouseBtnEv } from '../js/generalChangeVal.js'
+
 export default {
   name: 'slides',
   data () {
     return {
-      colorchange:0,
-      mouseInimg:false,
-      mouseIndown:false,
-      tabflagbtn:{
-        tabl:false,
-        tabr:false,
-      },
-      imgData:[
+      colorchange:0,//div(.slides)的背景色为imgData[colorchange][3]
+      mouseInimg:false,//鼠标是否在图片范围内.在则暂停轮播.
+      mouseIndown:false,//鼠标是否在‘下载客户端’按钮范围内
+      tabflagbtn:{ tabl:false, tabr:false },//两侧切换按钮是否click
+      imgData:[//轮播图片:[图片url,底部切换按钮是否mouseover,底部切换按钮是否click,对应背景色]
         ['./static/01.jpg',false,true,'rgb(0,0,0)'],
         ['./static/02.jpg',false,false,'rgb(255,214,228)'],
         ['./static/03.jpg',false,false,'rgb(226,198,194)'],
@@ -45,74 +44,60 @@ export default {
     }
   },
   methods:{
-    imgon:function(e){
-      this.mouseInimg=true;
+    btnIn: function(key){
+      this[key] = true;
     },
-    imgout:function(){
-      this.mouseInimg=false;
+    btnOut:function(key){
+      this[key] = false;
     },
     tabflagon:function(key){
-      this.tabflagbtn[key] = true;
+      mouseBtnEv.setNewVal(this.tabflagbtn, key, true);
     },
     tabflagout:function(key){
-      this.tabflagbtn[key] = false;
+      mouseBtnEv.setNewVal(this.tabflagbtn, key, false);
     },
     tabbon:function(index){
-      this.$set(this.imgData[index], 1, true);
-      this.imgData[index].splice(1, 1, true);
+      mouseBtnEv.setNewVal(this.imgData[index], 1, true);
     },
     tabbout:function(index){
-      this.$set(this.imgData[index], 1, false);
-      this.imgData[index].splice(1, 1, false);
+      mouseBtnEv.setNewVal(this.imgData[index], 1, false);
     },
+    //通用切换按钮click事件：获取之前被激活的图片->取消激活->激活当前图片->设置对应背景色
     tabbClick:function(index){
-      for (var i=0;i<this.imgData.length;i++){
-        if (this.imgData[i][2]===true){
-          this.$set(this.imgData[i], 2, false);
-          this.imgData[i].splice(2, 1, false);
-        }
-      }
-      this.$set(this.imgData[index], 2, true);
-      this.imgData[index].splice(2, 1, true);
-      this.colorchange=index;
+      var current = this.imgData.map(function(item){
+        return item[2];
+      }).indexOf(true);
+
+      mouseBtnEv.setNewVal(this.imgData[current], 2, false);
+      mouseBtnEv.setNewVal(this.imgData[index], 2, true);
+      mouseBtnEv.setNewVal(this,'colorchange', index);
     },
+    //两侧切换按钮click事件：获取之前被激活的图片->确定下一个被激活的图片->激活当前图片->设置对应背景色
     slide:function(side){
-      var current =null;
-      this.imgData.forEach(function(value,index){
-        if(value[2]===true){
-          return current=index;
-        }
-      });
+      var current = this.imgData.map(function(item){
+        return item[2];
+      }).indexOf(true);
 
-      if (side=='tabr') {
+      if (side =='tabr') {//向右切换
         this.itertation(current);
-      } else {
-        this.$set(this.imgData[current], 2, false);
-        this.imgData[current].splice(2, 1, false);
-
+      } else {//向左切换
         var front = this.imgData.length-1;
         if (current!==0){
-          front=current-1;
+          front = current-1;
         }; 
         this.tabbClick(front);
-        this.colorchange=front;
+        mouseBtnEv.setNewVal(this,'colorchange', front);
       };
     },
+    //一张图播放完成时的结束事件：确定下一个被激活的图片->激活当前图片->设置对应背景色
     itertation:function(index){
-      this.$set(this.imgData[index], 2, false);
-      this.imgData[index].splice(2, 1, false);
-      var nextIndex=0;
+      var nextIndex = 0;
       if (index!==this.imgData.length-1){
-        nextIndex=index+1;
+        nextIndex = index+1;
       }; 
+
       this.tabbClick(nextIndex);
-      this.colorchange=nextIndex;
-    },
-    downIn:function(){
-      this.mouseIndown=true;
-    },
-    downOut:function(){
-      this.mouseIndown=false;
+      mouseBtnEv.setNewVal(this,'colorchange', nextIndex);
     },
   },
 }  
@@ -133,7 +118,6 @@ export default {
   position: absolute;
   left: 0;
 }
-
 #downloadwarp{
   position: absolute;
   top: 0;
@@ -191,20 +175,20 @@ export default {
   background: url(../assets/banner.png) no-repeat scroll -19px -343px;
 }
 .fade{
-  animation: fade-in 6s infinite;
-  -webkit-animation:fade-in 6s infinite;
+  animation: fade-in 6s;
+  -webkit-animation:fade-in 6s;
 }
 @keyframes fade-in {
-    0% {opacity: 0;}/*初始状态 透明度为0*/
-    10% {opacity: 1;}/*结束状态 透明度为1*/
-    90% {opacity: 1;}/*过渡状态 透明度为1*/
-    100% {opacity: 0;}/*结束状态 透明度为1*/
+    0% {opacity: 0.8;}/*初始状态 透明度为0*/
+    5% {opacity: 1;}
+    80% {opacity: 1;}
+    100% {opacity: 0;}
 }
 @-webkit-keyframes fade-in {/*针对webkit内核*/
-    0% {opacity: 0;}/*初始状态 透明度为0*/
-    10% {opacity: 1;}/*结束状态 透明度为1*/
-    90% {opacity: 1;}/*过渡状态 透明度为1*/
-    100% {opacity: 0;}/*结束状态 透明度为1*/
+    0% {opacity: 0.8;}
+    5% {opacity: 1;}
+    80% {opacity: 1;}
+    100% {opacity: 0;}
 }
 .slidepause{
   animation-play-state:paused;
