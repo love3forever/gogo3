@@ -12,6 +12,10 @@ let mouseBtnEv = {
      * @param     {[obj]}                 data   [对象或数组]
      * @param     {[string/number]}       key    [键/索引]
      * @param     {[all]}                 newVal [新值]
+	 /**   
+     * 受JS限制，Vue 不能检测以下变动的数组：
+     * 1.arr[index]=newValue; 2.arr.length = newLength;
+     * 上述两种情况可用arr.splice()解决，其中1.还可以使用vue.set方法
      */
 	setNewVal: function(data,key,newVal){
 		if (typeof key === "string"){//改变对象中元素的值

@@ -63,6 +63,7 @@ export default {
       mouseBtnEv.setNewVal(this,'logHide', false);
     },
     hideLogmethods:function(){
+      //this.logHide = false;
       mouseBtnEv.setNewVal(this,'logHide', true);
     }
   }
