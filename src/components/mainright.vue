@@ -93,6 +93,7 @@ a{
   height: 100%;
   border: 1px solid rgb(204,204,204);
   color: rgb(102,102,102);
+  background: white;
 }
 .right-top{
   height: 126px;

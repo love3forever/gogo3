@@ -1,7 +1,8 @@
 <template>
   <div class="mainleft">
-   
-
+   <div class="left-content">
+     
+   </div>
   </div>
 </template>
 
@@ -23,5 +24,10 @@ export default {
 .mainleft{
   width: 730px;
   height: 100%;
+  margin-right: 250px;
+}
+.left-content{
+  width: 690px;
+  padding: 20px 20px 40px 20px;
 }
 </style>
