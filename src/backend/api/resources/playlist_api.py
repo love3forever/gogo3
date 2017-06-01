@@ -11,9 +11,10 @@ from dataCollector import data_poster
 from common_funcs import output
 
 playlist_blueprint = Blueprint(__name__, 'playlist')
-playlistAPI = Api(playlist_blueprint)
+playlistAPI = Api(playlist_blueprint, prefix='/api/v1/playlist')
 
 
+@playlistAPI.resource('/detail/<string:playlistId>')
 class PlaylistDetail(Resource):
     """docstring for PlaylistDetail"""
 
@@ -28,6 +29,7 @@ class PlaylistDetail(Resource):
             abort(404, description='do request with right playlist please')
 
 
+@playlistAPI.resource('/comments/<string:playlistId>')
 class PlaylistComments(Resource):
     """docstring for PlaylistComments"""
 
@@ -45,13 +47,3 @@ class PlaylistComments(Resource):
                 abort(404, description='no playlist comments info')
         else:
             abort(404, description='do request with right playlist please')
-
-
-playlistAPI.add_resource(
-    PlaylistDetail, '/api/v1/playlist/detail/<string:playlistId>',
-    endpoint='PlaylistDetail')
-
-
-playlistAPI.add_resource(
-    PlaylistComments, '/api/v1/playlist/comments/<string:playlistId>',
-    endpoint='PlaylistComments')

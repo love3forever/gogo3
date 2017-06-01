@@ -12,10 +12,10 @@ from dataCollector import data_poster
 from common_funcs import output
 
 song_blueprint = Blueprint(__name__, 'song_blueprint')
-songAPI = Api(song_blueprint)
+songAPI = Api(song_blueprint, prefix='/api/v1/song')
 
 
-@songAPI.resource('/api/v1/song/detail/<string:songId>')
+@songAPI.resource('/detail/<string:songId>')
 class SongDetail(Resource):
     """get song detail by song id"""
 
@@ -31,7 +31,7 @@ class SongDetail(Resource):
                 404, message='do request with a right songId, current id:{}'.format(songId))
 
 
-@songAPI.resource('/api/v1/song/comments/<string:songId>')
+@songAPI.resource('/comments/<string:songId>')
 class SongComments(Resource):
     """docstring for SongComments"""
 

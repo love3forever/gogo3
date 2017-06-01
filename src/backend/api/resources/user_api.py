@@ -13,7 +13,6 @@ from common_funcs import output
 
 user_blueprint = Blueprint(__name__, 'user_blueprint')
 userAPI = Api(user_blueprint, prefix='/api/v1/user')
-Api()
 
 
 @userAPI.resource('/<string:userId>/follows')
