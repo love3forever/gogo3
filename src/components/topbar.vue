@@ -163,6 +163,8 @@ input {
   position: absolute;
   top: 10px;
   left: -50px;
+  z-index: 100;
+  //background: rgb(51,51,51);
 }
 #search{
   width: 210px;
