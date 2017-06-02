@@ -30,11 +30,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background: rgb(245,245,245);
 }
 .main{
   position: relative;
   width: 980px;
   height: 1000px;
   margin: 0 auto;
+  border-left: 1px solid rgb(204,204,204);
+  background: white;
 }
 </style>

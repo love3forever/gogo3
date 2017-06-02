@@ -3,7 +3,7 @@
     <div class="flagwrap">
       <div style="width:100%;height:100%;">
         <a href="/#" style="display:inline-block;width:100%;height:100%;"> 
-          <img id="flag" @webkitAnimationEnd="itertation(index)" class="fade" :class="{'slidepause':mouseInimg}" @mouseover="btnIn('mouseInimg')" @mouseout="btnOut('mouseInimg')" v-for="(item,index) in imgData" :src="item[0]" v-if="item[2]">
+          <img id="flag" @webkitAnimationIteration="itertation(index)" class="fade" :class="{'slidepause':mouseInimg}" @mouseover="btnIn('mouseInimg')" @mouseout="btnOut('mouseInimg')" v-for="(item,index) in imgData" :src="item[0]" v-if="item[2]">
         </a>  
         <a class="tabflag tabl" id="tabl" @mouseover="tabflagon('tabl')" @mouseout="tabflagout('tabl')" @click="slide('tabl')" :class="{'tabl-active':tabflagbtn.tabl}" href="/#"></a>
         <a class="tabflag tabr" id="tabr" @mouseover="tabflagon('tabr')" @mouseout="tabflagout('tabr')" @click="slide('tabr')" :class="{'tabr-active':tabflagbtn.tabr}" href="/#"></a>
@@ -175,17 +175,17 @@ export default {
   background: url(../assets/banner.png) no-repeat scroll -19px -343px;
 }
 .fade{
-  animation: fade-in 6s;
-  -webkit-animation:fade-in 6s;
+  animation: fade-in 6s infinite;
+  -webkit-animation:fade-in 6s infinite;
 }
 @keyframes fade-in {
-    0% {opacity: 0.8;}/*初始状态 透明度为0*/
+    0% {opacity:0;}/*初始状态 透明度为0*/
     5% {opacity: 1;}
     80% {opacity: 1;}
     100% {opacity: 0;}
 }
 @-webkit-keyframes fade-in {/*针对webkit内核*/
-    0% {opacity: 0.8;}
+    0% {opacity: 0;}
     5% {opacity: 1;}
     80% {opacity: 1;}
     100% {opacity: 0;}
