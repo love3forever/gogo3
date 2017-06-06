@@ -29,13 +29,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  //color: #2c3e50;
+  color: rgb(102,102,102);
   background: rgb(245,245,245);
 }
 .main{
   position: relative;
   width: 980px;
-  height: 1000px;
+  //height: 1500px;
   margin: 0 auto;
   border-left: 1px solid rgb(204,204,204);
   background: white;

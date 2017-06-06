@@ -92,7 +92,6 @@ a{
   width: 250px;
   height: 100%;
   border: 1px solid rgb(204,204,204);
-  color: rgb(102,102,102);
 }
 .right-top{
   height: 126px;
@@ -132,7 +131,7 @@ a{
   font-size: 13px;
 }
 .right-center a{
-  color: rgb(102,102,102);
+  color: inherit;
   font-size: 12px;
   text-decoration:none;
 }
@@ -168,7 +167,7 @@ img{
 }
 .info{
   display: inline-block;
-  width: 133px;
+  width: 130px;
   height: 100%;
   padding-left: 12px;
   overflow:hidden;
@@ -180,7 +179,7 @@ img{
   height: 100%;
 }
 h4{
-  margin: 1em 0;
+  margin: 0.8em 0;
   padding: 0;
 }
 .info p{
@@ -202,7 +201,6 @@ h4{
   background: none;
 }
 .right-bottom{
-  color: rgb(102,102,102);
   margin-top: 30px;
   font-size: 12px;
   text-align: left;
@@ -216,7 +214,7 @@ h4{
 }
 .dj-info{
   padding-left: 7px;
-  width: 160px;
+  width: 158px;
 }
 .dj-info p{
   margin-bottom: 4px;
