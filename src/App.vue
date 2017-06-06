@@ -36,7 +36,7 @@ export default {
 .main{
   position: relative;
   width: 980px;
-  height: 1000px;
+  //height: 1500px;
   margin: 0 auto;
   border-left: 1px solid rgb(204,204,204);
   background: white;

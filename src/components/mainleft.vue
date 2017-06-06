@@ -59,6 +59,38 @@
           <a href="/#" class="hot-title">榜单</a>
           <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
+        <div class="song-list">
+          <dl class="bill">
+            <dt class="bill-top">
+              <div class="billtop-des">
+                <img src="../assets/bill01.jpg">
+                <a href="/#"></a>
+              </div>
+              <div class="billtop-title"></div>
+            </dt>
+            <dd></dd>
+          </dl>
+          <dl class="bill">
+            <dt class="bill-top">
+              <div class="billtop-des">
+                <img src="../assets/bill02.jpg">
+                <a href="/#"></a>
+              </div>
+              <div class="billtop-title"></div>
+            </dt>
+            <dd></dd>
+          </dl>
+          <dl class="bill">
+            <dt class="bill-top">
+              <div class="billtop-des">
+                <img src="../assets/bill03.jpg">
+                <a href="/#"></a>
+              </div>
+              <div class="billtop-title"></div>
+            </dt>
+            <dd></dd>
+          </dl>
+        </div>
       </div>
    </div>
   </div>
@@ -250,6 +282,10 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   margin: 9px 5px 9px 10px;
   background: url(../assets/iconall.png) no-repeat scroll 0 -24px;
 }
+.hot-descrp sub{
+  position: relative;
+  top:-1px;
+}
 .hot-num{
   float: left;
   margin: 6px 0;
@@ -386,5 +422,46 @@ a.disk-des:hover{
 .diskright-Active{
   cursor:pointer;
   background: url(../assets/index.png) no-repeat scroll -320px -75px; 
+}
+.song-list{
+  width: 100%;
+  height: 472px;
+  margin-top:20px;
+  background: url(../assets/index_bill.png) no-repeat scroll 0 0;
+}
+.bill{
+  float: left;
+  width: 230px;
+  height: 100%;
+  margin: 0;
+}
+.bill-top{
+  display: block;
+  height: 100px;
+
+  padding: 20px 0 0 20px;
+  text-align: left;
+}
+.billtop-des{
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.billtop-des img,.billtop-des a{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top:0;
+  left:0;
+}
+.billtop-des a{
+  background: url(../assets/coverall.png) no-repeat scroll -145px -57px; 
+}
+.billtop-title{
+  display: inline-block;
+  width: 114px;
+  height: 51px;
+  margin: 6px 0 23px 10px;
 }
 </style>
