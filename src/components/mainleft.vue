@@ -34,6 +34,25 @@
           <a href="/#" class="hot-title">新碟上架</a>
           <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
+        <div class="disk">
+          <div class="disk-wrap">
+            <a :class="['disk-tab','disk-left',{'diskleft-Active':disktab.left}]" @click="diskSlide('left')" @mouseover="disktabIn('left')" @mouseout="disktabOut('left')"></a>
+            <div class="disk-scroll">
+              <ul class="disk-group" v-for="(group,num) in diskgroup" :style="'left:'+group+'px;'">
+                <li v-for="(top,index) in disk[num%2]">
+                  <div>
+                    <img :src="top[0]">
+                    <a href="/#" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></a>
+                    <a href="/#" title="播放" class="disk-play" v-if="top[3]"></a>
+                  </div>
+                  <p><a href="/#" class="disk-des">{{top[1]}}</a></p>
+                  <p><a href="/#" class="disk-singer">{{top[2]}}</a></p>
+                </li>
+              </ul>
+            </div>
+            <a :class="['disk-tab','disk-right',{'diskright-Active':disktab.right}]" @click="diskSlide('right')" @mouseover="disktabIn('right')" @mouseout="disktabOut('right')"></a>
+          </div>
+        </div>
       </div>
       <div class="left-bottom">
         <div class="lefthead">
@@ -62,6 +81,24 @@ export default {
           ["./static/hot06.jpg","220万","健身小白应该注意些啥？",true,false],
           ["./static/hot07.jpg","220万","Deep House深窈之道",false,false],
           ["./static/hot08.jpg","220万","刘瑜：色",true,false],
+      ],
+      diskgroup:[-645,0,645,645*2],//645=ul.width
+      disktab:{left:false,right:false},
+      disk:[
+        [
+          ["./static/10top01.jpg","PRODUCE 101 - 35 Boys 5 Concepts","PRODUCE 101",false],
+          ["./static/10top02.jpg","我想和你唱 第二季 第6期","群星",false],
+          ["./static/10top03.jpg","Wonder Woman: Original Motion Picture Soundtrack","Rupert Gregson-Williams",false],
+          ["./static/10top04.jpg","2017跨界歌王 第八期","群星",false],
+          ["./static/10top05.jpg","LONELY","Sistar",false],
+        ],
+        [
+          ["./static/5top01.jpg","放&披风","陈奕迅",false],
+          ["./static/5top02.jpg","欢乐颂2 电视原声带","群星",false],
+          ["./static/5top03.jpg","군주 - 가면의 주인 OST","V.A.",false],
+          ["./static/5top04.jpg","hopeless fountain kingdom (Deluxe)","Halsey",false],
+          ["./static/5top05.jpg","There For You","Martin Garrix / Troye Sivan",false],
+        ]
       ]
     }
   },
@@ -71,6 +108,51 @@ export default {
     },
     btnOut:function(index){
       mouseBtnEv.setNewVal(this.hotitem[index], 4, false);
+    },
+    diskIn:function(num,index){
+      mouseBtnEv.setNewVal(this.disk[num][index], 3, true);
+    },
+    diskOut:function(num,index){
+      mouseBtnEv.setNewVal(this.disk[num][index], 3, false);
+    },
+    disktabIn:function(type){
+      mouseBtnEv.setNewVal(this.disktab, type, true);
+    },
+    disktabOut:function(type){
+      mouseBtnEv.setNewVal(this.disktab, type, false);
+    },
+    diskSlide:function(type){//
+      var current = this.diskgroup.indexOf(0);//当前显示的ul索引      
+      var count = 0;//setInterval执行次数
+      var dataParm = {};//setInteval参数
+      var ulWidth = null;//ul.width
+      //初始化ulWidth
+      if (current !== 0){
+        ulWidth = Math.abs(this.diskgroup[current-1]);
+      } else {
+        ulWidth = Math.abs(this.diskgroup[current+1]);
+      };
+      //根据切换方向的不同，初始化dataParm
+      if (type == 'left'){
+        dataParm.next = current-1;
+        dataParm.nextVal = ulWidth; 
+      } else if(type == "right"){
+        dataParm.next = current-3;
+        dataParm.nextVal = -ulWidth; 
+      };
+
+      var chageLeft = setInterval(()=>{
+        count++;//计次
+        var addVal = count*dataParm.nextVal/50;//切换时元素left增加的值,=当前次数*ul.width/总次数
+        //每20ms改变一次current、next ul的left值
+        mouseBtnEv.setNewVal(this.diskgroup, dataParm.next, addVal-dataParm.nextVal);
+        mouseBtnEv.setNewVal(this.diskgroup, current, addVal);
+        //执行50次后(共1s)停止，并改变备用ul的left值
+        if (count == 50){//总计1000ms=50次*20ms/次
+          mouseBtnEv.setNewVal(this.diskgroup, current-2, -dataParm.nextVal);
+          clearInterval(chageLeft);
+        };
+      },20);
     },
   },
 }  
@@ -206,6 +288,103 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   width: 35px;
   height: 15px;
   margin-right: 3px;
-  background:  url(../assets/icon.png) no-repeat scroll -31px -658px;
+  background: url(../assets/icon.png) no-repeat scroll -31px -658px;
+}
+.disk{
+  height: 184px;
+  margin: 20px 0 37px 0;
+  border: 1px solid rgb(211,211,211);
+}
+.disk-wrap{
+  position: relative;
+  height: 182px;
+  padding-left: 16px;
+  border: 1px solid white;
+  background: rgb(245,245,245);
+}
+.disk-tab{
+  text-decoration: none;
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  top:71px;
+}
+.disk-left{
+  left: 4px;
+  background: url(../assets/index.png) no-repeat scroll -260px -75px; 
+}
+.disk-right{
+  right: 4px;
+  background: url(../assets/index.png) no-repeat scroll -300px -75px; 
+}
+.disk-scroll{
+  width: 645px;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+.disk-group{
+  text-decoration: none;
+  width: 100%;
+  height: 150px;
+  margin: 28px 0 0 0;
+  padding: 0;
+  position: absolute;
+}
+.disk-group li{
+  display: inline-block;
+  width: 118px;
+  height: 100%;
+  margin-left: 11px;
+  vertical-align: top;
+}
+.disk-group div{
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 7px;
+}
+.disk-mask{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 118px;
+  height: 100%;
+  background-clip: border-box;
+  background: url(../assets/coverall.png) no-repeat scroll 0 -570px;
+}
+.disk-play{
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 22px;
+  height: 22px;
+  background: url(../assets/iconall.png) no-repeat scroll 0 -85px;
+}
+.disk-group p{
+  width: 90%;
+  height: 18px;
+  line-height: 18px;
+  font-size: 12px;
+  margin: 0;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.disk-des{
+  color: black;
+}
+a.disk-des:hover{
+  text-decoration: underline;
+}
+.diskleft-Active{
+  cursor:pointer;
+  background: url(../assets/index.png) no-repeat scroll -280px -75px; 
+} 
+.diskright-Active{
+  cursor:pointer;
+  background: url(../assets/index.png) no-repeat scroll -320px -75px; 
 }
 </style>

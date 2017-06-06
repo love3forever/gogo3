@@ -92,7 +92,6 @@ a{
   width: 250px;
   height: 100%;
   border: 1px solid rgb(204,204,204);
-  color: rgb(102,102,102);
 }
 .right-top{
   height: 126px;
@@ -132,7 +131,7 @@ a{
   font-size: 13px;
 }
 .right-center a{
-  color: rgb(102,102,102);
+  color: inherit;
   font-size: 12px;
   text-decoration:none;
 }
@@ -202,7 +201,6 @@ h4{
   background: none;
 }
 .right-bottom{
-  color: rgb(102,102,102);
   margin-top: 30px;
   font-size: 12px;
   text-align: left;
