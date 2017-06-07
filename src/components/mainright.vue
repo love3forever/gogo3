@@ -91,7 +91,8 @@ a{
   right: 0;
   width: 250px;
   height: 100%;
-  border: 1px solid rgb(204,204,204);
+  border-left: 1px solid rgb(204,204,204);
+  border-right: 1px solid rgb(204,204,204);
 }
 .right-top{
   height: 126px;
