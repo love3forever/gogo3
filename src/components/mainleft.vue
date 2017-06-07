@@ -60,35 +60,27 @@
           <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
         <div class="song-list">
-          <dl class="bill">
+          <dl class="bill" v-for="(bill,num) in billborad">
             <dt class="bill-top">
               <div class="billtop-des">
-                <img src="../assets/bill01.jpg">
-                <a href="/#"></a>
+                <img :src="bill.pic">
+                <a :title="bill.title" href="/#"></a>
               </div>
-              <div class="billtop-title"></div>
-            </dt>
-            <dd></dd>
-          </dl>
-          <dl class="bill">
-            <dt class="bill-top">
-              <div class="billtop-des">
-                <img src="../assets/bill02.jpg">
-                <a href="/#"></a>
+              <div class="billtop-title">
+                <a :title="bill.title" href="/#" class="bill-title"><h3>{{bill.title}}</h3></a>
+                <a title="播放" href="/#" class="bill-play" @mouseover="songPlayIn(num)" @mouseout="songPlayOut(num)" :class="{'bill-playActive':bill.ico[0]}"></a>
+                <a title="收藏" href="/#" class="bill-collect" @mouseover="songClctIn(num)" @mouseout="songClctOut(num)" :class="{'bill-collectActive':bill.ico[1]}"></a>
               </div>
-              <div class="billtop-title"></div>
             </dt>
-            <dd></dd>
-          </dl>
-          <dl class="bill">
-            <dt class="bill-top">
-              <div class="billtop-des">
-                <img src="../assets/bill03.jpg">
-                <a href="/#"></a>
-              </div>
-              <div class="billtop-title"></div>
-            </dt>
-            <dd></dd>
+            <dd>
+              <ol>
+                <li v-for="(song,index) in bill.list">
+                  <span class="song-num" :class="{'song-numtop':index<3}">{{index+1}}</span>
+                  <a href="/#" class="song-item" :title="song[0]">{{song[0]}}</a>
+                </li>
+              </ol>
+              <div><a href="/#" class="view-allsong">查看全部></a></div>
+            </dd>
           </dl>
         </div>
       </div>
@@ -131,7 +123,60 @@ export default {
           ["./static/5top04.jpg","hopeless fountain kingdom (Deluxe)","Halsey",false],
           ["./static/5top05.jpg","There For You","Martin Garrix / Troye Sivan",false],
         ]
-      ]
+      ],
+      billborad:{
+        upbill:{
+          title:"云音乐飙升榜",
+          pic:"./static/bill01.jpg",
+          ico:[false,false],
+          list:[
+            ["那个男孩",false,false,false],
+            ["我喜欢上你是的内心活动",false,false,false],
+            ["音乐带我解脱",false,false,false],
+            ["Slide",false,false,false],
+            ["同类",false,false,false],
+            ["天已黑",false,false,false],
+            ["小半",false,false,false],
+            ["失眠",false,false,false],
+            ["致姗姗来迟的你",false,false,false],
+            ["天已黑",false,false,false],
+          ]
+        },
+        newbill:{
+          title:"云音乐新歌榜",
+          pic:"./static/bill02.jpg",
+          ico:[false,false],
+          list:[
+            ["There For You",false,false,false],
+            ["阿婆说",false,false,false],
+            ["咖喱咖喱",false,false,false],
+            ["凉凉",false,false,false],
+            ["爱我所爱",false,false,false],
+            ["那个男孩",false,false,false],
+            ["齐天",false,false,false],
+            ["想做你的疯女孩",false,false,false],
+            ["我一定会爱上你",false,false,false],
+            ["大城大事",false,false,false],
+          ]
+        },
+        originalbill:{
+          title:"云音乐原创榜",
+          pic:"./static/bill03.jpg",
+          ico:[false,false],
+          list:[
+            ["同类",false,false,false],
+            ["该死的冷战",false,false,false],
+            ["出城",false,false,false],
+            ["不必为我担心",false,false,false],
+            ["五月",false,false,false],
+            ["罗曼蒂克",false,false,false],
+            ["飞舞的少年",false,false,false],
+            ["北极熊",false,false,false],
+            ["十二年后",false,false,false],
+            ["告别就是死去一点点",false,false,false],
+          ]
+        },
+      }
     }
   },
   methods:{
@@ -185,6 +230,18 @@ export default {
           clearInterval(chageLeft);
         };
       },20);
+    },
+    songPlayIn:function(index){
+      mouseBtnEv.setNewVal(this.billborad[index].ico, 0, true);
+    },
+    songPlayOut:function(index){
+      mouseBtnEv.setNewVal(this.billborad[index].ico, 0, false);
+    },
+    songClctIn:function(index){
+      mouseBtnEv.setNewVal(this.billborad[index].ico, 1, true);
+    },
+    songClctOut:function(index){
+      mouseBtnEv.setNewVal(this.billborad[index].ico, 1, false);
     },
   },
 }  
@@ -438,7 +495,7 @@ a.disk-des:hover{
 .bill-top{
   display: block;
   height: 100px;
-
+  position: relative;
   padding: 20px 0 0 20px;
   text-align: left;
 }
@@ -459,9 +516,88 @@ a.disk-des:hover{
   background: url(../assets/coverall.png) no-repeat scroll -145px -57px; 
 }
 .billtop-title{
-  display: inline-block;
+  position: absolute;
+  top:20px;
+  left: 100px;
   width: 114px;
   height: 51px;
   margin: 6px 0 23px 10px;
+}
+.billtop-title h3{
+  margin: 0 0 10px 0;
+  color: rgb(51,51,51);
+  font-size: 14px;
+}
+a.bill-title:hover,a.song-item:hover,a.view-allsong:hover{
+  text-decoration: underline;
+}
+.bill-play{
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  background: url(../assets/index.png) no-repeat scroll -267px -205px; 
+}
+.bill-playActive{
+  background: url(../assets/index.png) no-repeat scroll -267px -235px; 
+}
+.bill-collect{
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  background: url(../assets/index.png) no-repeat scroll -300px -205px; 
+}
+.bill-collectActive{
+  background: url(../assets/index.png) no-repeat scroll -300px -235px; 
+}
+dd{
+  margin: 0;
+}
+dd ol{
+  margin: 0 0 0 50px;
+  padding: 0;
+  width: auto;
+  list-style:none;
+}
+dd li{
+  height: 32px;
+  font-size: 12px;
+  text-align: left;
+
+}
+dd div{
+  height: 32px;
+  margin-right:32px;
+  line-height: 32px; 
+  text-align: right;
+}
+.song-num{
+  display: inline-block;
+  width: 35px;
+  height: 32px;
+  margin-left:-35px;
+  line-height: 32px;
+  font-size: 16px;
+  position: relative;
+  float: left;
+  text-align: center;
+  color: rgb(51,51,51);
+
+}
+.song-numtop{
+  color: rgb(193,13,12);
+}
+.song-item{
+  float: left;
+  width: 170px;
+  height: 32px;
+  line-height: 32px;
+  color: rgb(51,51,51);
+}
+.view-allsong{
+  text-align: right;
+  font-size: 12px;
+  color: inherit;
 }
 </style>
