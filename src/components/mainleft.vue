@@ -17,7 +17,7 @@
               <div class="item-bottom">
                 <span class="ico"></span>
                 <span class="hot-num">{{item[1]}}</span>
-                <a href="/#" class="hotplay" :class="{'hotplay-Active':item[4]}" @mouseover="btnIn(index)" @mouseout="btnOut(index)"></a>
+                <a href="/#" class="hotplay"></a>
               </div>
             </div>
             <p><a href="/#" class="hot-descrp"><sub v-if="item[3]"></sub>{{item[2]}}</a></p>
@@ -36,7 +36,7 @@
         </div>
         <div class="disk">
           <div class="disk-wrap">
-            <a :class="['disk-tab','disk-left',{'diskleft-Active':disktab.left}]" @click="diskSlide('left')" @mouseover="disktabIn('left')" @mouseout="disktabOut('left')"></a>
+            <a class="disk-tab disk-left" @click="diskSlide('left')"></a>
             <div class="disk-scroll">
               <ul class="disk-group" v-for="(group,num) in diskgroup" :style="'left:'+group+'px;'">
                 <li v-for="(top,index) in disk[num%2]">
@@ -50,7 +50,7 @@
                 </li>
               </ul>
             </div>
-            <a :class="['disk-tab','disk-right',{'diskright-Active':disktab.right}]" @click="diskSlide('right')" @mouseover="disktabIn('right')" @mouseout="disktabOut('right')"></a>
+            <a class="disk-tab disk-right" @click="diskSlide('right')"></a>
           </div>
         </div>
       </div>
@@ -68,8 +68,8 @@
               </div>
               <div class="billtop-title">
                 <a :title="bill.title" href="/#" class="bill-title"><h3>{{bill.title}}</h3></a>
-                <a title="播放" href="/#" class="bill-play" @mouseover="songPlayIn(num)" @mouseout="songPlayOut(num)" :class="{'bill-playActive':bill.ico[0]}"></a>
-                <a title="收藏" href="/#" class="bill-collect" @mouseover="songClctIn(num)" @mouseout="songClctOut(num)" :class="{'bill-collectActive':bill.ico[1]}"></a>
+                <a title="播放" href="/#" class="bill-play"></a>
+                <a title="收藏" href="/#" class="bill-collect"></a>
               </div>
             </dt>
             <dd>
@@ -97,17 +97,16 @@ export default {
     return {
       hotrecommend:[["华语",false],["流行",true],["摇滚",true],["民谣",true],["电子",true]],
       hotitem:[
-          ["./static/hot01.jpg","220万","2017年五月最热新歌TOP50",false,false],
-          ["./static/hot02.jpg","25万","『福音之旅』聆听清风絮语，静沐斜阳暖心",false,false],
-          ["./static/hot03.jpg","48万","『电音故事』从生命的起源说起",true,false],
-          ["./static/hot04.jpg","18230","『哲学公开课』切实的幸福",false,false],
-          ["./static/hot05.jpg","220万","『锐韧Trap』风骚霸道，黑暗的迷人性格",false,false],
-          ["./static/hot06.jpg","220万","健身小白应该注意些啥？",true,false],
-          ["./static/hot07.jpg","220万","Deep House深窈之道",false,false],
-          ["./static/hot08.jpg","220万","刘瑜：色",true,false],
+          ["./static/hot01.jpg","220万","2017年五月最热新歌TOP50",false],
+          ["./static/hot02.jpg","25万","『福音之旅』聆听清风絮语，静沐斜阳暖心",false],
+          ["./static/hot03.jpg","48万","『电音故事』从生命的起源说起",true],
+          ["./static/hot04.jpg","18230","『哲学公开课』切实的幸福",false],
+          ["./static/hot05.jpg","220万","『锐韧Trap』风骚霸道，黑暗的迷人性格",false],
+          ["./static/hot06.jpg","220万","健身小白应该注意些啥？",true],
+          ["./static/hot07.jpg","220万","Deep House深窈之道",false],
+          ["./static/hot08.jpg","220万","刘瑜：色",true],
       ],
       diskgroup:[-645,0,645,645*2],//645=ul.width
-      disktab:{left:false,right:false},
       disk:[
         [
           ["./static/10top01.jpg","PRODUCE 101 - 35 Boys 5 Concepts","PRODUCE 101",false],
@@ -128,75 +127,60 @@ export default {
         upbill:{
           title:"云音乐飙升榜",
           pic:"./static/bill01.jpg",
-          ico:[false,false],
           list:[
-            ["那个男孩",false,false,false],
-            ["我喜欢上你是的内心活动",false,false,false],
-            ["音乐带我解脱",false,false,false],
-            ["Slide",false,false,false],
-            ["同类",false,false,false],
-            ["天已黑",false,false,false],
-            ["小半",false,false,false],
-            ["失眠",false,false,false],
-            ["致姗姗来迟的你",false,false,false],
-            ["天已黑",false,false,false],
+            ["那个男孩"],
+            ["我喜欢上你是的内心活动"],
+            ["音乐带我解脱"],
+            ["Slide"],
+            ["同类"],
+            ["天已黑"],
+            ["小半"],
+            ["失眠"],
+            ["致姗姗来迟的你"],
+            ["天已黑"],
           ]
         },
         newbill:{
           title:"云音乐新歌榜",
           pic:"./static/bill02.jpg",
-          ico:[false,false],
           list:[
-            ["There For You",false,false,false],
-            ["阿婆说",false,false,false],
-            ["咖喱咖喱",false,false,false],
-            ["凉凉",false,false,false],
-            ["爱我所爱",false,false,false],
-            ["那个男孩",false,false,false],
-            ["齐天",false,false,false],
-            ["想做你的疯女孩",false,false,false],
-            ["我一定会爱上你",false,false,false],
-            ["大城大事",false,false,false],
+            ["There For You"],
+            ["阿婆说"],
+            ["咖喱咖喱"],
+            ["凉凉"],
+            ["爱我所爱"],
+            ["那个男孩"],
+            ["齐天"],
+            ["想做你的疯女孩"],
+            ["我一定会爱上你"],
+            ["大城大事"],
           ]
         },
         originalbill:{
           title:"云音乐原创榜",
           pic:"./static/bill03.jpg",
-          ico:[false,false],
           list:[
-            ["同类",false,false,false],
-            ["该死的冷战",false,false,false],
-            ["出城",false,false,false],
-            ["不必为我担心",false,false,false],
-            ["五月",false,false,false],
-            ["罗曼蒂克",false,false,false],
-            ["飞舞的少年",false,false,false],
-            ["北极熊",false,false,false],
-            ["十二年后",false,false,false],
-            ["告别就是死去一点点",false,false,false],
+            ["同类"],
+            ["该死的冷战"],
+            ["出城"],
+            ["不必为我担心"],
+            ["五月"],
+            ["罗曼蒂克"],
+            ["飞舞的少年"],
+            ["北极熊"],
+            ["十二年后"],
+            ["告别就是死去一点点"],
           ]
         },
       }
     }
   },
   methods:{
-    btnIn: function(index){
-      mouseBtnEv.setNewVal(this.hotitem[index], 4, true);
-    },
-    btnOut:function(index){
-      mouseBtnEv.setNewVal(this.hotitem[index], 4, false);
-    },
     diskIn:function(num,index){
       mouseBtnEv.setNewVal(this.disk[num][index], 3, true);
     },
     diskOut:function(num,index){
       mouseBtnEv.setNewVal(this.disk[num][index], 3, false);
-    },
-    disktabIn:function(type){
-      mouseBtnEv.setNewVal(this.disktab, type, true);
-    },
-    disktabOut:function(type){
-      mouseBtnEv.setNewVal(this.disktab, type, false);
     },
     diskSlide:function(type){//
       var current = this.diskgroup.indexOf(0);//当前显示的ul索引      
@@ -230,18 +214,6 @@ export default {
           clearInterval(chageLeft);
         };
       },20);
-    },
-    songPlayIn:function(index){
-      mouseBtnEv.setNewVal(this.billborad[index].ico, 0, true);
-    },
-    songPlayOut:function(index){
-      mouseBtnEv.setNewVal(this.billborad[index].ico, 0, false);
-    },
-    songClctIn:function(index){
-      mouseBtnEv.setNewVal(this.billborad[index].ico, 1, true);
-    },
-    songClctOut:function(index){
-      mouseBtnEv.setNewVal(this.billborad[index].ico, 1, false);
     },
   },
 }  
@@ -354,8 +326,8 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   margin: 6px;
   background: url(../assets/iconall.png) no-repeat scroll 0 0;
 }
-.hotplay-Active{
-  background: url(../assets/iconall.png) no-repeat scroll 0 -60px;
+.hotplay:hover{
+  background: url(../assets/iconall.png) no-repeat scroll 0 -60px; 
 }
 .hot-item{
   display: inline-block;
@@ -472,11 +444,11 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
 a.disk-des:hover{
   text-decoration: underline;
 }
-.diskleft-Active{
+a.disk-left:hover{
   cursor:pointer;
   background: url(../assets/index.png) no-repeat scroll -280px -75px; 
 } 
-.diskright-Active{
+a.disk-right:hover{
   cursor:pointer;
   background: url(../assets/index.png) no-repeat scroll -320px -75px; 
 }
@@ -538,7 +510,7 @@ a.bill-title:hover,a.song-item:hover,a.view-allsong:hover{
   margin-right: 5px;
   background: url(../assets/index.png) no-repeat scroll -267px -205px; 
 }
-.bill-playActive{
+.bill-play:hover{
   background: url(../assets/index.png) no-repeat scroll -267px -235px; 
 }
 .bill-collect{
@@ -548,7 +520,7 @@ a.bill-title:hover,a.song-item:hover,a.view-allsong:hover{
   margin-right: 5px;
   background: url(../assets/index.png) no-repeat scroll -300px -205px; 
 }
-.bill-collectActive{
+.bill-collect:hover{
   background: url(../assets/index.png) no-repeat scroll -300px -235px; 
 }
 dd{

@@ -24,18 +24,20 @@ export default {
   },
   data () {
     return {
-      scrollLength:0,
+      scrollLength:0,//垂直滚动条距顶部距离
     }
   },
   methods:{
+    //返回顶部按钮点击事件
     goToTop:function(){
       let backlength = document.documentElement.scrollTop || document.body.scrollTop; 
       backlength = 0;
     }
   },
   mounted:function(){
-    this.$nextTick(function (){  
-      window.addEventListener('scroll', ()=>{
+    //模板挂载完成后开始监听window.onscroll事件
+    this.$nextTick(function(){  
+      window.addEventListener('scroll', ()=>{//箭头函数修正this指针
         this.scrollLength = document.documentElement.scrollTop || document.body.scrollTop; 
       });  
     });  

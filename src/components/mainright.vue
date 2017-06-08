@@ -2,7 +2,7 @@
   <div class="mainright">
     <div class="right-top">
       <p>登录网易云音乐，可以享受无限收藏的乐趣，并无限同步到手机</p>
-      <a href="/#" class="login" @mouseover="btnIn('logActive')" @mouseout="btnOut('logActive')" :class="{'log-Active':logActive}">用户登录</a>
+      <a href="/#" class="login">用户登录</a>
     </div>
     <div class="right-center">
       <h3>
@@ -10,19 +10,19 @@
         <a class="viewall" href="">查看全部></a>
       </h3>
       <ul>
-        <li class="singer-wrap" :class="{'singer-Active':singer[1]}" v-for="(singer,index) in singerData" @mouseover="singerIn(index)" @mouseout="singerOut(index)">
+        <li class="singer-wrap" v-for="(singer,index) in singerData">
           <a class="singer" href="/#">
             <div class="head">
               <img :src="singer[0]">
             </div>
             <div class="info">
-              <h4><span>{{singer[3]}}</span></h4>
-              <p>{{singer[4]}}</p>
+              <h4><span>{{singer[2]}}</span></h4>
+              <p class="p-over">{{singer[3]}}</p>
             </div>
           </a>
         </li>
       </ul>
-      <a href="/#" class="singer-apply" :class="{'apply-Active':applyActive}"  @mouseover="btnIn('applyActive')" @mouseout="btnOut('applyActive')" >申请成为音乐人</a>
+      <a href="/#" class="singer-apply">申请成为音乐人</a>
     </div>
     <div class="right-bottom">
       <h3><span>热门DJ</span></h3>
@@ -46,14 +46,12 @@ export default {
   name: 'slides',
   data () {
     return {
-      logActive:false,
-      applyActive:false,
-      singerData:[//入驻歌手:[图片,是否mouseover,是否click,姓名,描述]
-        ['./static/singer01.jpg',false,false,'张惠妹aMEI','台湾歌手张惠妹'],
-        ['./static/singer02.jpg',false,false,'尚雯婕','原创电子唱作人'],
-        ['./static/singer03.jpg',false,false,'羽泉组合','国内知名演唱组合 羽泉'],
-        ['./static/singer04.jpg',false,false,'李志','个体音乐人李志'],
-        ['./static/singer05.jpg',false,false,'马頔麻油叶','民谣音乐人'],
+      singerData:[//入驻歌手:[图片,是否click,姓名,描述]
+        ['./static/singer01.jpg',false,'张惠妹aMEI','台湾歌手张惠妹'],
+        ['./static/singer02.jpg',false,'尚雯婕','原创电子唱作人'],
+        ['./static/singer03.jpg',false,'羽泉组合','国内知名演唱组合 羽泉'],
+        ['./static/singer04.jpg',false,'李志','个体音乐人李志'],
+        ['./static/singer05.jpg',false,'马頔麻油叶','民谣音乐人'],
       ],
       djData:[//DJ:[图片,姓名,描述]
         ['./static/dj01.jpg','陈立','美食家陈立教授'],
@@ -63,20 +61,6 @@ export default {
         ['./static/dj05.jpg','DJ晓苏','独立DJ,CRI环球旅游广播特邀DJ'],
       ],
     }
-  },
-  methods:{
-   btnIn: function(key){
-    this[key] = true;
-   },
-   btnOut:function(key){
-    this[key] = false;
-   },
-   singerIn:function(index){
-    mouseBtnEv.setNewVal(this.singerData[index], 1, true);
-   },
-   singerOut:function(index){
-    mouseBtnEv.setNewVal(this.singerData[index], 1, false);
-   },
   },
 }  
 </script>
@@ -116,7 +100,7 @@ a{
   color: rgb(221,220,220);
   background: url(../assets/index.png) no-repeat scroll 0 -195px;
 }
-.log-Active{
+a.login:hover{
   background: url(../assets/index.png) no-repeat scroll -110px -195px;
 }
 .right-center{
@@ -154,7 +138,7 @@ a{
   border: 0.1px solid rgb(233,233,233);
   background-color: rgb(250,250,250);
 }
-.singer-Active{
+a.singer-apply:hover,li.singer-wrap:hover{
   background-color: rgb(244,244,244);
 }
 .head{

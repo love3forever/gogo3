@@ -2,7 +2,7 @@
   <div class="bottombar" v-if="isshow">
     <ul class="inbl">
       <li class="inbl" v-for="(item,index) in subtitle">
-        <a href="/#" class="btm-tab" track-by="$index"  @click="mouseClick(index)" :class="{ 'btnInact': item[1]}">{{item[0]}}</a>
+        <a href="/#" class="btm-tab" track-by="$index"  @click="mouseClick(index)" :class="{'btnInact': item[1]}">{{item[0]}}</a>
       </li>
     </ul>
   </div>
@@ -34,26 +34,26 @@ export default {
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>  
+<style>  
 .bottombar{
   height: 35px;
   background: url(../assets/topbar.png) repeat-x scroll 0px -230px;
 }
-ul{
+.bottombar ul{
   display: inline-block;
   margin: 0 0 0 -230px;
   padding: 0;
   height: 100%;
   list-style-type: none;
 }
-li{
+.bottombar li{
   display: inline-block;
   margin: 0 17px;
   width: 52px;
   height: 100%;
   line-height: 35px;
 }
-a{
+.bottombar a{
   text-decoration:none;
   font-size: 10px;
   color: rgb(221,220,220);
@@ -63,7 +63,4 @@ a{
 .btnInact,a.btm-tab:hover{
   background-image: url(../assets/redclick.png);
 }
-/*.btnInact{
-  background-image: url(../assets/redclick.png);
-}*/
 </style>

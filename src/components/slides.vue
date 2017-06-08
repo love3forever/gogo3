@@ -1,18 +1,18 @@
 <template>
-  <div class="slides" :style="'background:'+imgData[colorchange][3]">
+  <div class="slides" :style="'background:'+imgData[colorchange][2]">
     <div class="flagwrap">
       <div style="width:100%;height:100%;">
         <a href="/#" style="display:inline-block;width:100%;height:100%;"> 
-          <img id="flag" @webkitAnimationIteration="itertation(index)" class="fade" :class="{'slidepause':mouseInimg}" @mouseover="btnIn('mouseInimg')" @mouseout="btnOut('mouseInimg')" v-for="(item,index) in imgData" :src="item[0]" v-if="item[2]">
+          <img id="flag" @webkitAnimationIteration="itertation(index)" class="fade" v-for="(item,index) in imgData" :src="item[0]" v-if="item[1]">
         </a>  
-        <a class="tabflag tabl" id="tabl" @mouseover="tabflagon('tabl')" @mouseout="tabflagout('tabl')" @click="slide('tabl')" :class="{'tabl-active':tabflagbtn.tabl}" href="/#"></a>
-        <a class="tabflag tabr" id="tabr" @mouseover="tabflagon('tabr')" @mouseout="tabflagout('tabr')" @click="slide('tabr')" :class="{'tabr-active':tabflagbtn.tabr}" href="/#"></a>
+        <a class="tabflag tabl" id="tabl" @click="slide('tabl')" href="/#"></a>
+        <a class="tabflag tabr" id="tabr" @click="slide('tabr')" href="/#"></a>
         <div id="tabb">
-          <a href="/#" class="tabbbtn" v-for="(item,index) in imgData" @mouseover="tabbon(index)" @mouseout="tabbout(index)" @click="tabbClick(index)" :class="{'tabb-active':item[1],'tabb-cli':item[2]}"></a>
+          <a href="/#" class="tabbbtn" v-for="(item,index) in imgData" @click="tabbClick(index)" :class="{'tabb-cli':item[1]}"></a>
         </div>
       </div>
       <div id="downloadwarp">
-        <a href="/#" :class="{'down-Active':mouseIndown}" @mouseover="btnIn('mouseIndown')" @mouseout="btnOut('mouseIndown')"></a>
+        <a href="/#" ></a>
         <p>PC 安卓 iPhone WP iPad Mac 六大客户端</p>
       </div>
     </div>
@@ -27,55 +27,34 @@ export default {
   name: 'slides',
   data () {
     return {
-      colorchange:0,//div(.slides)的背景色为imgData[colorchange][3]
-      mouseInimg:false,//鼠标是否在图片范围内.在则暂停轮播.
-      mouseIndown:false,//鼠标是否在‘下载客户端’按钮范围内
-      tabflagbtn:{ tabl:false, tabr:false },//两侧切换按钮是否click
-      imgData:[//轮播图片:[图片url,底部切换按钮是否mouseover,底部切换按钮是否click,对应背景色]
-        ['./static/01.jpg',false,true,'rgb(0,0,0)'],
-        ['./static/02.jpg',false,false,'rgb(255,214,228)'],
-        ['./static/03.jpg',false,false,'rgb(226,198,194)'],
-        ['./static/04.jpg',false,false,'rgb(252,248,237)'],
-        ['./static/05.jpg',false,false,'rgb(235,246,248)'],
-        ['./static/06.jpg',false,false,'rgb(186,19,3)'],
-        ['./static/07.jpg',false,false,'rgb(0,0,0)'],
-        ['./static/08.jpg',false,false,'rgb(244,245,247)'],
+      colorchange:0,//div(.slides)的背景色为imgData[colorchange][2]
+      imgData:[//轮播图片:[图片url,底部切换按钮是否click,对应背景色]
+        ['./static/01.jpg',true,'rgb(0,0,0)'],
+        ['./static/02.jpg',false,'rgb(255,214,228)'],
+        ['./static/03.jpg',false,'rgb(226,198,194)'],
+        ['./static/04.jpg',false,'rgb(252,248,237)'],
+        ['./static/05.jpg',false,'rgb(235,246,248)'],
+        ['./static/06.jpg',false,'rgb(186,19,3)'],
+        ['./static/07.jpg',false,'rgb(0,0,0)'],
+        ['./static/08.jpg',false,'rgb(244,245,247)'],
       ],
     }
   },
   methods:{
-    btnIn: function(key){
-      this[key] = true;
-    },
-    btnOut:function(key){
-      this[key] = false;
-    },
-    tabflagon:function(key){
-      mouseBtnEv.setNewVal(this.tabflagbtn, key, true);
-    },
-    tabflagout:function(key){
-      mouseBtnEv.setNewVal(this.tabflagbtn, key, false);
-    },
-    tabbon:function(index){
-      mouseBtnEv.setNewVal(this.imgData[index], 1, true);
-    },
-    tabbout:function(index){
-      mouseBtnEv.setNewVal(this.imgData[index], 1, false);
-    },
     //通用切换按钮click事件：获取之前被激活的图片->取消激活->激活当前图片->设置对应背景色
     tabbClick:function(index){
       var current = this.imgData.map(function(item){
-        return item[2];
+        return item[1];
       }).indexOf(true);
 
-      mouseBtnEv.setNewVal(this.imgData[current], 2, false);
-      mouseBtnEv.setNewVal(this.imgData[index], 2, true);
+      mouseBtnEv.setNewVal(this.imgData[current], 1, false);
+      mouseBtnEv.setNewVal(this.imgData[index], 1, true);
       mouseBtnEv.setNewVal(this,'colorchange', index);
     },
     //两侧切换按钮click事件：获取之前被激活的图片->确定下一个被激活的图片->激活当前图片->设置对应背景色
     slide:function(side){
       var current = this.imgData.map(function(item){
-        return item[2];
+        return item[1];
       }).indexOf(true);
 
       if (side =='tabr') {//向右切换
@@ -132,9 +111,10 @@ export default {
   width: 215px;
   height: 56px;
 }
-.down-Active{
+#downloadwarp a:hover{
   background: url(../assets/download.png) no-repeat scroll 0 -340px;
 }
+
 .tabflag{
   position: absolute;
   top: 136.5px;
@@ -149,10 +129,10 @@ export default {
   right: -60px;
   background: url(../assets/banner.png) no-repeat scroll 0 -508px;
 }
-.tabl-active{
+a.tabl:hover{
   background: url(../assets/banner.png) no-repeat scroll 0 -430px;
 }
-.tabr-active{
+a.tabr:hover{
   background: url(../assets/banner.png) no-repeat scroll 0 -578px;
 }
 #tabb{
@@ -168,7 +148,7 @@ export default {
   height: 20px;
   background: url(../assets/banner.png) no-repeat scroll 0px -343px;
 }
-.tabb-active{
+a.tabbbtn:hover{
   background: url(../assets/banner.png) no-repeat scroll -19px -343px;
 }
 .tabb-cli{
@@ -190,7 +170,7 @@ export default {
     80% {opacity: 1;}
     100% {opacity: 0;}
 }
-.slidepause{
+#flag:hover{
   animation-play-state:paused;
   -webkit-animation-play-state:paused;
 }

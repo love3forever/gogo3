@@ -45,12 +45,6 @@ export default {
     }
   },
   methods:{
-    mouseInbtn:function(index){
-      mouseBtnEv.setNewVal(this.title[index], 1, true);
-    },
-    mouseOutbtn:function(index){
-      mouseBtnEv.setNewVal(this.title[index], 1, false);
-    },
     mouseClick:function(index){//获取之前被激活的按钮->取消激活->激活当前按钮
       var current = this.title.map(function(item){
         return item[1];
