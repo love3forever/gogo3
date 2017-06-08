@@ -1,10 +1,8 @@
 <template>
   <div id="app">
     <topbar></topbar>
-    <slides></slides>
-    <div class="main">
-      <mainleft></mainleft>
-      <mainright></mainright>
+    <div class="content">
+      <router-view></router-view>
     </div>
     <foot></foot>
     <a href="/#" id="back2top" class="back2top" title="回到顶部" v-if="scrollLength!==0" @click="goToTop">回到顶部</a>
@@ -13,14 +11,13 @@
 
 <script>
 import topbar from './components/topbar'
-import slides from './components/slides'
-import mainleft from './components/mainleft'
-import mainright from './components/mainright'
+import origin from './components/origin'
 import foot from './components/foot'
+
 export default {
   name: 'app',
   components: {
-    topbar,slides,mainleft,mainright,foot
+    topbar,origin,foot
   },
   data () {
     return {
