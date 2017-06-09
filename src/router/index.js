@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import origin from '@/components/origin'
 import foot from '@/components/foot'
+import originlist from '@/components/origin-list'
 
 Vue.use(Router)
 
@@ -12,15 +13,18 @@ export default new Router({
 	}),
 	routes: [
 		{
-		  path: '/',
-		  name: 'origin',
-		  component: origin
-		},    
+			path: '/',component: origin,		  
+		},
 		{
-		  path: '/foot',
-		  name: 'foot',
-		  component: foot
-		}
+		  path: '/home',component: origin,
+		  children:[
+		  	{path:'discover',component:origin},
+		  	{path:'foot',component:foot},
+		  ]
+		},   
+		{
+			path: '/playlist',component: originlist,		  
+		},
 	]
 })
 

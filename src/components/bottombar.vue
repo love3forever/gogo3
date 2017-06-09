@@ -1,8 +1,9 @@
 <template>
   <div class="bottombar" v-if="isshow">
     <ul class="inbl">
-      <li class="inbl" v-for="(item,index) in subtitle">
-        <a href="/#" class="btm-tab" track-by="$index"  @click="mouseClick(index)" :class="{'btnInact': item[1]}">{{item[0]}}</a>
+      <li class="inbl" v-for="(item,index) in subtitle" @click="mouseClick(index)">
+        <router-link to="/playlist" class="btm-tab"  :class="{'btnInact': item[1]}">{{item[0]}}</router-link>
+      <!--   <a href="/#" class="btm-tab" track-by="$index"  @click="mouseClick(index)" :class="{'btnInact': item[1]}">{{item[0]}}</a> -->
       </li>
     </ul>
   </div>

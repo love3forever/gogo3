@@ -82,7 +82,7 @@ export default {
 }  
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>  
+<style>  
 .slides{
   height: 336px;
   background-color: rgb(255,214,228);
@@ -174,7 +174,7 @@ a.tabbbtn:hover{
   animation-play-state:paused;
   -webkit-animation-play-state:paused;
 }
-p{
+.slides p{
   font-size: 13px;
   color: rgb(221,220,220);  
 }

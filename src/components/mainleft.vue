@@ -219,7 +219,7 @@ export default {
 }  
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>  
+<style>  
 .mainleft{
   width: 730px;
   height: 100%;
@@ -441,7 +441,7 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
 .disk-des{
   color: black;
 }
-a.disk-des:hover{
+a.disk-des:hover,a.hot-artist:hover,a.taba:hover{
   text-decoration: underline;
 }
 a.disk-left:hover{

@@ -65,7 +65,7 @@ export default {
 }  
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>  
+<style>  
 a{
   text-decoration:none;
 }
@@ -146,7 +146,7 @@ a.singer-apply:hover,li.singer-wrap:hover{
   width: 62px;
   height: 100%;
 }
-img{
+.mainright img{
   width: 100%;
   height: 100%;
 }
@@ -163,7 +163,7 @@ img{
   width: 100%;
   height: 100%;
 }
-h4{
+.mainright h4{
   margin: 0.8em 0;
   padding: 0;
 }

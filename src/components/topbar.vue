@@ -4,7 +4,7 @@
       <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
       <ul class="inbl" id="btnlist">
         <li class="inbl" v-for="(item,index) in title" track-by="$index" @click="mouseClick(index)" :class="{'btnCliact': item[1]}">
-          <router-link to="/foot"><span>{{item[0]}}</span><sub :class="{'subHide': !item[1]}"></sub></router-link>
+          <router-link to="/home"><span>{{item[0]}}</span><sub :class="{'subHide': !item[1]}"></sub></router-link>       
           <!-- <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[1]}"></sub></a> -->
         </li>
       </ul>
@@ -115,19 +115,19 @@ li.inbl:hover{
 .wrap{
   display: inline-block;
 }
-ul {
+.topbar ul {
   list-style-type: none;
   padding: 0;
 }
-li {
+.topbar li {
   margin: 0;
 }
-a {
+.topbar a {
   text-decoration:none;
   font-size: 14px;
   color: rgb(221,220,220);
 }
-input {
+.topbar input {
   width: 155px;
   height: 12px;
   border: 0;
