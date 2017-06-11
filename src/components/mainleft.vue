@@ -17,7 +17,7 @@
               <div class="item-bottom">
                 <span class="ico"></span>
                 <span class="hot-num">{{item[1]}}</span>
-                <a href="/#" class="hotplay" :class="{'hotplay-Active':item[4]}" @mouseover="btnIn(index)" @mouseout="btnOut(index)"></a>
+                <a href="/#" class="hotplay"></a>
               </div>
             </div>
             <p><a href="/#" class="hot-descrp"><sub v-if="item[3]"></sub>{{item[2]}}</a></p>
@@ -36,7 +36,7 @@
         </div>
         <div class="disk">
           <div class="disk-wrap">
-            <a :class="['disk-tab','disk-left',{'diskleft-Active':disktab.left}]" @click="diskSlide('left')" @mouseover="disktabIn('left')" @mouseout="disktabOut('left')"></a>
+            <a class="disk-tab disk-left" @click="diskSlide('left')"></a>
             <div class="disk-scroll">
               <ul class="disk-group" v-for="(group,num) in diskgroup" :style="'left:'+group+'px;'">
                 <li v-for="(top,index) in disk[num%2]">
@@ -50,7 +50,7 @@
                 </li>
               </ul>
             </div>
-            <a :class="['disk-tab','disk-right',{'diskright-Active':disktab.right}]" @click="diskSlide('right')" @mouseover="disktabIn('right')" @mouseout="disktabOut('right')"></a>
+            <a class="disk-tab disk-right" @click="diskSlide('right')"></a>
           </div>
         </div>
       </div>
@@ -60,35 +60,27 @@
           <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
         <div class="song-list">
-          <dl class="bill">
+          <dl class="bill" v-for="(bill,num) in billborad">
             <dt class="bill-top">
               <div class="billtop-des">
-                <img src="../assets/bill01.jpg">
-                <a href="/#"></a>
+                <img :src="bill.pic">
+                <a :title="bill.title" href="/#"></a>
               </div>
-              <div class="billtop-title"></div>
-            </dt>
-            <dd></dd>
-          </dl>
-          <dl class="bill">
-            <dt class="bill-top">
-              <div class="billtop-des">
-                <img src="../assets/bill02.jpg">
-                <a href="/#"></a>
+              <div class="billtop-title">
+                <a :title="bill.title" href="/#" class="bill-title"><h3>{{bill.title}}</h3></a>
+                <a title="播放" href="/#" class="bill-play"></a>
+                <a title="收藏" href="/#" class="bill-collect"></a>
               </div>
-              <div class="billtop-title"></div>
             </dt>
-            <dd></dd>
-          </dl>
-          <dl class="bill">
-            <dt class="bill-top">
-              <div class="billtop-des">
-                <img src="../assets/bill03.jpg">
-                <a href="/#"></a>
-              </div>
-              <div class="billtop-title"></div>
-            </dt>
-            <dd></dd>
+            <dd>
+              <ol>
+                <li v-for="(song,index) in bill.list">
+                  <span class="song-num" :class="{'song-numtop':index<3}">{{index+1}}</span>
+                  <a href="/#" class="song-item" :title="song[0]">{{song[0]}}</a>
+                </li>
+              </ol>
+              <div><a href="/#" class="view-allsong">查看全部></a></div>
+            </dd>
           </dl>
         </div>
       </div>
@@ -105,17 +97,16 @@ export default {
     return {
       hotrecommend:[["华语",false],["流行",true],["摇滚",true],["民谣",true],["电子",true]],
       hotitem:[
-          ["./static/hot01.jpg","220万","2017年五月最热新歌TOP50",false,false],
-          ["./static/hot02.jpg","25万","『福音之旅』聆听清风絮语，静沐斜阳暖心",false,false],
-          ["./static/hot03.jpg","48万","『电音故事』从生命的起源说起",true,false],
-          ["./static/hot04.jpg","18230","『哲学公开课』切实的幸福",false,false],
-          ["./static/hot05.jpg","220万","『锐韧Trap』风骚霸道，黑暗的迷人性格",false,false],
-          ["./static/hot06.jpg","220万","健身小白应该注意些啥？",true,false],
-          ["./static/hot07.jpg","220万","Deep House深窈之道",false,false],
-          ["./static/hot08.jpg","220万","刘瑜：色",true,false],
+          ["./static/hot01.jpg","220万","2017年五月最热新歌TOP50",false],
+          ["./static/hot02.jpg","25万","『福音之旅』聆听清风絮语，静沐斜阳暖心",false],
+          ["./static/hot03.jpg","48万","『电音故事』从生命的起源说起",true],
+          ["./static/hot04.jpg","18230","『哲学公开课』切实的幸福",false],
+          ["./static/hot05.jpg","220万","『锐韧Trap』风骚霸道，黑暗的迷人性格",false],
+          ["./static/hot06.jpg","220万","健身小白应该注意些啥？",true],
+          ["./static/hot07.jpg","220万","Deep House深窈之道",false],
+          ["./static/hot08.jpg","220万","刘瑜：色",true],
       ],
       diskgroup:[-645,0,645,645*2],//645=ul.width
-      disktab:{left:false,right:false},
       disk:[
         [
           ["./static/10top01.jpg","PRODUCE 101 - 35 Boys 5 Concepts","PRODUCE 101",false],
@@ -131,27 +122,65 @@ export default {
           ["./static/5top04.jpg","hopeless fountain kingdom (Deluxe)","Halsey",false],
           ["./static/5top05.jpg","There For You","Martin Garrix / Troye Sivan",false],
         ]
-      ]
+      ],
+      billborad:{
+        upbill:{
+          title:"云音乐飙升榜",
+          pic:"./static/bill01.jpg",
+          list:[
+            ["那个男孩"],
+            ["我喜欢上你是的内心活动"],
+            ["音乐带我解脱"],
+            ["Slide"],
+            ["同类"],
+            ["天已黑"],
+            ["小半"],
+            ["失眠"],
+            ["致姗姗来迟的你"],
+            ["天已黑"],
+          ]
+        },
+        newbill:{
+          title:"云音乐新歌榜",
+          pic:"./static/bill02.jpg",
+          list:[
+            ["There For You"],
+            ["阿婆说"],
+            ["咖喱咖喱"],
+            ["凉凉"],
+            ["爱我所爱"],
+            ["那个男孩"],
+            ["齐天"],
+            ["想做你的疯女孩"],
+            ["我一定会爱上你"],
+            ["大城大事"],
+          ]
+        },
+        originalbill:{
+          title:"云音乐原创榜",
+          pic:"./static/bill03.jpg",
+          list:[
+            ["同类"],
+            ["该死的冷战"],
+            ["出城"],
+            ["不必为我担心"],
+            ["五月"],
+            ["罗曼蒂克"],
+            ["飞舞的少年"],
+            ["北极熊"],
+            ["十二年后"],
+            ["告别就是死去一点点"],
+          ]
+        },
+      }
     }
   },
   methods:{
-    btnIn: function(index){
-      mouseBtnEv.setNewVal(this.hotitem[index], 4, true);
-    },
-    btnOut:function(index){
-      mouseBtnEv.setNewVal(this.hotitem[index], 4, false);
-    },
     diskIn:function(num,index){
       mouseBtnEv.setNewVal(this.disk[num][index], 3, true);
     },
     diskOut:function(num,index){
       mouseBtnEv.setNewVal(this.disk[num][index], 3, false);
-    },
-    disktabIn:function(type){
-      mouseBtnEv.setNewVal(this.disktab, type, true);
-    },
-    disktabOut:function(type){
-      mouseBtnEv.setNewVal(this.disktab, type, false);
     },
     diskSlide:function(type){//
       var current = this.diskgroup.indexOf(0);//当前显示的ul索引      
@@ -190,7 +219,7 @@ export default {
 }  
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>  
+<style>  
 .mainleft{
   width: 730px;
   height: 100%;
@@ -297,8 +326,8 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   margin: 6px;
   background: url(../assets/iconall.png) no-repeat scroll 0 0;
 }
-.hotplay-Active{
-  background: url(../assets/iconall.png) no-repeat scroll 0 -60px;
+.hotplay:hover{
+  background: url(../assets/iconall.png) no-repeat scroll 0 -60px; 
 }
 .hot-item{
   display: inline-block;
@@ -412,14 +441,14 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
 .disk-des{
   color: black;
 }
-a.disk-des:hover{
+a.disk-des:hover,a.hot-artist:hover,a.taba:hover{
   text-decoration: underline;
 }
-.diskleft-Active{
+a.disk-left:hover{
   cursor:pointer;
   background: url(../assets/index.png) no-repeat scroll -280px -75px; 
 } 
-.diskright-Active{
+a.disk-right:hover{
   cursor:pointer;
   background: url(../assets/index.png) no-repeat scroll -320px -75px; 
 }
@@ -438,7 +467,7 @@ a.disk-des:hover{
 .bill-top{
   display: block;
   height: 100px;
-
+  position: relative;
   padding: 20px 0 0 20px;
   text-align: left;
 }
@@ -459,9 +488,88 @@ a.disk-des:hover{
   background: url(../assets/coverall.png) no-repeat scroll -145px -57px; 
 }
 .billtop-title{
-  display: inline-block;
+  position: absolute;
+  top:20px;
+  left: 100px;
   width: 114px;
   height: 51px;
   margin: 6px 0 23px 10px;
+}
+.billtop-title h3{
+  margin: 0 0 10px 0;
+  color: rgb(51,51,51);
+  font-size: 14px;
+}
+a.bill-title:hover,a.song-item:hover,a.view-allsong:hover{
+  text-decoration: underline;
+}
+.bill-play{
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  background: url(../assets/index.png) no-repeat scroll -267px -205px; 
+}
+.bill-play:hover{
+  background: url(../assets/index.png) no-repeat scroll -267px -235px; 
+}
+.bill-collect{
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  background: url(../assets/index.png) no-repeat scroll -300px -205px; 
+}
+.bill-collect:hover{
+  background: url(../assets/index.png) no-repeat scroll -300px -235px; 
+}
+dd{
+  margin: 0;
+}
+dd ol{
+  margin: 0 0 0 50px;
+  padding: 0;
+  width: auto;
+  list-style:none;
+}
+dd li{
+  height: 32px;
+  font-size: 12px;
+  text-align: left;
+
+}
+dd div{
+  height: 32px;
+  margin-right:32px;
+  line-height: 32px; 
+  text-align: right;
+}
+.song-num{
+  display: inline-block;
+  width: 35px;
+  height: 32px;
+  margin-left:-35px;
+  line-height: 32px;
+  font-size: 16px;
+  position: relative;
+  float: left;
+  text-align: center;
+  color: rgb(51,51,51);
+
+}
+.song-numtop{
+  color: rgb(193,13,12);
+}
+.song-item{
+  float: left;
+  width: 170px;
+  height: 32px;
+  line-height: 32px;
+  color: rgb(51,51,51);
+}
+.view-allsong{
+  text-align: right;
+  font-size: 12px;
+  color: inherit;
 }
 </style>

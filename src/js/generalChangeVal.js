@@ -26,6 +26,13 @@ let mouseBtnEv = {
 			console.log("类型错误");
 		};
 	},
+     stopBubble: function(e){
+          if ( e && e.stopPropagation ) {
+               e.stopPropagation();
+          } else { 
+               window.event.cancelBubble = true;
+          }
+     }
 }
 
 export { mouseBtnEv }

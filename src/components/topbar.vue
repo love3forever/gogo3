@@ -3,8 +3,9 @@
     <div class="topbar">
       <h1 class="logo"><a href="/#"><span class="isHide">网易云音乐</span></a></h1> 
       <ul class="inbl" id="btnlist">
-        <li class="inbl" v-for="(item,index) in title" track-by="$index" @mouseover="mouseInbtn(index)" @mouseout="mouseOutbtn(index)" @click="mouseClick(index)" :class="{ 'btnInact': item[1], 'btnCliact': item[2]}">
-          <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[2]}"></sub></a>
+        <li class="inbl" v-for="(item,index) in title" track-by="$index" @click="mouseClick(index)" :class="{'btnCliact': item[1]}">
+          <router-link to="/home"><span>{{item[0]}}</span><sub :class="{'subHide': !item[1]}"></sub></router-link>       
+          <!-- <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[1]}"></sub></a> -->
         </li>
       </ul>
       <div class="wrap" id="search">
@@ -24,8 +25,8 @@
         </div>
       </div>
     </div>
-    <bottombar :isshow="title[0][2]"></bottombar>
-    <div class="nobtnbar" v-if="!title[0][2]"></div>
+    <bottombar :isshow="title[0][1]"></bottombar>
+    <div class="nobtnbar" v-if="!title[0][1]"></div>
   </nav>
 </template>
 <script>
@@ -40,24 +41,18 @@ export default {
   data () {
     return {
       logHide:true,
-      title: [['发现音乐',false,true],['我的音乐',false,false],['朋友',false,false],['商城',false,false],['音乐人',false,false],['下载客户端',false,false]],
+      title: [['发现音乐',true],['我的音乐',false],['朋友',false],['商城',false],['音乐人',false],['下载客户端',false]],
       log:['手机号登录','微信登录','QQ登录','新浪微博登录','网易邮箱账号登录']
     }
   },
   methods:{
-    mouseInbtn:function(index){
-      mouseBtnEv.setNewVal(this.title[index], 1, true);
-    },
-    mouseOutbtn:function(index){
-      mouseBtnEv.setNewVal(this.title[index], 1, false);
-    },
     mouseClick:function(index){//获取之前被激活的按钮->取消激活->激活当前按钮
       var current = this.title.map(function(item){
-        return item[2];
+        return item[1];
       }).indexOf(true);
 
-      mouseBtnEv.setNewVal(this.title[current], 2, false);
-      mouseBtnEv.setNewVal(this.title[index], 2, true);
+      mouseBtnEv.setNewVal(this.title[current], 1, false);
+      mouseBtnEv.setNewVal(this.title[index], 1, true);
     },
     showLogmethods:function(){
       mouseBtnEv.setNewVal(this,'logHide', false);
@@ -80,7 +75,7 @@ export default {
   justify-content:center;
   align-items:center;
 }
-.btnInact{
+li.inbl:hover{
   background: url(../assets/topbar.png) no-repeat scroll 0px -470px;
   background-size: 96px 622px;
 }
@@ -120,19 +115,19 @@ export default {
 .wrap{
   display: inline-block;
 }
-ul {
+.topbar ul {
   list-style-type: none;
   padding: 0;
 }
-li {
+.topbar li {
   margin: 0;
 }
-a {
+.topbar a {
   text-decoration:none;
   font-size: 14px;
   color: rgb(221,220,220);
 }
-input {
+.topbar input {
   width: 155px;
   height: 12px;
   border: 0;
