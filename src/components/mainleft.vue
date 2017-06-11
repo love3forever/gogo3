@@ -216,6 +216,20 @@ export default {
       },20);
     },
   },
+  created: function initPage(){
+    this.$http.get('http://localhost:33333/api/v1/index/detail').then(response => {
+      console.log(response.data);
+      var responseData = response.data;
+      var recommendList = responseData['recommendList'];
+      for (var i = 0; i < recommendList.length; i++) {
+        this.hotitem[i].splice(0,3,recommendList[i]['img'],recommendList[i]['playTimes'],recommendList[i]['playlistTitle']);
+
+/*        this.hotitem[i][0] = recommendList[i]['img'];
+        this.hotitem[i][1] = recommendList[i]['playTimes'];
+        this.hotitem[i][2] = recommendList[i]['playlistTitle'];*/
+      }
+    });
+  }
 }  
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

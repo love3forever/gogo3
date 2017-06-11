@@ -26,7 +26,7 @@ session = Session()
 
 def get_data_from_web(url):
     # 根据url获取原始数据
-    time.sleep(1)
+    # time.sleep(1)
     if url:
         origin_data = session.get(url)
         if origin_data.status_code == 200:
