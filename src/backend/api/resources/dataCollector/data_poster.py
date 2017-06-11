@@ -51,15 +51,105 @@ def parse_index_data():
     index_data = get_data_from_web(indexURL)
     index_content = index_data.content
     index_soup = BeautifulSoup(index_content, 'lxml')
+    index_response = {}
     cvr_list = index_soup.find_all('ul', class_='m-cvrlst f-cb')
+    # 获取推荐歌单列表
     if cvr_list:
         hottest_recommend_lis = cvr_list[0].select('li')
         recommend_data = map(mapper_index_recommend_list,
                              hottest_recommend_lis)
-        return recommend_data
+        index_response['recommendList'] = recommend_data
     else:
-        print('Nothing found')
-        return None
+        print('no recommendList found')
+        index_response['recommendList'] = None
+    # 获取热门DJ列表
+    hotdj_list = index_soup.select("#hotdj-list > li")
+    if hotdj_list:
+        hotdj_data_list = []
+        for dj_li in hotdj_list:
+            hotdj_data = {}
+            dj_img = dj_li.select('img')[0]['src']
+            dj_info = dj_li.select('.info > p')
+            dj_link = dj_info[0].select('a')[0]['href']
+            dj_name = dj_info[0].select('a')[0].string
+            dj_desc = dj_info[1].string
+            hotdj_data['img'] = dj_img
+            hotdj_data['href'] = dj_link
+            hotdj_data['name'] = dj_name
+            hotdj_data['desc'] = dj_desc
+            hotdj_data_list.append(hotdj_data)
+        index_response['hotdj'] = hotdj_data_list
+    else:
+        print('no dj list data')
+        index_response['hotdj'] = None
+    # 获取榜单列表
+    blk_list = index_soup.select('.blk')
+    if blk_list:
+        filted_blk = filter(lambda x: len(x.select('.top')) != 0, blk_list)
+        blk_data_list = []
+        for item in filted_blk:
+            blk_data = {}
+            blk_img = item.select('.cver > img')[0]['data-src']
+            blk_href = item.select('.cver > a')[0]['href']
+            blk_title = item.select('.cver > a')[0]['title']
+            blk_data['img'] = blk_img
+            blk_data['href'] = blk_href
+            blk_data['title'] = blk_title
+
+            blk_song_list = item.select('dd > ol > li')
+            blk_songs = []
+            if blk_song_list:
+                for blk_song in blk_song_list:
+                    blk_song_data = {}
+                    blk_song_data['songName'] = blk_song.select('a')[0][
+                        'title']
+                    blk_song_data['songHref'] = blk_song.select('a')[0][
+                        'href']
+                    blk_songs.append(blk_song_data)
+            blk_data['songs'] = blk_songs
+
+            blk_data['more'] = item.select('.more > a')[0]['href']
+
+            blk_data_list.append(blk_data)
+        index_response['blk'] = blk_data_list
+    else:
+        print('no blk data')
+        index_response['blk'] = None
+    # 获取最新入驻歌手信息
+    singer_list = index_soup.select('#singer-list > li')
+    if singer_list:
+        singer_data_list = []
+        for singer in singer_list:
+            singer_data = {}
+            singer_data['href'] = singer.select('a')[0]['href']
+            singer_data['img'] = singer.select('img')[0]['src']
+            singer_data['name'] = singer.select('h4 > span')[0].string
+            singer_data['desc'] = singer.select('p')[0].string
+            singer_data_list.append(singer_data)
+        index_response['newSinger'] = singer_data_list
+    else:
+        print('no singer data')
+        index_response['newSinger'] = None
+    # 获取最新专辑列表
+    album_list = index_soup.select('.roll > ul')
+    if album_list:
+        album_data_list = []
+        album_li_list = []
+        album_li_list.extend(album_list[0].select('li'))
+        album_li_list.extend(album_list[1].select('li'))
+        for ablum_li in album_li_list:
+            ablum_data = {}
+            ablum_data['img'] = ablum_li.select('img')[0]['data-src']
+            ablum_data['href'] = ablum_li.select('.f-thide > a')[0]['href']
+            ablum_data['title'] = ablum_li.select('.f-thide > a')[0]['title']
+            ablum_data['artistName'] = ablum_li.select('.tit')[0]['title']
+            ablum_data['artistHref'] = ablum_li.select('.tit > a')[0]['href']
+            album_data_list.append(ablum_data)
+        index_response['newAlbum'] = album_data_list
+    else:
+        print('no album data')
+        index_response['newAlbum'] = None
+    return index_response
 
 
 def mapper_index_recommend_list(data):
@@ -82,7 +172,7 @@ def mapper_index_recommend_list(data):
             'playlistID': play_list_id
         }
     else:
-        return None
+        return Nonesinger_data
 
 
 def get_playlist_data(playlist_id):
@@ -211,6 +301,4 @@ def get_song_comments(songId):
     return data_list
 
 if __name__ == '__main__':
-    result = get_song_comments('5272145')
-    print(len(result))
-    print(result)
+    parse_index_data()

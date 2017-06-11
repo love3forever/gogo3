@@ -27,11 +27,7 @@ class Test_Data_Poster(unittest.TestCase):
         assert get_data_from_web(indexURL) is not None
 
     def test_parse_index_data(self):
-        assert len(parse_index_data()) == 8
-
-    def test_get_playlist_data(self):
-        playlist = parse_index_data()[0]['playlistID']
-        assert get_playlist_data(playlist) is not None
+        assert parse_index_data() is not None
 
 
 class Test_User_Poster(unittest.TestCase):
@@ -90,6 +86,20 @@ class Test_Playlist_Api(unittest.TestCase):
 
     def test_user_fans(self):
         rv = self.app.get('/api/v1/user/77159064/fans')
+        assert rv.status_code == 200
+
+
+class Test_Index_Api(unittest.TestCase):
+    """docstring for ClassName"""
+
+    def setUp(self):
+        self.app = app.test_client()
+
+    def tearDown(self):
+        pass
+
+    def test_get_index_detail(self):
+        rv = self.app.get('/api/v1/index/detail')
         assert rv.status_code == 200
 
 
