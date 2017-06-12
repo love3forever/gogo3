@@ -123,8 +123,8 @@ export default {
           ["./static/5top05.jpg","There For You","Martin Garrix / Troye Sivan",false],
         ]
       ],
-      billborad:{
-        upbill:{
+      billborad:[
+        {
           title:"云音乐飙升榜",
           pic:"./static/bill01.jpg",
           list:[
@@ -140,7 +140,7 @@ export default {
             ["天已黑"],
           ]
         },
-        newbill:{
+        {
           title:"云音乐新歌榜",
           pic:"./static/bill02.jpg",
           list:[
@@ -156,23 +156,23 @@ export default {
             ["大城大事"],
           ]
         },
-        originalbill:{
-          title:"云音乐原创榜",
-          pic:"./static/bill03.jpg",
+        {
+          title:"",
+          pic:"",
           list:[
-            ["同类"],
-            ["该死的冷战"],
-            ["出城"],
-            ["不必为我担心"],
-            ["五月"],
-            ["罗曼蒂克"],
-            ["飞舞的少年"],
-            ["北极熊"],
-            ["十二年后"],
-            ["告别就是死去一点点"],
+            [""],
+            [""],
+            [""],
+            [""],
+            [""],
+            [""],
+            [""],
+            [""],
+            [""],
+            [""],
           ]
         },
-      }
+      ]
     }
   },
   methods:{
@@ -216,17 +216,31 @@ export default {
       },20);
     },
   },
-  created: function initPage(){
+  beforeCreate: function initPage(){
     this.$http.get('http://localhost:33333/api/v1/index/detail').then(response => {
-      console.log(response.data);
       var responseData = response.data;
+
       var recommendList = responseData['recommendList'];
       for (var i = 0; i < recommendList.length; i++) {
         this.hotitem[i].splice(0,3,recommendList[i]['img'],recommendList[i]['playTimes'],recommendList[i]['playlistTitle']);
+      }
 
-/*        this.hotitem[i][0] = recommendList[i]['img'];
-        this.hotitem[i][1] = recommendList[i]['playTimes'];
-        this.hotitem[i][2] = recommendList[i]['playlistTitle'];*/
+      var newAlbum = responseData['newAlbum'];
+      for (var i = 0; i < newAlbum.length; i++) {
+        if (i<5){
+          this.disk[0][i].splice(0,3,newAlbum[i]['img'],newAlbum[i]['title'],newAlbum[i]['artistName']);
+        } else {
+          this.disk[1][i-5].splice(0,3,newAlbum[i]['img'],newAlbum[i]['title'],newAlbum[i]['artistName']);
+        };
+      }
+
+      var blk = responseData['blk'];
+      for (var i = 0; i < blk.length; i++) {
+        this.billborad[i].title = blk[i].title;
+        this.billborad[i].pic = blk[i].img;
+        for (var j = 0; j <blk[i].songs.length;j++){
+          this.billborad[i].list[j].splice(0,1,blk[i].songs[j].songName);
+        }
       }
     });
   }
