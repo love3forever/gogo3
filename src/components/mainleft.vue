@@ -217,18 +217,15 @@ export default {
     },
   },
   created: function initPage(){
-    this.$http.get('http://123.206.211.77:33333/api/v1/index/detail').then(response => {
-      console.log(response.data);
+    this.$http.get('http://123.206.211.77:33333/api/v1/index/detail').then(function(response){
       var responseData = response.data;
       var recommendList = responseData['recommendList'];
       for (var i = 0; i < recommendList.length; i++) {
         this.hotitem[i].splice(0,3,recommendList[i]['img'],recommendList[i]['playTimes'],recommendList[i]['playlistTitle']);
-
-/*        this.hotitem[i][0] = recommendList[i]['img'];
-        this.hotitem[i][1] = recommendList[i]['playTimes'];
-        this.hotitem[i][2] = recommendList[i]['playlistTitle'];*/
       }
-    }).catch(function (err) { });
+    } , function(response){
+      console.log('error');
+    });
   }
 }  
 </script>
