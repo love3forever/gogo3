@@ -62,6 +62,22 @@ export default {
       ],
     }
   },
+  beforeCreate: function (){
+    this.$http.get('http://localhost:33333/api/v1/index/detail').then(response => {
+      var responseData = response.data;
+
+      var newSinger = responseData['newSinger'];
+      for (var i = 0; i < newSinger.length; i++) {
+        this.singerData[i].splice(0,1,newSinger[i]['img']);
+        this.singerData[i].splice(2,2,newSinger[i]['name'],newSinger[i]['desc']);
+      }
+
+      var hotdj = responseData['hotdj'];
+      for (var i = 0; i < hotdj.length; i++) {
+        this.djData[i].splice(0,3,hotdj[i]['img'],hotdj[i]['name'],hotdj[i]['desc']);
+      }
+    });
+  }
 }  
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
