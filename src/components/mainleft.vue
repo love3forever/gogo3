@@ -217,7 +217,7 @@ export default {
     },
   },
   created: function initPage(){
-    this.$http.get('http://localhost:33333/api/v1/index/detail').then(response => {
+    this.$http.get('http://123.206.211.77:33333/api/v1/index/detail').then(response => {
       console.log(response.data);
       var responseData = response.data;
       var recommendList = responseData['recommendList'];
@@ -228,7 +228,7 @@ export default {
         this.hotitem[i][1] = recommendList[i]['playTimes'];
         this.hotitem[i][2] = recommendList[i]['playlistTitle'];*/
       }
-    });
+    }).catch(function (err) { });
   }
 }  
 </script>
