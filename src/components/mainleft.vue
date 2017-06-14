@@ -216,8 +216,8 @@ export default {
       },20);
     },
   },
-  beforeCreate: function initPage(){
-    this.$http.get('http://localhost:33333/api/v1/index/detail').then(response => {
+  created: function initPage(){
+    this.$http.get('http://123.206.211.77:33333/api/v1/index/detail').then(function(response){
       var responseData = response.data;
 
       var recommendList = responseData['recommendList'];
@@ -242,6 +242,8 @@ export default {
           this.billborad[i].list[j].splice(0,1,blk[i].songs[j].songName);
         }
       }
+    } , function(response){
+      console.log('error');
     });
   }
 }  
