@@ -10,17 +10,17 @@
           <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
         <ul class="hot-item">
-          <li v-for="(item,index) in hotitem">
+          <li v-for="item in hotitem">
             <div class="item-wrap">
-              <img :src="item[0]">
+              <img :src="item.img">
               <a href="/#" class="msk"></a>
               <div class="item-bottom">
                 <span class="ico"></span>
-                <span class="hot-num">{{item[1]}}</span>
+                <span class="hot-num">{{item.playTimes}}</span>
                 <a href="/#" class="hotplay"></a>
               </div>
             </div>
-            <p><a href="/#" class="hot-descrp"><sub v-if="item[3]"></sub>{{item[2]}}</a></p>
+            <p><a href="/#" class="hot-descrp"><!--<sub v-if="item[3]"></sub>-->{{item.playlistTitle}}</a></p>
           </li>
         </ul>
       </div>
@@ -43,7 +43,7 @@
                   <div>
                     <img :src="top[0]">
                     <a href="/#" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></a>
-                    <a href="/#" title="播放" class="disk-play" v-if="top[3]"></a>
+                    <a href="/#" title="播放" class="disk-play" v-show="top[3]"></a>
                   </div>
                   <p><a href="/#" class="disk-des">{{top[1]}}</a></p>
                   <p><a href="/#" class="disk-singer">{{top[2]}}</a></p>
@@ -63,7 +63,7 @@
           <dl class="bill" v-for="(bill,num) in billborad">
             <dt class="bill-top">
               <div class="billtop-des">
-                <img :src="bill.pic">
+                <img :src="bill.img">
                 <a :title="bill.title" href="/#"></a>
               </div>
               <div class="billtop-title">
@@ -74,9 +74,9 @@
             </dt>
             <dd>
               <ol>
-                <li v-for="(song,index) in bill.list">
+                <li v-for="(song,index) in bill.songs">
                   <span class="song-num" :class="{'song-numtop':index<3}">{{index+1}}</span>
-                  <a href="/#" class="song-item" :title="song[0]">{{song[0]}}</a>
+                  <a href="/#" class="song-item" :title="song.songName">{{song.songName}}</a>
                 </li>
               </ol>
               <div><a href="/#" class="view-allsong">查看全部></a></div>
@@ -93,86 +93,11 @@ import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'slides',
+  props:['leftData'],
   data () {
     return {
       hotrecommend:[["华语",false],["流行",true],["摇滚",true],["民谣",true],["电子",true]],
-      hotitem:[
-          ["./static/hot01.jpg","220万","2017年五月最热新歌TOP50",false],
-          ["./static/hot02.jpg","25万","『福音之旅』聆听清风絮语，静沐斜阳暖心",false],
-          ["./static/hot03.jpg","48万","『电音故事』从生命的起源说起",true],
-          ["./static/hot04.jpg","18230","『哲学公开课』切实的幸福",false],
-          ["./static/hot05.jpg","220万","『锐韧Trap』风骚霸道，黑暗的迷人性格",false],
-          ["./static/hot06.jpg","220万","健身小白应该注意些啥？",true],
-          ["./static/hot07.jpg","220万","Deep House深窈之道",false],
-          ["./static/hot08.jpg","220万","刘瑜：色",true],
-      ],
       diskgroup:[-645,0,645,645*2],//645=ul.width
-      disk:[
-        [
-          ["./static/10top01.jpg","PRODUCE 101 - 35 Boys 5 Concepts","PRODUCE 101",false],
-          ["./static/10top02.jpg","我想和你唱 第二季 第6期","群星",false],
-          ["./static/10top03.jpg","Wonder Woman: Original Motion Picture Soundtrack","Rupert Gregson-Williams",false],
-          ["./static/10top04.jpg","2017跨界歌王 第八期","群星",false],
-          ["./static/10top05.jpg","LONELY","Sistar",false],
-        ],
-        [
-          ["./static/5top01.jpg","放&披风","陈奕迅",false],
-          ["./static/5top02.jpg","欢乐颂2 电视原声带","群星",false],
-          ["./static/5top03.jpg","군주 - 가면의 주인 OST","V.A.",false],
-          ["./static/5top04.jpg","hopeless fountain kingdom (Deluxe)","Halsey",false],
-          ["./static/5top05.jpg","There For You","Martin Garrix / Troye Sivan",false],
-        ]
-      ],
-      billborad:[
-        {
-          title:"云音乐飙升榜",
-          pic:"./static/bill01.jpg",
-          list:[
-            ["那个男孩"],
-            ["我喜欢上你是的内心活动"],
-            ["音乐带我解脱"],
-            ["Slide"],
-            ["同类"],
-            ["天已黑"],
-            ["小半"],
-            ["失眠"],
-            ["致姗姗来迟的你"],
-            ["天已黑"],
-          ]
-        },
-        {
-          title:"云音乐新歌榜",
-          pic:"./static/bill02.jpg",
-          list:[
-            ["There For You"],
-            ["阿婆说"],
-            ["咖喱咖喱"],
-            ["凉凉"],
-            ["爱我所爱"],
-            ["那个男孩"],
-            ["齐天"],
-            ["想做你的疯女孩"],
-            ["我一定会爱上你"],
-            ["大城大事"],
-          ]
-        },
-        {
-          title:"",
-          pic:"",
-          list:[
-            [""],
-            [""],
-            [""],
-            [""],
-            [""],
-            [""],
-            [""],
-            [""],
-            [""],
-            [""],
-          ]
-        },
-      ]
     }
   },
   methods:{
@@ -216,35 +141,32 @@ export default {
       },20);
     },
   },
-  created: function initPage(){
-    this.$http.get('http://123.206.211.77:33333/api/v1/index/detail').then(function(response){
-      var responseData = response.data;
+  computed:{
+    hotitem:function(){
+      return this.leftData?this.leftData.recommendList:[];
+    },
+    billborad:function(){
+      return this.leftData?this.leftData.blk:[];
+    },
+    disk:function(){
+      if (!this.leftData){//数据未返回
+        return [];
+      } else {//数据已返回
+        var newAlbum = this.leftData.newAlbum;
+        var outputDisk = new Array(new Array(5),new Array(5));
 
-      var recommendList = responseData['recommendList'];
-      for (var i = 0; i < recommendList.length; i++) {
-        this.hotitem[i].splice(0,3,recommendList[i]['img'],recommendList[i]['playTimes'],recommendList[i]['playlistTitle']);
-      }
-
-      var newAlbum = responseData['newAlbum'];
-      for (var i = 0; i < newAlbum.length; i++) {
-        if (i<5){
-          this.disk[0][i].splice(0,3,newAlbum[i]['img'],newAlbum[i]['title'],newAlbum[i]['artistName']);
-        } else {
-          this.disk[1][i-5].splice(0,3,newAlbum[i]['img'],newAlbum[i]['title'],newAlbum[i]['artistName']);
+        for (var i=0;i<newAlbum.length;i++){
+          if (i<5){       
+            outputDisk[0][i] = new Array(4);
+            outputDisk[0][i]=[newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false];
+          } else {
+            outputDisk[1][i-5] = new Array(4);
+            outputDisk[1][i-5]=[newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false];
+          };
         };
-      }
-
-      var blk = responseData['blk'];
-      for (var i = 0; i < blk.length; i++) {
-        this.billborad[i].title = blk[i].title;
-        this.billborad[i].pic = blk[i].img;
-        for (var j = 0; j <blk[i].songs.length;j++){
-          this.billborad[i].list[j].splice(0,1,blk[i].songs[j].songName);
-        }
-      }
-    } , function(response){
-      console.log('error');
-    });
+        return outputDisk;
+      };
+    }
   }
 }  
 </script>
