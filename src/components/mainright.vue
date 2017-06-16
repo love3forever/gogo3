@@ -13,11 +13,11 @@
         <li class="singer-wrap" v-for="(singer,index) in singerData">
           <a class="singer" href="/#">
             <div class="head">
-              <img :src="singer[0]">
+              <img :src="singer.img">
             </div>
             <div class="info">
-              <h4><span>{{singer[2]}}</span></h4>
-              <p class="p-over">{{singer[3]}}</p>
+              <h4><span>{{singer.name}}</span></h4>
+              <p class="p-over">{{singer.desc}}</p>
             </div>
           </a>
         </li>
@@ -28,10 +28,10 @@
       <h3><span>热门DJ</span></h3>
       <ul>
         <li class="dj-wrap" v-for="dj in djData">
-          <a href="/#" class="dj"><img :src="dj[0]"></a>
+          <a href="/#" class="dj"><img :src="dj.img"></a>
           <div class="info dj-info">
-            <p><a href="/#" class='dj-Name'>{{dj[1]}}</a><sub class="dj-v"></sub></p>
-            <p class="p-over">{{dj[2]}}</p>
+            <p><a href="/#" class='dj-Name'>{{dj.name}}</a><sub class="dj-v"></sub></p>
+            <p class="p-over">{{dj.desc}}</p>
           </div>
         </li>
       </ul>
@@ -44,39 +44,14 @@ import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'slides',
-  data () {
-    return {
-      singerData:[//入驻歌手:[图片,是否click,姓名,描述]
-        ['./static/singer01.jpg',false,'张惠妹aMEI','台湾歌手张惠妹'],
-        ['./static/singer02.jpg',false,'尚雯婕','原创电子唱作人'],
-        ['./static/singer03.jpg',false,'羽泉组合','国内知名演唱组合 羽泉'],
-        ['./static/singer04.jpg',false,'李志','个体音乐人李志'],
-        ['./static/singer05.jpg',false,'马頔麻油叶','民谣音乐人'],
-      ],
-      djData:[//DJ:[图片,姓名,描述]
-        ['./static/dj01.jpg','陈立','美食家陈立教授'],
-        ['./static/dj02.jpg','DJ艳秋','著名音乐节目主持人'],
-        ['./static/dj03.jpg','国家大剧院古典音乐频道','国家大剧院古典音乐官方'],
-        ['./static/dj04.jpg','谢谢收听','南京电视台主持人王馨'],
-        ['./static/dj05.jpg','DJ晓苏','独立DJ,CRI环球旅游广播特邀DJ'],
-      ],
-    }
-  },
-  beforeCreate: function (){
-    this.$http.get('http://localhost:33333/api/v1/index/detail').then(response => {
-      var responseData = response.data;
-
-      var newSinger = responseData['newSinger'];
-      for (var i = 0; i < newSinger.length; i++) {
-        this.singerData[i].splice(0,1,newSinger[i]['img']);
-        this.singerData[i].splice(2,2,newSinger[i]['name'],newSinger[i]['desc']);
-      }
-
-      var hotdj = responseData['hotdj'];
-      for (var i = 0; i < hotdj.length; i++) {
-        this.djData[i].splice(0,3,hotdj[i]['img'],hotdj[i]['name'],hotdj[i]['desc']);
-      }
-    });
+  props:['rightData'],
+  computed:{
+    singerData:function(){
+      return this.rightData?this.rightData.newSinger:[];
+    },
+    djData:function(){
+      return this.rightData?this.rightData.hotdj:[];
+    },
   }
 }  
 </script>

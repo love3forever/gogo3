@@ -47,7 +47,9 @@ export default {
   },
   methods:{
     tabclick:function(mode){
-      this.isHot = mode;
+      if (this.isHot!==mode){
+        this.isHot = mode;
+      }
     }
   }
 }
