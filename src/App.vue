@@ -5,7 +5,7 @@
       <router-view></router-view>
     </div>
     <foot></foot>
-    <a href="/#" id="back2top" class="back2top" title="回到顶部" v-if="scrollLength!==0" @click="goToTop">回到顶部</a>
+    <a href="#" id="back2top" class="back2top" title="回到顶部" v-if="scrollLength" >回到顶部</a>
   </div>
 </template>
 
@@ -22,13 +22,6 @@ export default {
   data () {
     return {
       scrollLength:0,//垂直滚动条距顶部距离
-    }
-  },
-  methods:{
-    //返回顶部按钮点击事件
-    goToTop:function(){
-      let backlength = document.documentElement.scrollTop || document.body.scrollTop; 
-      backlength = 0;
     }
   },
   mounted:function(){
