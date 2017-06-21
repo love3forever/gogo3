@@ -46,6 +46,12 @@
             </a>
             <div class="clear"></div>
           </div>
+          <pre v-show="!isShowMore"><b class="u-desc">介绍：</b>{{descDot}}<b class="u-desc" v-show="descMore">...</b></pre>
+          <pre v-show="isShowMore"><b class="u-desc">介绍：</b>{{descMore}}</pre>
+          <div class="show-more" v-if="descMore">
+            <a href="#" class="fr" @click="tabShowMore">{{isShowMore?"收起":"展开"}}</a>
+            <i class="u-ico" :class="{'u-icoActive':isShowMore}"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -61,21 +67,26 @@ export default {
   name: 'playlist',
   data () {
     return {
-
+      descDot:null,
+      descMore:null,
+      isShowMore:false,
     }
   },
-/*  beforeCreate:function(){
-      this.$http.get('http://123.206.211.77:33333/api/v1/index/direct')
-      .then(response => {
-        console.log('数据get');
-        let { blk, hotdj,newAlbum,newSinger,recommendList } = response.data;
-        this.rightData = {newSinger,hotdj};
-        this.leftData = {blk,newAlbum,recommendList};
-      })
-      .catch(response => {
-        console.log(response)
-      });
-  },*/
+  methods:{
+    tabShowMore:function(){
+      this.isShowMore = !this.isShowMore;
+    }
+  },
+  created:function(){
+    var description="我要做远方的忠诚的儿子\n和物质的短暂情人\n和所有以梦为马的诗人一样\n我不得不和烈士和小丑走在同一道路上\n万人都要将火熄灭 我一人独将此火高高举起\n此火为大 开花落英于神圣的祖国\n和所有以梦为马的诗人一样\n我藉此火得度一生的茫茫黑夜\n此火为大 祖国的语言和乱石投筑的梁山城寨\n以梦为上的敦煌——那七月也会寒冷的骨骼\n如雪白的柴和坚硬的条条白雪 横放在众神之山\n和所有以梦为马的诗人一样\n我投入此火 这三者是囚禁我的灯盏 吐出光辉\n万人都要从我刀口走过 去建筑祖国的语言\n我甘愿一切从头开始\n和所有以梦为马的诗人一样\n我也愿将牢底坐穿\n众神创造物中只有我最易朽 带着不可抗拒的 死亡的速度\n只有粮食是我珍爱\n我将她紧紧抱住 抱住她 在故乡生儿育女\n和所有以梦为马的诗人一样\n我也愿将自己埋葬在四周高高的山上 守望平静的家园\n面对大河我无限惭愧\n我年华虚度 空有一身疲倦\n和所有以梦为马的诗人一样\n岁月易逝 一滴不剩 水滴中有一匹马儿 一命归天\n千年后如若我再生于祖国的河岸\n千年后我再次拥有中国的稻田 和周天子的雪山\n天马踢踏\n和所有以梦为马的诗人一样\n我选择永恒的事业\n我的事业 就是要成为太阳的一生\n他从古至今——“日”——他无比辉煌无比光明\n和所有以梦为马的诗人一样\n最后我被黄昏的众神抬入不朽的太阳\n太阳是我的名字\n太阳是我的一生";
+
+    if (description.length<100){
+      this.descDot = description;
+    } else {
+      this.descDot = description.substr(0,99);
+      this.descMore = description;
+    };
+  },
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -127,7 +138,6 @@ export default {
 .playlist-content{
   display: inline-block;
   width: 410px;
-  height:100px;
   margin-left: 30px;
   vertical-align:top;
 }
@@ -176,7 +186,7 @@ export default {
   color: #0c73c2;
   margin-left: 10px;
 }
-.author-link:hover{
+.author-link:hover,.show-more a:hover{
   text-decoration: underline;
 }
 .content-opreation a{
@@ -292,5 +302,31 @@ i{
 }
 .u-tag i:hover{
   background: url(../assets/button2.png) no-repeat scroll 0 -1400px;
+}
+.playlist p{
+  margin: 0;
+  font-size: 12px;
+}
+.show-more{
+  text-align: right;
+}
+.fr{
+  color: #0c73c2; 
+}
+.u-ico{
+  display: inline-block;
+  width: 11px;
+  height: 8px;
+  background: url(../assets/icon.png) no-repeat scroll -65px -520px;
+}
+.u-icoActive{
+  background: url(../assets/icon.png) no-repeat scroll -45px -520px;
+}
+.u-desc{
+  font-weight: normal;
+}
+pre{
+  font-size: 12px;
+  font-family: inherit;
 }
 </style>
