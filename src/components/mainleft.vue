@@ -97,8 +97,12 @@ export default {
   data () {
     return {
       hotrecommend:[["华语",false],["流行",true],["摇滚",true],["民谣",true],["电子",true]],
-      diskgroup:[-645,0,645,645*2],//645=ul.width
+      ulWidth:645,//ul.width
+      diskgroup:null,//645=ul.width
     }
+  },
+  created:function(){
+    this.diskgroup=[-this.ulWidth,0,this.ulWidth,this.ulWidth*2];
   },
   methods:{
     diskIn:function(num,index){
@@ -111,20 +115,20 @@ export default {
       var current = this.diskgroup.indexOf(0);//当前显示的ul索引      
       var count = 0;//setInterval执行次数
       var dataParm = {};//setInteval参数
-      var ulWidth = null;//ul.width
+/*      var ulWidth = null;//ul.width
       //初始化ulWidth
       if (current !== 0){
         ulWidth = Math.abs(this.diskgroup[current-1]);
       } else {
         ulWidth = Math.abs(this.diskgroup[current+1]);
-      };
+      };*/
       //根据切换方向的不同，初始化dataParm
       if (type == 'left'){
         dataParm.next = current-1;
-        dataParm.nextVal = ulWidth; 
+        dataParm.nextVal = this.ulWidth; 
       } else if(type == "right"){
         dataParm.next = current-3;
-        dataParm.nextVal = -ulWidth; 
+        dataParm.nextVal = -this.ulWidth; 
       };
 
       var chageLeft = setInterval(()=>{
