@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Date    : 2017-05-25 20:59:55
-# @Author  : Your Name (you@example.org)
+# @Author  : love3forever
 # @Link    : http://example.org
 # @Version : $Id$
 from flask.blueprints import Blueprint
