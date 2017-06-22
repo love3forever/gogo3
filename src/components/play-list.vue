@@ -1,21 +1,21 @@
 <template>
-  <div class="playlist main">
+  <div class="playlist main" v-if="result">
     <div class="playlist-left">
       <div class="playlist-head">
         <div class="playlist-cover">
-          <img src="http://p1.music.126.net/i3uyC0I4mcUnKgXFCnGUOg==/109951162945982389.jpg">
+          <img :src="result.coverImgUrl">
           <span></span>
         </div>
         <div class="playlist-content">
           <div class="content-title">
             <i></i>
-            <h2>|华语励志| 用最初的心走最远的路</h2>
+            <h2>{{result.name}}</h2>
           </div>
           <div class="content-author">
-            <a href="/#"><img src="http://p1.music.126.net/Rjpe1fUw8cJsW-NSGKpF6w==/109951162864851765.jpg"></a>
-            <span><a href="/#" class="author-link">-武姜儿-</a></span>
+            <a href="/#"><img :src="creator.avatarUrl"></a>
+            <span><a href="/#" class="author-link">{{creator.nickname}}</a></span>
             <sup></sup>
-            <span>2017-05-27&nbsp创建</span>
+            <span>{{createtime}}&nbsp创建</span>
           </div>
           <div class="content-opreation">
             <a href="#" class="btn-play">
@@ -23,26 +23,23 @@
             </a>
             <a href="#" class="add-to"></a>
             <a href="#" class="btn-fav">
-              <i>(12784)</i>
+              <i>{{`(${result.subscribedCount})`}}</i>
             </a>
             <a href="#" class="btn-share">
-              <i>(72)</i>
+              <i>{{`(${result.shareCount})`}}</i>
             </a>
             <a href="#" class="btn-dl">
               <i>下载</i>
             </a>
             <a href="#" class="btn-cm">
-              <i>(133)</i>
+              <i>{{`(${result.commentCount})`}}</i>
             </a>
             <div class="clear"></div>
           </div>
           <div class="content-tag">
             <b>标签：</b>
-            <a href="#" class="u-tag">
-              <i>欧美</i>
-            </a>
-            <a href="#" class="u-tag">
-              <i>流行</i>
+            <a href="#" class="u-tag" v-for="tag in result.tags">
+              <i>{{tag}}</i>
             </a>
             <div class="clear"></div>
           </div>
@@ -52,6 +49,44 @@
             <a href="#" class="fr" @click="tabShowMore">{{isShowMore?"收起":"展开"}}</a>
             <i class="u-ico" :class="{'u-icoActive':isShowMore}"></i>
           </div>
+        </div>
+      </div>
+      <div class="playlist-tracks">
+        <div class="u-title">
+          <h3>歌曲列表</h3>
+          <span class="u-lft">{{`${result.trackCount}首歌`}}</span>
+          <span class="u-rgt">播放：<strong>{{result.playCount}}</strong>次</span>
+          <div class="u-rgt">
+            <i></i>
+            <a href="">生成外链播放器</a>
+          </div>
+        </div>
+        <div class="u-content">
+          <table class="tracks-table">
+            <thead>
+              <tr>
+                <th class="w1"><div class="u-wrap"></div></th>
+                <th><div class="u-wrap">歌曲标题</div></th>
+                <th class="w2"><div class="u-wrap">时长</div></th>
+                <th class="w3"><div class="u-wrap">歌手</div></th>
+                <th class="w4"><div class="u-wrap">专辑</div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(track,index) in tracks" :class="{'track-fill':index%2==0}">
+                <td>
+                  <div class="w-ply">
+                    <span>{{index+1}}</span>
+                    <span class="tracks-ply"></span>
+                  </div>
+                </td>
+                <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
+                <td>{{track.duration}}</td>
+                <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
+                <td class="p-over"><a href="#" :title="track.albName">{{track.albName}}</a></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -67,25 +102,48 @@ export default {
   name: 'playlist',
   data () {
     return {
-      descDot:null,
-      descMore:null,
+      result:null,
       isShowMore:false,
     }
   },
   methods:{
     tabShowMore:function(){
       this.isShowMore = !this.isShowMore;
-    }
+    },
   },
-  created:function(){
-    var description="我要做远方的忠诚的儿子\n和物质的短暂情人\n和所有以梦为马的诗人一样\n我不得不和烈士和小丑走在同一道路上\n万人都要将火熄灭 我一人独将此火高高举起\n此火为大 开花落英于神圣的祖国\n和所有以梦为马的诗人一样\n我藉此火得度一生的茫茫黑夜\n此火为大 祖国的语言和乱石投筑的梁山城寨\n以梦为上的敦煌——那七月也会寒冷的骨骼\n如雪白的柴和坚硬的条条白雪 横放在众神之山\n和所有以梦为马的诗人一样\n我投入此火 这三者是囚禁我的灯盏 吐出光辉\n万人都要从我刀口走过 去建筑祖国的语言\n我甘愿一切从头开始\n和所有以梦为马的诗人一样\n我也愿将牢底坐穿\n众神创造物中只有我最易朽 带着不可抗拒的 死亡的速度\n只有粮食是我珍爱\n我将她紧紧抱住 抱住她 在故乡生儿育女\n和所有以梦为马的诗人一样\n我也愿将自己埋葬在四周高高的山上 守望平静的家园\n面对大河我无限惭愧\n我年华虚度 空有一身疲倦\n和所有以梦为马的诗人一样\n岁月易逝 一滴不剩 水滴中有一匹马儿 一命归天\n千年后如若我再生于祖国的河岸\n千年后我再次拥有中国的稻田 和周天子的雪山\n天马踢踏\n和所有以梦为马的诗人一样\n我选择永恒的事业\n我的事业 就是要成为太阳的一生\n他从古至今——“日”——他无比辉煌无比光明\n和所有以梦为马的诗人一样\n最后我被黄昏的众神抬入不朽的太阳\n太阳是我的名字\n太阳是我的一生";
-
-    if (description.length<100){
-      this.descDot = description;
-    } else {
-      this.descDot = description.substr(0,99);
-      this.descMore = description;
-    };
+  beforeCreate:function(){
+    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/static')
+      .then(response => {
+        console.log('数据get');
+        this.result = response.data.result;
+      })
+      .catch(response => {
+        console.log(response)
+    });
+  },
+  computed:{
+    creator:function(){
+      return this.result.creator;
+    },
+    createtime:function(){
+      return new Date(this.result.createTime).toLocaleDateString().replace(/\//g,"-");
+    },
+    descDot:function(){
+      return this.result.description.substr(0,99);
+    },
+    descMore:function(){
+      var description = this.result.description;
+      return description.length>99?description:null;
+    },
+    tracks:function(){
+      var originTracks = this.result.tracks,
+          list = new Array();
+      for (let item of originTracks){ 
+        let{ duration,name:songName,album:{name:albName},album:{artists:[{name:artName}]}} =item;
+        list.push({ duration,songName,albName,artName });
+      }
+      return list;
+    },
   },
 }
 </script>
@@ -328,5 +386,110 @@ i{
 pre{
   font-size: 12px;
   font-family: inherit;
+}
+.playlist-tracks{
+  margin-top: 27px;
+}
+.u-title{
+  height: 33px;
+  border-bottom: 2px solid #c20c0c;
+  font-size: 12px;
+  color: rgb(51,51,51);
+}
+.u-title h3{
+  float: left;
+  height: 26px;
+  margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+}
+.u-title span{
+  height: 16px;
+  line-height: 16px;
+  color: rgb(102,102,102);
+  margin: 9px 0 0 20px;
+}
+.u-title strong{
+  color: #c20c0c;
+}
+.u-lft{
+  float: left;
+}
+.u-rgt{
+  float: right;
+}
+div.u-rgt{
+  margin-top: 8px;
+  vertical-align: bottom;
+}
+div.u-rgt i{
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url(../assets/icon.png) no-repeat scroll -34px -863px;
+  vertical-align: bottom;
+}
+div.u-rgt a{
+  color: #4996d1;
+  text-decoration: underline;
+}
+.tracks-table{
+  width: 100%;
+  border: 1px solid rgb(217,217,217);
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+.tracks-table thead{
+  width: 100%;
+}
+.tracks-table th{
+  height: 38px;
+  padding: 0;
+  margin: 0;
+  background: url(../assets/table.png) repeat-x scroll 0 0;
+}
+.w1{
+  width: 74px;
+}
+.w2{
+  width: 111px;
+}
+.w3{
+  width: 89px;
+}
+.w4{
+  width: 127px;
+}
+.u-wrap{
+  font-weight: normal;
+  height: 18px;
+  padding: 8px 10px;
+  background: url(../assets/table.png) no-repeat scroll 0 -56px;
+}
+.w1 div{
+  background: none;
+}
+.tracks-table td{
+  padding:6px 10px;
+}
+.tracks-ply{
+  float: right;
+  width: 17px;
+  height: 17px;
+  background: url(../assets/table.png) no-repeat scroll 0 -103px;
+}
+.w-ply{
+  height: 18px;
+  line-height: 18px;
+}
+td a{
+  color: rgb(51,51,51);
+}
+td a:hover{
+  text-decoration: underline;
+}
+.track-fill{
+  background: rgb(247,247,247);
 }
 </style>
