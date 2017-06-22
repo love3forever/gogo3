@@ -32,7 +32,19 @@ let mouseBtnEv = {
           } else { 
                window.event.cancelBubble = true;
           }
-     }
+     },
+     changeTime:function(time){//毫秒数转为XX:XX:XX
+          var newtime = new Date(time),
+              hours = newtime.getUTCHours(),
+              minSecs = newtime.toLocaleTimeString().substr(3);
+          if (hours==0){
+               return minSecs;
+          } else if (hours<10) {
+               return `0${hours}:${minSecs}`;
+          } else {
+               return `${hours}:${minSecs}`;
+          };
+    }
 }
 
 export { mouseBtnEv }

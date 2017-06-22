@@ -77,7 +77,7 @@
                 <td>
                   <div class="w-ply">
                     <span>{{index+1}}</span>
-                    <span class="tracks-ply"></span>
+                    <span  :class="[track.click?'tracks-cli':'tracks-ply']" @click="plyClick(index)"></span>
                   </div>
                 </td>
                 <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'playlist',
@@ -110,6 +111,18 @@ export default {
     tabShowMore:function(){
       this.isShowMore = !this.isShowMore;
     },
+    plyClick:function(index){
+      var clickList = this.tracks.map(function(item){
+        return item.click;
+      });
+
+      var current = clickList.indexOf(true);
+      if (current>-1){
+        mouseBtnEv.setNewVal(this.tracks[current], 'click', false);
+      }
+       mouseBtnEv.setNewVal(this.tracks[index], 'click', true);
+       console.log(this.tracks)
+    }
   },
   beforeCreate:function(){
     this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/static')
@@ -138,9 +151,10 @@ export default {
     tracks:function(){
       var originTracks = this.result.tracks,
           list = new Array();
-      for (let item of originTracks){ 
-        let{ duration,name:songName,album:{name:albName},album:{artists:[{name:artName}]}} =item;
-        list.push({ duration,songName,albName,artName });
+      for ( let item of originTracks ){ 
+        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
+        duration = mouseBtnEv.changeTime(duration);
+        list.push({ duration, songName, albName, artName,click:false});
       }
       return list;
     },
@@ -478,6 +492,15 @@ div.u-rgt a{
   width: 17px;
   height: 17px;
   background: url(../assets/table.png) no-repeat scroll 0 -103px;
+}
+.tracks-ply:hover{
+  background: url(../assets/table.png) no-repeat scroll 0 -128px;
+}
+.tracks-cli{
+  float: right;
+  width: 17px;
+  height: 17px;
+  background: url(../assets/table.png) no-repeat scroll -20px -128px;
 }
 .w-ply{
   height: 18px;
