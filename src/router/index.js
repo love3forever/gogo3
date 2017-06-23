@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import origin from '@/components/origin'
 import foot from '@/components/foot'
 import originlist from '@/components/origin-list'
+import playlist from '@/components/play-list'
 
 Vue.use(Router)
 
@@ -24,6 +25,9 @@ export default new Router({
 		},   
 		{
 			path: '/playlist',component: originlist,		  
+		},
+		{
+			path: '/use/playlist',component: playlist,	
 		},
 	]
 })
