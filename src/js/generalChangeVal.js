@@ -36,7 +36,7 @@ let mouseBtnEv = {
      changeTime:function(time){//毫秒数转为XX:XX:XX
           var newtime = new Date(time),
               hours = newtime.getUTCHours(),
-              minSecs = newtime.toLocaleTimeString().substr(3);
+              minSecs = newtime.toLocaleTimeString().substr(-5);
           if (hours==0){
                return minSecs;
           } else if (hours<10) {

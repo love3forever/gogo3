@@ -25,6 +25,7 @@
         </ul>
       </div>
       <div class="left-ad">
+        <a href="#" class="ad"></a>
         <a target="_blank" href="http://www.kaola.com/activity/detail/15809.shtml?tag=39c18428bdd72630e076b136f47c6b31&__da_4cdeb8a1_57188748ea833c82#zid_9957431215">
           <img src="../../static/ad.jpg">
         </a>
@@ -237,7 +238,14 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   background: url(../assets/index.png) no-repeat scroll 0 -240px;
 }
 .left-ad{
+  position: relative;
+  width: 689px;
+  height: 75px;
   margin-bottom: 35px;
+}
+.lef-ad img{
+  width: 100%;
+  height: 100%;
 }
 .item-wrap{
   position: relative;
