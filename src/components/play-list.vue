@@ -1,21 +1,21 @@
 <template>
-  <div class="playlist main" v-if="result">
+  <div class="playlist main" v-if="hasResult">
     <div class="playlist-left">
       <div class="playlist-head">
         <div class="playlist-cover">
-          <img :src="result.coverImgUrl">
+          <img :src="songs.coverImgUrl">
           <span></span>
         </div>
         <div class="playlist-content">
           <div class="content-title">
             <i></i>
-            <h2>{{result.name}}</h2>
+            <h2>{{songs.name}}</h2>
           </div>
           <div class="content-author">
-            <a href="/#"><img :src="creator.avatarUrl"></a>
-            <span><a href="/#" class="author-link">{{creator.nickname}}</a></span>
+            <a href="/#"><img :src="songs.creator.avatarUrl"></a>
+            <span><a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
             <sup></sup>
-            <span>{{createtime}}&nbsp创建</span>
+            <span>{{songs.createtime}}&nbsp创建</span>
           </div>
           <div class="content-opreation">
             <a href="#" class="btn-play">
@@ -23,39 +23,39 @@
             </a>
             <a href="#" class="add-to"></a>
             <a href="#" class="btn-fav">
-              <i>{{`(${result.subscribedCount})`}}</i>
+              <i>{{`(${songs.subscribedCount})`}}</i>
             </a>
             <a href="#" class="btn-share">
-              <i>{{`(${result.shareCount})`}}</i>
+              <i>{{`(${songs.shareCount})`}}</i>
             </a>
             <a href="#" class="btn-dl">
               <i>下载</i>
             </a>
             <a href="#" class="btn-cm">
-              <i>{{`(${result.commentCount})`}}</i>
+              <i>{{`(${songs.commentCount})`}}</i>
             </a>
             <div class="clear"></div>
           </div>
           <div class="content-tag">
             <b>标签：</b>
-            <a href="#" class="u-tag" v-for="tag in result.tags">
+            <a href="#" class="u-tag" v-for="tag in songs.tags">
               <i>{{tag}}</i>
             </a>
             <div class="clear"></div>
           </div>
-          <pre v-show="!isShowMore"><b class="u-desc">介绍：</b>{{descDot}}<b class="u-desc" v-show="descMore">...</b></pre>
-          <pre v-show="isShowMore"><b class="u-desc">介绍：</b>{{descMore}}</pre>
-          <div class="show-more" v-if="descMore">
-            <a href="#" class="fr" @click="tabShowMore">{{isShowMore?"收起":"展开"}}</a>
-            <i class="u-ico" :class="{'u-icoActive':isShowMore}"></i>
+          <pre v-show="!songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
+          <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
+          <div class="show-more" v-if="songs.descMore">
+            <a href="#" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
+            <i class="u-ico" :class="{'u-icoActive':songs.isShowMore}"></i>
           </div>
         </div>
       </div>
       <div class="playlist-tracks">
         <div class="u-title">
           <h3>歌曲列表</h3>
-          <span class="u-lft">{{`${result.trackCount}首歌`}}</span>
-          <span class="u-rgt">播放：<strong>{{result.playCount}}</strong>次</span>
+          <span class="u-lft">{{`${songs.trackCount}首歌`}}</span>
+          <span class="u-rgt">播放：<strong>{{songs.playCount}}</strong>次</span>
           <div class="u-rgt">
             <i></i>
             <a href="">生成外链播放器</a>
@@ -72,12 +72,12 @@
                 <th class="w4"><div class="u-wrap">专辑</div></th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="(track,index) in tracks" :class="{'track-fill':index%2==0}">
+            <tbody @click="plySong">
+              <tr v-for="(track,index) in songs.tracks" :class="{'track-fill':index%2==0}">
                 <td>
                   <div class="w-ply">
-                    <span>{{index+1}}</span>
-                    <span  :class="[track.click?'tracks-cli':'tracks-ply']"  @click="plyClick(index)"></span>
+                    <em>{{index+1}}</em>
+                    <span :class="[track.click?'tracks-cli':'tracks-ply']" :data-tag="index"></span>
                   </div>
                 </td>
                 <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
@@ -87,6 +87,29 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="playlist-cmt">
+        <div class="u-title">
+          <h3>评论</h3>
+          <span class="u-lft">{{`共${songs.trackCount}条评论`}}</span>
+        </div>
+        <div class="iptarea">
+          <img src="http://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=50y50">
+          <div class="area">
+            <!-- onchange、onkeydown、onkeyup为了兼容IE9及以下:onchange="this.value=this.value.substring(0, 140)" onkeydown="this.value=this.value.substring(0, 140)" onkeyup="this.value=this.value.substring(0, 140)"-->
+            <textarea placeholder="评论" v-model="cmtContent" :maxlength="maxlength"></textarea>
+            <div class="btn-wrap">
+              <i class="emj"></i>
+              <i class="at" @click="addAT"></i>
+              <a href="javascript:;">评论</a>
+              <span>{{cmtCount}}</span>
+            </div>
+            <div class="corr">
+              <em>◆</em>
+              <span>◆</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -152,64 +175,194 @@ export default {
   name: 'playlist',
   data () {
     return {
-      result:null,
-      tracks:null,
-      creator:null,
-      createtime:null,
-      descDot:null,
-      descMore:null,
-      isShowMore:false,
+      hasResult:false,//是否返回歌单数据
+      songs:{//歌单
+        coverImgUrl:null,
+        name:null,
+        subscribedCount:null,
+        shareCount:null,
+        commentCount:null,
+        tags:null,
+        trackCount:null,
+        playCount:null,
+        tracks:null,     //歌曲
+        creator:null,    //歌单创建者
+        createtime:null, //歌单创建时间
+        descDot:null,    //歌单介绍part1
+        descMore:null,   //歌单介绍part2
+        isShowMore:false,//歌单介绍是否展开
+      },
+      maxlength:140,//评论最大长度
+      cmtContent:"",//评论内容
     }
   },
   methods:{
+    initData:function(result){
+      //解构result.tracks
+      var originTracks = result.tracks,
+          list = new Array();
+      for ( let item of originTracks ){ 
+        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
+        duration = mouseBtnEv.changeTime(duration);
+        list.push({ duration, songName, albName, artName, click:false});
+      }
+      //初始化songs
+      this.songs = {
+        coverImgUrl:result.coverImgUrl,
+        name:result.name,
+        subscribedCount:result.subscribedCount,
+        shareCount:result.shareCount,
+        commentCount:result.commentCount,
+        tags:result.tags,
+        trackCount:result.trackCount,
+        playCount:result.playCount,
+        tracks:list,
+        creator:result.creator,
+        createtime:new Date(result.createTime).toLocaleDateString().replace(/\//g,"-"),
+        descDot:result.description.substr(0,99),
+        descMore: result.description.length>99?result.description:null,
+        isShowMore:false,   
+      };
+      return true;
+    },
+    addAT:function(){
+      if (this.cmtContent.length < this.maxlength){
+        this.cmtContent += "@";
+      }  
+    },
     tabShowMore:function(){
-      this.isShowMore = !this.isShowMore;
+      this.songs.isShowMore = !this.songs.isShowMore;
     },
     plyClick:function(index){
-      var clickList = this.tracks.map(function(item){
+      var clickList = this.songs.tracks.map(function(item){
         return item.click;
       });
 
       var current = clickList.indexOf(true);
       if (current>-1){
-        mouseBtnEv.setNewVal(this.tracks[current], 'click', false);
+        mouseBtnEv.setNewVal(this.songs.tracks[current], 'click', false);
       }
-      mouseBtnEv.setNewVal(this.tracks[index], 'click', true);
+      mouseBtnEv.setNewVal(this.songs.tracks[index], 'click', true);
+    },
+    plySong:function(ev){
+      var ev = ev||window.event;
+      var target = ev.target||ev.srcElement;
+
+      if (target.nodeName.toLowerCase() == "span"){
+        var index = parseInt(target.dataset.tag);
+        this.plyClick(index);             
+      }
     }
   },
   beforeCreate:function(){
     this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/static')
       .then(response => {
         console.log('数据get');
-        this.result = response.data.result;
+        var result = response.data.result;
+        this.hasResult = this.initData(result);
       })
       .catch(response => {
         console.log(response)
     });
   },
-  watch:{
-    result:function(){//result数据返回成功后，初始化data
-      var result = this.result;
-
-      var originTracks = result.tracks,
-          list = new Array();
-      for ( let item of originTracks ){ 
-        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
-        duration = mouseBtnEv.changeTime(duration);
-        list.push({ duration, songName, albName, artName,click:false});
-      }
-      this.tracks = list;
-
-      this.creator = result.creator;
-      this.createtime = new Date(result.createTime).toLocaleDateString().replace(/\//g,"-");
-      this.descDot = result.description.substr(0,99);
-      this.descMore = result.description.length>99?result.description:null;
+  computed:{
+    cmtCount:function(){
+      var content = this.cmtContent;
+      return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
     }
-  }
+  },
 }
 </script>
 
 <style>
+.emj{
+  width: 18px;
+  height: 18px;
+  margin: 3px 10px 0 0;
+  cursor: pointer;
+  background:  url(../assets/icon.png) no-repeat scroll -40px -490px;
+}
+.at{
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  cursor: pointer;
+  background:  url(../assets/icon.png) no-repeat scroll -60px -490px;
+}
+.btn-wrap{
+  padding-top: 10px;
+  vertical-align: middle;
+  overflow: hidden;
+}
+.btn-wrap span{
+  float: right;
+  height: 25px;
+  margin-right: 10px;
+  line-height: 25px;
+  color: rgb(153,153,153);
+}
+.btn-wrap a{
+  float: right;
+  width: 46px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  color: white;
+  background:  url(../assets/button.png) no-repeat scroll -84px -64px;
+}
+.corr{
+  position: absolute;
+  left: -7px;
+  top: 12px;
+  width: 13px;
+  height: 14px;
+  font-size: 15px;
+  font-family: SimSun;
+
+}
+.corr em{
+  display: block;
+  font-style: normal;
+  color: rgb(205,205,205);
+  height: 10px;
+}
+.corr span{
+  color: white;
+  display: block;
+  margin: -10px 0 0 1px;
+  height: 10px;
+}
+.iptarea{
+  margin: 20px 0;
+  vertical-align: top;
+}
+.iptarea img{
+  float: left;
+  width: 50px;
+  height: 50px;
+  margin-right: -50px;
+  vertical-align: top;
+}
+.area{
+  float: left;
+  position: relative;
+  margin-left: 62px;
+  vertical-align: top;
+}
+.area textarea{
+  width: 564px;
+  height: 50px;
+  padding: 5px 6px 6px 6px;
+  border-color: rgb(205,205,205);
+  border-radius: 2px;
+  font-size: 12px;
+  font-family:Arial, Helvetica, sans-serif;
+  resize: none;
+}
+.playlist-cmt{
+  margin-top: 40px;
+  font-size: 12px;
+}
 .rela-title a{
   font-size: 14px;
   color: black;
@@ -655,6 +808,9 @@ div.u-rgt a{
 .w-ply{
   height: 18px;
   line-height: 18px;
+}
+.w-ply em{
+  font-style: normal;
 }
 td a{
   color: rgb(51,51,51);
