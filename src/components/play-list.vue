@@ -1,5 +1,5 @@
 <template>
-  <div class="playlist main" v-if="hasResult">
+  <div class="playlist main" v-show="hasResult">
     <div class="playlist-left">
       <div class="playlist-head">
         <div class="playlist-cover">
@@ -111,6 +111,40 @@
             </div>
           </div>
         </div>
+        <div class="u-cmt" v-show="cmts">
+          <h3>最新评论</h3>
+          <div class="cmt1" v-for="cmt in cmts">
+            <div class="cmt-head">
+              <a href="/#"><img :src="cmt.user.avatarUrl"></a>
+            </div>
+            <div class="cmt-wrap">
+              <div class="cmt-rel">
+                <a href="">{{cmt.user.nickname}}</a>：{{cmt.content}}
+              </div>
+              <div class="isRpl" v-if="cmt.beReplied.length">
+                <span>
+                  <i class="bd">◆</i>
+                  <i class="db">◆</i>
+                </span>
+                <a href="/#">{{cmt.beReplied[0].user.nickname}}</a>：{{cmt.beReplied[0].content}}
+              </div>
+              <div class="cmt-desc">
+                <span>15分钟前</span>
+                <a href="/#" class="rpl">回复</a>
+                <a href="/#" class="rpl-ct"><i class="nofav"></i>{{`(${cmt.likedCount})`}}</a>
+              </div>
+            </div>
+          </div>
+          <div class="cmt-tab" v-if="cmtLength>1"> 
+            <a href="#" class="frt">上一页</a>
+            <a href="#" class="page">1</a>
+            <span v-show="cmtFrontMore">...</span>
+            <a href="#" :class="[val.isclick?'page-cli':'page']" v-for="val in cmtIndex">{{val.num}}</a>
+            <span v-show="cmtNextMore">...</span>
+            <a href="#" class="page">{{cmtLength}}</a>
+            <a href="#" class="nxt">下一页</a>
+         </div>
+        </div>
       </div>
     </div>
     <div class="playlist-right">
@@ -186,14 +220,26 @@ export default {
         trackCount:null,
         playCount:null,
         tracks:null,     //歌曲
-        creator:null,    //歌单创建者
+        creator:{},    //歌单创建者
         createtime:null, //歌单创建时间
         descDot:null,    //歌单介绍part1
         descMore:null,   //歌单介绍part2
         isShowMore:false,//歌单介绍是否展开
       },
-      maxlength:140,//评论最大长度
+      hasCmt:null,//是否返回评论数据
+      maxlength:140,//允许输入的最多字数
       cmtContent:"",//评论内容
+      cmtLength: Math.ceil(140/3),
+      cmtIndex:[
+        { num: 2, isclick: true},
+        { num: 3, isclick: false},
+        { num: 4, isclick: false},
+        { num: 5, isclick: false},
+        { num: 6, isclick: false},
+        { num: 7, isclick: false},
+        { num: 8, isclick: false},
+      ],
+      cmts:null,
     }
   },
   methods:{
@@ -257,24 +303,166 @@ export default {
   beforeCreate:function(){
     this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/static')
       .then(response => {
-        console.log('数据get');
+        console.log('歌单数据get');
         var result = response.data.result;
         this.hasResult = this.initData(result);
       })
       .catch(response => {
         console.log(response)
     });
+
+    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/comments/static')
+      .then(response => {
+        console.log('评论数据get');
+        this.cmts = response.data.comments;
+      })
+      .catch(response => {
+        console.log(response)
+    });
+
   },
   computed:{
     cmtCount:function(){
       var content = this.cmtContent;
       return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
-    }
+    },
+    cmtFrontMore:function(){
+      return this.cmtIndex[0]>2;
+    },
+    cmtNextMore:function(){
+      return this.cmtLength>10&&this.cmtIndex[this.cmtIndex.length-1]<this.cmtLength-4;
+    },
   },
 }
 </script>
 
 <style>
+.page-cli{
+  margin: 0 1px 0 2px;
+  padding: 0 8px;
+  cursor: default;
+  pointer-events: none;
+  border: 1px solid rgb(162, 22, 27);
+  color: white;
+  background: url(../assets/button.png) no-repeat scroll 0 -650px;
+}
+.page{
+  margin: 0 1px 0 2px;
+  padding: 0 8px;
+}
+.page:hover{
+  border: 1px solid rgb(51,51,51);
+}
+.cmt-tab{
+  color: rgb(51,51,51);
+}
+.cmt-tab a{
+  display: inline-block;
+  height: 22px;
+  border: 1px solid rgb(204,204,204);
+  border-radius: 2px;
+  line-height: 24px;
+}
+.frt{
+  width: 54px;
+  padding-left:12px;
+  background:  url(../assets/button.png) no-repeat scroll 0 -560px;
+}
+.frt:hover{
+   background-position: 0 -590px;
+}
+.nxt{
+  width: 54px;
+  padding-right:12px;
+  background:  url(../assets/button.png) no-repeat scroll -75px -560px;
+}
+.nxt:hover{
+  background-position: -75px -590px;
+}
+.cmt-tab{
+  margin: 20px 0;
+  text-align: center;
+}
+.cmt1{
+  overflow: hidden;
+}
+.isRpl{
+  position: relative;
+  margin-top:10px;
+  padding: 8px 19px;
+  border: 1px solid rgb(222,222,222);
+  background-color: rgb(244,244,244);
+}
+.isRpl span{
+  position: absolute;
+  top:-7px;
+  left: 20px;
+  font-size: 12px;
+  line-height: 14px;
+}
+.bd{
+  display: block;
+  color: rgb(222,222,222);
+}
+.db{
+  display: block;
+  color:  rgb(244,244,244);
+  margin-top:-13px;
+}
+.nofav{
+  width: 15px;
+  height: 14px;
+  margin-right: 3px;
+  background:  url(../assets/icon2.png) no-repeat scroll -150px 0;
+}
+.rpl{
+  padding-left: 8px;
+  border-left: 1px solid rgb(205,204,204);
+}
+.rpl-ct{
+  margin-right: 8px;
+}
+.cmt-desc{
+  margin-top: 15px;
+}
+.cmt-desc a{
+  float: right;
+  vertical-align: middle;
+}
+.cmt-rel{
+  width: 580px;
+  color: rgb(51,51,51);
+}
+.cmt-rel a,.isRpl a{
+  color: #0c73c2;
+}
+.cmt-rel a:hover,.cmt-desc a:hover,.isRpl a:hover{
+  text-decoration: underline;
+}
+.cmt-wrap{
+  float: left;
+  margin-left: 60px;
+}
+.cmt-head{
+  float: left;
+  margin-right: -50px;
+}
+.cmt-head img{
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+.cmt1{
+
+  padding: 15px 0;
+  border-top: 1px dotted rgb(204,204,204);
+}
+.u-cmt h3{
+  font-size: 12px;
+  height: 20px;
+  margin: 0 0 -1px 0;
+  border-bottom: 1px solid rgb(207,207,207);
+}
 .emj{
   width: 18px;
   height: 18px;
@@ -335,6 +523,7 @@ export default {
 .iptarea{
   margin: 20px 0;
   vertical-align: top;
+  overflow: hidden;
 }
 .iptarea img{
   float: left;
