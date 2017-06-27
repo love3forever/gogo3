@@ -136,13 +136,13 @@
             </div>
           </div>
           <div class="cmt-tab" v-if="cmtLength>1"> 
-            <a href="#" class="frt">上一页</a>
-            <a href="#" class="page">1</a>
+            <a href="#" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}">上一页</a>
+            <a href="#" :class="[cmtIndex.first[0].isclick?'page-cli':'page']">{{cmtIndex.first[0].num}}</a>
             <span v-show="cmtFrontMore">...</span>
-            <a href="#" :class="[val.isclick?'page-cli':'page']" v-for="val in cmtIndex">{{val.num}}</a>
+            <a href="#" :class="[val.isclick?'page-cli':'page']" v-for="val in cmtIndex.others">{{val.num}}</a>
             <span v-show="cmtNextMore">...</span>
-            <a href="#" class="page">{{cmtLength}}</a>
-            <a href="#" class="nxt">下一页</a>
+            <a href="#" :class="[cmtIndex.last[0].isclick?'page-cli':'page']">{{cmtIndex.last[0].num}}</a>
+            <a href="#" class="nxt" :class="{'disa-nxt':cmtIndex.last[0].isclick}">下一页</a>
          </div>
         </div>
       </div>
@@ -230,15 +230,23 @@ export default {
       maxlength:140,//允许输入的最多字数
       cmtContent:"",//评论内容
       cmtLength: Math.ceil(140/3),
-      cmtIndex:[
-        { num: 2, isclick: true},
-        { num: 3, isclick: false},
-        { num: 4, isclick: false},
-        { num: 5, isclick: false},
-        { num: 6, isclick: false},
-        { num: 7, isclick: false},
-        { num: 8, isclick: false},
-      ],
+      cmtIndex:{
+        first:[
+                { num: 1, isclick: true},
+              ],
+        others:[
+                { num: 2, isclick: false},
+                { num: 3, isclick: false},
+                { num: 4, isclick: false},
+                { num: 5, isclick: false},
+                { num: 6, isclick: false},
+                { num: 7, isclick: false},
+                { num: 8, isclick: false},
+              ],
+        last:[
+                { num: 72, isclick: false},
+             ],
+      },
       cmts:null,
     }
   },
@@ -314,7 +322,7 @@ export default {
     this.$http.get('http://123.206.211.77:33333/api/v1/playlist/comments/static')
       .then(response => {
         console.log('评论数据get');
-        this.cmts = response.data.comments;
+        this.cmts = response.data.comments.splice(0,5);
       })
       .catch(response => {
         console.log(response)
@@ -337,6 +345,16 @@ export default {
 </script>
 
 <style>
+.disa-nxt{
+  pointer-events: none;
+  color: rgb(202,202,202);
+  background-position: -75px -620px; 
+}
+.disa-frt{
+  pointer-events: none;
+  color: rgb(202,202,202);
+  background-position: 0 -620px; 
+}
 .page-cli{
   margin: 0 1px 0 2px;
   padding: 0 8px;
@@ -348,6 +366,7 @@ export default {
 }
 .page{
   margin: 0 1px 0 2px;
+  border: 1px solid rgb(204,204,204);
   padding: 0 8px;
 }
 .page:hover{
@@ -359,13 +378,14 @@ export default {
 .cmt-tab a{
   display: inline-block;
   height: 22px;
-  border: 1px solid rgb(204,204,204);
+
   border-radius: 2px;
   line-height: 24px;
 }
 .frt{
   width: 54px;
   padding-left:12px;
+  border: 1px solid rgb(204,204,204);
   background:  url(../assets/button.png) no-repeat scroll 0 -560px;
 }
 .frt:hover{
@@ -374,6 +394,7 @@ export default {
 .nxt{
   width: 54px;
   padding-right:12px;
+  border: 1px solid rgb(204,204,204);
   background:  url(../assets/button.png) no-repeat scroll -75px -560px;
 }
 .nxt:hover{
@@ -392,6 +413,7 @@ export default {
   padding: 8px 19px;
   border: 1px solid rgb(222,222,222);
   background-color: rgb(244,244,244);
+  line-height: 20px;
 }
 .isRpl span{
   position: absolute;
@@ -431,6 +453,7 @@ export default {
 }
 .cmt-rel{
   width: 580px;
+  line-height: 20px;
   color: rgb(51,51,51);
 }
 .cmt-rel a,.isRpl a{
