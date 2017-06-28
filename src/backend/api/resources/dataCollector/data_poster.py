@@ -142,7 +142,7 @@ def parse_index_data():
             ablum_data['img'] = ablum_li.select('img')[0]['data-src']
             ablum_data['href'] = ablum_li.select('.f-thide > a')[0]['href']
             ablum_data['title'] = ablum_li.select('.f-thide > a')[0]['title']
-            ablum_data['artistName'] = ablum_li.select('.tit')[0]['title']
+            ablum_data['artistName'] = ablum_li.select('.s-fc3')[0].string
             ablum_data['artistHref'] = ablum_li.select('.tit > a')[0]['href']
             album_data_list.append(ablum_data)
         index_response['newAlbum'] = album_data_list
@@ -300,5 +300,19 @@ def get_song_comments(songId):
             return None
     return data_list
 
+
+def get_playlist_comments_withoffset(playlistid, page):
+    data_list = {}
+    postURL = playlist_comments_URL.format(playlistid)
+    post_param = get_playlist_comments_param(playlistid)
+    post_param['offset'] = str((page - 1) * 20)
+    post_param['limit'] = str(20)
+    encrtyed_param = encrypted_request(post_param)
+    response_data = post_data_to_web(postURL, encrtyed_param)
+    if response_data:
+        data_list = response_data
+    return data_list
+
+
 if __name__ == '__main__':
-    parse_index_data()
+    print str(get_playlist_comments_withoffset('763639683', 1))
