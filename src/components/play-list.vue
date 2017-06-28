@@ -136,13 +136,13 @@
             </div>
           </div>
           <div class="cmt-tab" v-if="cmtLength>1"> 
-            <a href="#" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}">上一页</a>
-            <a href="#" :class="[cmtIndex.first[0].isclick?'page-cli':'page']">{{cmtIndex.first[0].num}}</a>
+            <a href="javascript:;" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}">上一页</a>
+            <a href="javascript:;" :class="[cmtIndex.first[0].isclick?'page-cli':'page']" @click="cmtClick(0)">{{cmtIndex.first[0].num}}</a>
             <span v-show="cmtFrontMore">...</span>
-            <a href="#" :class="[val.isclick?'page-cli':'page']" v-for="val in cmtIndex.others">{{val.num}}</a>
+            <a href="javascript:;" :class="[val.isclick?'page-cli':'page']" v-for="(val,index) in cmtIndex.others" @click="cmtClick(index+1)">{{val.num}}</a>
             <span v-show="cmtNextMore">...</span>
-            <a href="#" :class="[cmtIndex.last[0].isclick?'page-cli':'page']">{{cmtIndex.last[0].num}}</a>
-            <a href="#" class="nxt" :class="{'disa-nxt':cmtIndex.last[0].isclick}">下一页</a>
+            <a href="javascript:;" :class="[cmtIndex.last[0].isclick?'page-cli':'page']" @click="cmtClick(cmtIndex.others.length+1)">{{cmtIndex.last[0].num}}</a>
+            <a href="javascript:;" class="nxt" :class="{'disa-nxt':cmtIndex.last[0].isclick}" @click="nxt">下一页</a>
          </div>
         </div>
       </div>
@@ -244,7 +244,7 @@ export default {
                 { num: 8, isclick: false},
               ],
         last:[
-                { num: 72, isclick: false},
+                { num: 47, isclick: false},
              ],
       },
       cmts:null,
@@ -306,6 +306,65 @@ export default {
         var index = parseInt(target.dataset.tag);
         this.plyClick(index);             
       }
+    },
+    nxt:function(){
+      this.cmtIndex.others.forEach(function(val){
+        val.num--;
+      });
+      console.log(this.cmtIndex.others[this.cmtIndex.others.length-1].num)
+      console.log(this.cmtLength-4)
+    },
+    cmtChange:function(index,len,val){
+      var cmt = this.cmtIndex;
+
+      if (index===0){
+        cmt.first[0].isclick = val;
+      } else if (index===len-1){
+        cmt.last[0].isclick = val;
+      } else {
+        cmt.others[index-1].isclick = val;
+      };
+    },
+    cmtClick:function(index){
+      var cmt = this.cmtIndex,
+          clickList = new Array();
+
+      for (let page in cmt){
+        clickList.push(...cmt[page].map(function(val){
+            return val.isclick
+          })
+        );
+      }
+      
+      var current = clickList.findIndex(function(val){
+        return val===true;
+      });
+
+      var targetNum = cmt.others[index-1].num;
+
+      if (targetNum<6){
+          cmt.others.forEach(function(val,ind){
+            val.num = ind+2;
+          });
+
+          this.cmtChange(current,clickList.length,false);
+          this.cmtChange(targetNum-1,clickList.length,true);
+      } else if (targetNum>42){
+
+          cmt.others.forEach(function(val,ind){
+            val.num = ind+42-3;
+          });
+
+          this.cmtChange(current,clickList.length,false);
+          this.cmtChange(targetNum-1,clickList.length,true);
+      } else {
+        var diff = index - current;
+          cmt.others.forEach(function(val){
+            val.num += diff;
+          });
+          this.cmtChange(current,clickList.length,false);
+          cmt.others[3].isclick = true;
+      };     
     }
   },
   beforeCreate:function(){
@@ -335,10 +394,11 @@ export default {
       return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
     },
     cmtFrontMore:function(){
-      return this.cmtIndex[0]>2;
+      return this.cmtIndex.others[0].num>2;
     },
     cmtNextMore:function(){
-      return this.cmtLength>10&&this.cmtIndex[this.cmtIndex.length-1]<this.cmtLength-4;
+      var numb = this.cmtIndex.others;
+      return this.cmtLength>10&&numb[numb.length-1].num<this.cmtLength-1;
     },
   },
 }
