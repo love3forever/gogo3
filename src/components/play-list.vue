@@ -136,7 +136,7 @@
             </div>
           </div>
           <div class="cmt-tab" v-if="cmtLength>1"> 
-            <a href="javascript:;" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}">上一页</a>
+            <a href="javascript:;" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}" @click="frt">上一页</a>
             <a href="javascript:;" :class="[cmtIndex.first[0].isclick?'page-cli':'page']" @click="cmtClick(0)">{{cmtIndex.first[0].num}}</a>
             <span v-show="cmtFrontMore">...</span>
             <a href="javascript:;" :class="[val.isclick?'page-cli':'page']" v-for="(val,index) in cmtIndex.others" @click="cmtClick(index+1)">{{val.num}}</a>
@@ -232,19 +232,19 @@ export default {
       cmtLength: Math.ceil(140/3),
       cmtIndex:{
         first:[
-                { num: 1, isclick: true},
+                { num: 1, isclick: false},
               ],
         others:[
-                { num: 2, isclick: false},
-                { num: 3, isclick: false},
-                { num: 4, isclick: false},
-                { num: 5, isclick: false},
-                { num: 6, isclick: false},
-                { num: 7, isclick: false},
-                { num: 8, isclick: false},
+                { num: 40, isclick: false},
+                { num: 41, isclick: false},
+                { num: 42, isclick: false},
+                { num: 43, isclick: false},
+                { num: 44, isclick: false},
+                { num: 45, isclick: false},
+                { num: 46, isclick: false},
               ],
         last:[
-                { num: 47, isclick: false},
+                { num: 47, isclick: true},
              ],
       },
       cmts:null,
@@ -307,12 +307,11 @@ export default {
         this.plyClick(index);             
       }
     },
+    frt:function(){
+      this.cmtNum(false,-1);
+    },
     nxt:function(){
-      this.cmtIndex.others.forEach(function(val){
-        val.num--;
-      });
-      console.log(this.cmtIndex.others[this.cmtIndex.others.length-1].num)
-      console.log(this.cmtLength-4)
+      this.cmtNum(false,1);
     },
     cmtChange:function(index,len,val){
       var cmt = this.cmtIndex;
@@ -325,9 +324,23 @@ export default {
         cmt.others[index-1].isclick = val;
       };
     },
+    cmtNum:function(type,diff){
+      var cmt = this.cmtIndex;
+
+      if(type){
+        cmt.others.forEach(function(val,ind){
+          val.num = ind+diff;
+        });
+      } else {
+        cmt.others.forEach(function(val){
+          val.num += diff;
+        });
+      };
+    },
     cmtClick:function(index){
       var cmt = this.cmtIndex,
-          clickList = new Array();
+          clickList = new Array(),
+          diff = null;
 
       for (let page in cmt){
         clickList.push(...cmt[page].map(function(val){
@@ -339,32 +352,39 @@ export default {
       var current = clickList.findIndex(function(val){
         return val===true;
       });
-
-      var targetNum = cmt.others[index-1].num;
-
-      if (targetNum<6){
-          cmt.others.forEach(function(val,ind){
-            val.num = ind+2;
-          });
-
-          this.cmtChange(current,clickList.length,false);
-          this.cmtChange(targetNum-1,clickList.length,true);
-      } else if (targetNum>42){
-
-          cmt.others.forEach(function(val,ind){
-            val.num = ind+42-3;
-          });
-
-          this.cmtChange(current,clickList.length,false);
-          this.cmtChange(targetNum-1,clickList.length,true);
-      } else {
-        var diff = index - current;
-          cmt.others.forEach(function(val){
-            val.num += diff;
-          });
-          this.cmtChange(current,clickList.length,false);
-          cmt.others[3].isclick = true;
-      };     
+      this.cmtChange(current,clickList.length,false);
+      
+      if(current!== index){
+        if (index===0){
+          diff=2;
+          this.cmtNum(true,diff);
+          this.cmtChange(index,clickList.length,true);
+        } else if(index===clickList.length-1){
+          diff = this.cmtLength-cmt.others.length;//40
+          this.cmtNum(true,diff);
+          this.cmtChange(index,clickList.length,true);
+        } else {
+          var targetNum = cmt.others[index-1].num;
+          switch (true)
+          {
+            case targetNum<6:
+              diff=2;
+              this.cmtNum(true,diff);
+              this.cmtChange(targetNum-1,clickList.length,true);
+              break;
+            case targetNum>42:
+              diff = this.cmtLength-cmt.others.length;//40
+              this.cmtNum(true,diff);
+              this.cmtChange(targetNum-42+3,clickList.length,true);
+              break;
+            default:
+              diff = targetNum-cmt.others[3].num;
+              this.cmtNum(false,diff);
+              cmt.others[3].isclick = true;
+              break;
+          }
+        };
+      } 
     }
   },
   beforeCreate:function(){
