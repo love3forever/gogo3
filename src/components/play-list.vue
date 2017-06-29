@@ -229,22 +229,22 @@ export default {
       hasCmt:null,//是否返回评论数据
       maxlength:140,//允许输入的最多字数
       cmtContent:"",//评论内容
-      cmtLength: Math.ceil(140/3),
+      cmtLength: 47,
       cmtIndex:{
         first:[
-                { num: 1, isclick: false},
+                { num: 1, isclick: true},
               ],
         others:[
-                { num: 40, isclick: false},
-                { num: 41, isclick: false},
-                { num: 42, isclick: false},
-                { num: 43, isclick: false},
-                { num: 44, isclick: false},
-                { num: 45, isclick: false},
-                { num: 46, isclick: false},
+                { num: 2, isclick: false},
+                { num: 3, isclick: false},
+                { num: 4, isclick: false},
+                { num: 5, isclick: false},
+                { num: 6, isclick: false},
+                { num: 7, isclick: false},
+                { num: 8, isclick: false},
               ],
         last:[
-                { num: 47, isclick: true},
+                { num: 47, isclick: false},
              ],
       },
       cmts:null,
@@ -307,20 +307,18 @@ export default {
         this.plyClick(index);             
       }
     },
-    cmtSetFalse:function(index,len,val){
-      var cmt = this.cmtIndex;
-
-      if (index===0){
+    //评论翻页按钮，改变不同类型按钮的isclick值
+    cmtClearTrue:function(cmt,index,len,val){
+      if (index===0){//第一页
         cmt.first[0].isclick = val;
-      } else if (index===len-1){
+      } else if (index===len-1){//最后一页
         cmt.last[0].isclick = val;
-      } else {
+      } else {//其它
         cmt.others[index-1].isclick = val;
       };
     },
-    cmtNum:function(type,diff){
-      var cmt = this.cmtIndex;
-
+    //确定评论翻页后，列表显示的页数（cmtIndex.others）
+    cmtNum:function(cmt,type,diff){
       if(type){
         cmt.others.forEach(function(val,ind){
           val.num = ind+diff;
@@ -331,6 +329,7 @@ export default {
         });
       };
     },
+    //确定按下切换评论的按钮之前，已经被按下的按钮索引
     cmtCalcuCurrent:function(){
       var cmt = this.cmtIndex,
           clickList = new Array();
@@ -348,49 +347,56 @@ export default {
       });
       return { cmt,len,current }
     },
+    //按钮列表页数改变后，确定应被按下的按钮
     cmtSetTrue:function(cmt, len, current, index){
-      var diff = null;
+      var cmtLength = this.cmtLength,
+          diff = null;
       //再次按中同一个按钮不会触发click事件，因此此处无需加current!==index
-      if (index===0){
-        diff=2;
-        this.cmtNum(true,diff);
-        this.cmtSetFalse(index,len,true);
-      } else if(index===len-1){
-        diff = this.cmtLength-cmt.others.length;//40
-        this.cmtNum(true,diff);
-        this.cmtSetFalse(index,len,true);
+      if (cmtLength<11){   
+        this.cmtClearTrue(cmt,index,len,true);
       } else {
-        var targetNum = cmt.others[index-1].num;
-        switch (true)
-        {
-          case targetNum<6:
-            diff=2;
-            this.cmtNum(true,diff);
-            this.cmtSetFalse(targetNum-1,len,true);
-            break;
-          case targetNum>42:
-            diff = this.cmtLength-cmt.others.length;//40
-            this.cmtNum(true,diff);
-            this.cmtSetFalse(targetNum-42+3,len,true);
-            break;
-          default:
-            diff = targetNum-cmt.others[3].num;
-            this.cmtNum(false,diff);
-            cmt.others[3].isclick = true;
-            break;
-        }
+        if (index===0){
+          diff=2;//2=len-cmt.others.length,指的是第一页+最后一页
+          this.cmtNum(cmt,true,diff);
+          this.cmtClearTrue(cmt,index,len,true);
+        } else if(index===len-1){
+          diff = cmtLength-len+2;//40
+          this.cmtNum(cmt,true,diff);
+          this.cmtClearTrue(cmt,index,len,true);
+        } else {
+          var targetNum = cmt.others[index-1].num;
+          switch (true)
+          {
+            case targetNum<6:
+              diff=2;
+              this.cmtNum(cmt,true,diff);
+              this.cmtClearTrue(cmt,targetNum-1,len,true);
+              break;
+            case targetNum>cmtLength-5:
+              diff = cmtLength-len+2;
+              this.cmtNum(cmt,true,diff);
+              this.cmtClearTrue(cmt,targetNum-diff+1,len,true);
+              break;
+            default:
+              diff = targetNum-cmt.others[3].num;
+              this.cmtNum(cmt,false,diff);
+              cmt.others[3].isclick = true;
+              break;
+          }
+        };
       };
     },
+    //切换评论按钮点击事件
     cmtClick:function(add,index){
       var { cmt, len, current} = this.cmtCalcuCurrent();
 
-      if (add!==null){
+      if (add!==null){//上一页、下一页
         var index = current+add;
       }
 
-      this.cmtSetFalse(current,len,false);
+      this.cmtClearTrue(cmt,current,len,false);
       this.cmtSetTrue(cmt, len, current, index);
-    }
+    } 
   },
   beforeCreate:function(){
     this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/static')
@@ -411,7 +417,6 @@ export default {
       .catch(response => {
         console.log(response)
     });
-
   },
   computed:{
     cmtCount:function(){
