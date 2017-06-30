@@ -92,7 +92,7 @@
       <div class="playlist-cmt">
         <div class="u-title">
           <h3>评论</h3>
-          <span class="u-lft">{{`共${songs.trackCount}条评论`}}</span>
+          <span class="u-lft">{{`共${cmtNumber}条评论`}}</span>
         </div>
         <div class="iptarea">
           <img src="http://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=50y50">
@@ -112,7 +112,7 @@
           </div>
         </div>
         <div class="u-cmt" v-show="cmts">
-          <h3>最新评论</h3>
+          <h3 >最新评论</h3>
           <div class="cmt1" v-for="cmt in cmts">
             <div class="cmt-head">
               <a href="/#"><img :src="cmt.user.avatarUrl"></a>
@@ -129,7 +129,7 @@
                 <a href="/#">{{cmt.beReplied[0].user.nickname}}</a>：{{cmt.beReplied[0].content}}
               </div>
               <div class="cmt-desc">
-                <span>15分钟前</span>
+                <span>{{cmt.time}}</span>
                 <a href="/#" class="rpl">回复</a>
                 <a href="/#" class="rpl-ct"><i class="nofav"></i>{{`(${cmt.likedCount})`}}</a>
               </div>
@@ -229,22 +229,16 @@ export default {
       hasCmt:null,//是否返回评论数据
       maxlength:140,//允许输入的最多字数
       cmtContent:"",//评论内容
-      cmtLength: 47,
+      cmtNumber:null,
       cmtIndex:{
         first:[
                 { num: 1, isclick: true},
               ],
         others:[
-                { num: 2, isclick: false},
-                { num: 3, isclick: false},
-                { num: 4, isclick: false},
-                { num: 5, isclick: false},
-                { num: 6, isclick: false},
-                { num: 7, isclick: false},
-                { num: 8, isclick: false},
+
               ],
         last:[
-                { num: 47, isclick: false},
+                { num: null, isclick: false},
              ],
       },
       cmts:null,
@@ -352,7 +346,7 @@ export default {
       var cmtLength = this.cmtLength,
           diff = null;
       //再次按中同一个按钮不会触发click事件，因此此处无需加current!==index
-      if (cmtLength<11){   
+      if (cmtLength<11){ //总页数少于11页时，无需省略页数  
         this.cmtClearTrue(cmt,index,len,true);
       } else {
         if (index===0){
@@ -388,18 +382,40 @@ export default {
     },
     //切换评论按钮点击事件
     cmtClick:function(add,index){
+      this.cmts = null;//新一页评论数据返回之前隐藏当前评论
       var { cmt, len, current} = this.cmtCalcuCurrent();
-
       if (add!==null){//上一页、下一页
         var index = current+add;
       }
 
+      var pageIndex = null;
+      if (index===0){
+        pageIndex = cmt.first[0].num;
+      } else if (index===len-1) {
+        pageIndex = cmt.last[0].num;
+      } else {
+        pageIndex = cmt.others[index-1].num;
+      };
+
+      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/756004544/page/${pageIndex}`)
+        .then(response => {
+          console.log('评论数据get');
+          this.cmts = response.data.comments;
+          for (let cmt of this.cmts){
+            cmt.time = mouseBtnEv.setCommentTime(cmt.time)
+          }
+         this.cmtNumber = response.data.total;
+        })
+        .catch(response => {
+          console.log(response)
+      });
+      
       this.cmtClearTrue(cmt,current,len,false);
       this.cmtSetTrue(cmt, len, current, index);
     } 
   },
   beforeCreate:function(){
-    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/static')
+    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/752476047')
       .then(response => {
         console.log('歌单数据get');
         var result = response.data.result;
@@ -409,10 +425,14 @@ export default {
         console.log(response)
     });
 
-    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/comments/static')
+    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/comments/752476047/page/1')
       .then(response => {
         console.log('评论数据get');
-        this.cmts = response.data.comments.splice(0,5);
+        this.cmts = response.data.comments;
+        for (let cmt of this.cmts){
+          cmt.time = mouseBtnEv.setCommentTime(cmt.time)
+        }
+        this.cmtNumber = response.data.total;
       })
       .catch(response => {
         console.log(response)
@@ -423,6 +443,9 @@ export default {
       var content = this.cmtContent;
       return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
     },
+    cmtLength:function(){
+      return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/20);
+    },
     cmtFrontMore:function(){
       return this.cmtIndex.others[0].num>2;
     },
@@ -431,6 +454,18 @@ export default {
       return this.cmtLength>10&&numb[numb.length-1].num<this.cmtLength-1;
     },
   },
+  watch:{
+    cmtLength:function(newVal,oldVal){
+      console.log("??")
+      if (oldVal===null){//页面打开时初始化
+        var othersLen = newVal<11?newVal-2:7; 
+        for (let i =0;i<othersLen;i++){
+            this.cmtIndex.others.push({num:2+i,isclick: false});
+          }
+      } 
+      this.cmtIndex.last[0].num = newVal;
+    }
+  }
 }
 </script>
 
