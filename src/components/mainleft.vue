@@ -116,14 +116,6 @@ export default {
       var current = this.diskgroup.indexOf(0);//当前显示的ul索引      
       var count = 0;//setInterval执行次数
       var dataParm = {};//setInteval参数
-/*      var ulWidth = null;//ul.width
-      //初始化ulWidth
-      if (current !== 0){
-        ulWidth = Math.abs(this.diskgroup[current-1]);
-      } else {
-        ulWidth = Math.abs(this.diskgroup[current+1]);
-      };*/
-      //根据切换方向的不同，初始化dataParm
       if (type == 'left'){
         dataParm.next = current-1;
         dataParm.nextVal = this.ulWidth; 
@@ -175,7 +167,7 @@ export default {
   }
 }  
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style>  
 .mainleft{
   width: 730px;
