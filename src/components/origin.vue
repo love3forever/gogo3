@@ -1,9 +1,15 @@
 <template>
   <div class="origin">
     <slides></slides>
-    <div class="main" v-show="leftData&&rightData">
-      <mainleft :leftData="leftData"></mainleft>
-      <mainright :rightData="rightData"></mainright>
+    <div class="main">
+      <div v-show="leftData&&rightData">
+        <mainleft :leftData="leftData"></mainleft>
+        <mainright :rightData="rightData"></mainright>
+      </div>
+      <div class="loading" v-show="!(leftData&&rightData)">
+        <i></i>
+        加载中...
+      </div> 
     </div>
   </div>
 </template>
@@ -38,6 +44,6 @@ export default {
   },
 }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style>  
 </style>

@@ -49,6 +49,7 @@ export default {
   width: 980px;
   margin: 0 auto;
   border-left: 1px solid rgb(204,204,204);
+  border-right: 1px solid rgb(204,204,204);
   background: white;
 }
 a{

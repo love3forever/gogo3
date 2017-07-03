@@ -1,204 +1,214 @@
 <template>
-  <div class="playlist main" v-show="hasResult">
-    <div class="playlist-left">
-      <div class="playlist-head">
-        <div class="playlist-cover">
-          <img :src="songs.coverImgUrl">
-          <span></span>
-        </div>
-        <div class="playlist-content">
-          <div class="content-title">
-            <i></i>
-            <h2>{{songs.name}}</h2>
+  <div class="playlist main">
+    <div  v-show="hasResult">
+      <div class="playlist-left">
+        <div class="playlist-head">
+          <div class="playlist-cover">
+            <img :src="songs.coverImgUrl">
+            <span></span>
           </div>
-          <div class="content-author">
-            <a href="/#"><img :src="songs.creator.avatarUrl"></a>
-            <span><a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
-            <sup></sup>
-            <span>{{songs.createtime}}&nbsp创建</span>
-          </div>
-          <div class="content-opreation">
-            <a href="#" class="btn-play">
-              <i><em class="ply"></em>播放</i>
-            </a>
-            <a href="#" class="add-to"></a>
-            <a href="#" class="btn-fav">
-              <i>{{`(${songs.subscribedCount})`}}</i>
-            </a>
-            <a href="#" class="btn-share">
-              <i>{{`(${songs.shareCount})`}}</i>
-            </a>
-            <a href="#" class="btn-dl">
-              <i>下载</i>
-            </a>
-            <a href="#" class="btn-cm">
-              <i>{{`(${songs.commentCount})`}}</i>
-            </a>
-            <div class="clear"></div>
-          </div>
-          <div class="content-tag">
-            <b>标签：</b>
-            <a href="#" class="u-tag" v-for="tag in songs.tags">
-              <i>{{tag}}</i>
-            </a>
-            <div class="clear"></div>
-          </div>
-          <pre v-show="!songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
-          <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
-          <div class="show-more" v-if="songs.descMore">
-            <a href="#" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
-            <i class="u-ico" :class="{'u-icoActive':songs.isShowMore}"></i>
-          </div>
-        </div>
-      </div>
-      <div class="playlist-tracks">
-        <div class="u-title">
-          <h3>歌曲列表</h3>
-          <span class="u-lft">{{`${songs.trackCount}首歌`}}</span>
-          <span class="u-rgt">播放：<strong>{{songs.playCount}}</strong>次</span>
-          <div class="u-rgt">
-            <i></i>
-            <a href="">生成外链播放器</a>
-          </div>
-        </div>
-        <div class="u-content">
-          <table class="tracks-table">
-            <thead>
-              <tr>
-                <th class="w1"><div class="u-wrap"></div></th>
-                <th><div class="u-wrap">歌曲标题</div></th>
-                <th class="w2"><div class="u-wrap">时长</div></th>
-                <th class="w3"><div class="u-wrap">歌手</div></th>
-                <th class="w4"><div class="u-wrap">专辑</div></th>
-              </tr>
-            </thead>
-            <tbody @click="plySong">
-              <tr v-for="(track,index) in songs.tracks" :class="{'track-fill':index%2==0}">
-                <td>
-                  <div class="w-ply">
-                    <em>{{index+1}}</em>
-                    <span :class="[track.click?'tracks-cli':'tracks-ply']" :data-tag="index"></span>
-                  </div>
-                </td>
-                <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
-                <td>{{track.duration}}</td>
-                <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
-                <td class="p-over"><a href="#" :title="track.albName">{{track.albName}}</a></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="playlist-cmt">
-        <div class="u-title">
-          <h3>评论</h3>
-          <span class="u-lft">{{`共${cmtNumber}条评论`}}</span>
-        </div>
-        <div class="iptarea">
-          <img src="http://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=50y50">
-          <div class="area">
-            <!-- onchange、onkeydown、onkeyup为了兼容IE9及以下:onchange="this.value=this.value.substring(0, 140)" onkeydown="this.value=this.value.substring(0, 140)" onkeyup="this.value=this.value.substring(0, 140)"-->
-            <textarea placeholder="评论" v-model="cmtContent" :maxlength="maxlength"></textarea>
-            <div class="btn-wrap">
-              <i class="emj"></i>
-              <i class="at" @click="addAT"></i>
-              <a href="javascript:;">评论</a>
-              <span>{{cmtCount}}</span>
+          <div class="playlist-content">
+            <div class="content-title">
+              <i></i>
+              <h2>{{songs.name}}</h2>
             </div>
-            <div class="corr">
-              <em>◆</em>
-              <span>◆</span>
+            <div class="content-author">
+              <a href="/#"><img :src="songs.creator.avatarUrl"></a>
+              <span><a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+              <sup></sup>
+              <span>{{songs.createtime}}&nbsp创建</span>
             </div>
-          </div>
-        </div>
-        <div class="u-cmt" v-show="cmts">
-          <h3 >最新评论</h3>
-          <div class="cmt1" v-for="cmt in cmts">
-            <div class="cmt-head">
-              <a href="/#"><img :src="cmt.user.avatarUrl"></a>
-            </div>
-            <div class="cmt-wrap">
-              <div class="cmt-rel">
-                <a href="">{{cmt.user.nickname}}</a>：{{cmt.content}}
-              </div>
-              <div class="isRpl" v-if="cmt.beReplied.length">
-                <span>
-                  <i class="bd">◆</i>
-                  <i class="db">◆</i>
-                </span>
-                <a href="/#">{{cmt.beReplied[0].user.nickname}}</a>：{{cmt.beReplied[0].content}}
-              </div>
-              <div class="cmt-desc">
-                <span>{{cmt.time}}</span>
-                <a href="/#" class="rpl">回复</a>
-                <a href="/#" class="rpl-ct"><i class="nofav"></i>{{`(${cmt.likedCount})`}}</a>
-              </div>
-            </div>
-          </div>
-          <div class="cmt-tab" v-if="cmtLength>1"> 
-            <a href="javascript:;" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}" @click="cmtClick(-1)">上一页</a>
-            <a href="javascript:;" :class="[cmtIndex.first[0].isclick?'page-cli':'page']" @click="cmtClick(null,0)">{{cmtIndex.first[0].num}}</a>
-            <span v-show="cmtFrontMore">...</span>
-            <a href="javascript:;" :class="[val.isclick?'page-cli':'page']" v-for="(val,index) in cmtIndex.others" @click="cmtClick(null,index+1)">{{val.num}}</a>
-            <span v-show="cmtNextMore">...</span>
-            <a href="javascript:;" :class="[cmtIndex.last[0].isclick?'page-cli':'page']" @click="cmtClick(null,cmtIndex.others.length+1)">{{cmtIndex.last[0].num}}</a>
-            <a href="javascript:;" class="nxt" :class="{'disa-nxt':cmtIndex.last[0].isclick}" @click="cmtClick(1)">下一页</a>
-         </div>
-        </div>
-      </div>
-    </div>
-    <div class="playlist-right">
-      <div class="ad-wrap">
-        <a href="#" class="ad"></a>
-        <a href="#"><img src="https://haitaoad.nosdn.127.net/ad.bid.material_f73d40bef46d4b0098283ea63ca4b579?imageView&thumbnail=200x220&quality=100"></a>
-      </div>
-      <div class="rela-cmd u-head">
-        <h3>相关推荐</h3>
-        <ul>
-          <li>
-            <div class="rela-msk">
-              <a href="#">
-                <img src="http://p3.music.126.net/1L_rIf-sofhXEG1R2JQ5bQ==/1365593506719668.jpg?param=50y50">
+            <div class="content-opreation">
+              <a href="#" class="btn-play">
+                <i><em class="ply"></em>播放</i>
               </a>
-            </div>
-            <div class="rela-info">
-              <p class="rela-title p-over">
-                <a href="#" title="传统世界音乐【器乐】">传统世界音乐【器乐】</a>
-              </p>
-              <p class="p-over">
-                <span>by</span>
-                <a href="#" title="紫de甘蓝">紫de甘蓝</a>
-              </p>
-            </div>
-          </li>
-          <li>
-            <div class="rela-msk">
-              <a href="#">
-                <img src="http://p4.music.126.net/rnHLMLESV1c-PcFbDgAngg==/18775260557760255.jpg?param=50y50">
+              <a href="#" class="add-to"></a>
+              <a href="#" class="btn-fav">
+                <i>{{`(${songs.subscribedCount})`}}</i>
               </a>
+              <a href="#" class="btn-share">
+                <i>{{`(${songs.shareCount})`}}</i>
+              </a>
+              <a href="#" class="btn-dl">
+                <i>下载</i>
+              </a>
+              <a href="#" class="btn-cm">
+                <i>{{`(${songs.commentCount})`}}</i>
+              </a>
+              <div class="clear"></div>
             </div>
-            <div class="rela-info">
-              <p class="rela-title p-over">
-                <a href="#" title="一个人的乌德琴">一个人的乌德琴</a>
-              </p>
-              <p class="p-over">
-                <span>by</span>
-                <a href="#" title="珠疯">珠疯</a>
-              </p>
+            <div class="content-tag">
+              <b>标签：</b>
+              <a href="#" class="u-tag" v-for="tag in songs.tags">
+                <i>{{tag}}</i>
+              </a>
+              <div class="clear"></div>
             </div>
-          </li>
-        </ul>
+            <pre v-show="!songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
+            <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
+            <div class="show-more" v-if="songs.descMore">
+              <a href="javascript:;" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
+              <i class="u-ico" :class="{'u-icoActive':songs.isShowMore}"></i>
+            </div>
+          </div>
+        </div>
+        <div class="playlist-tracks">
+          <div class="u-title">
+            <h3>歌曲列表</h3>
+            <span class="u-lft">{{`${songs.trackCount}首歌`}}</span>
+            <span class="u-rgt">播放：<strong>{{songs.playCount}}</strong>次</span>
+            <div class="u-rgt">
+              <i></i>
+              <a href="">生成外链播放器</a>
+            </div>
+          </div>
+          <div class="u-content">
+            <table class="tracks-table">
+              <thead>
+                <tr>
+                  <th class="w1"><div class="u-wrap"></div></th>
+                  <th><div class="u-wrap">歌曲标题</div></th>
+                  <th class="w2"><div class="u-wrap">时长</div></th>
+                  <th class="w3"><div class="u-wrap">歌手</div></th>
+                  <th class="w4"><div class="u-wrap">专辑</div></th>
+                </tr>
+              </thead>
+              <tbody @click="plySong">
+                <tr v-for="(track,index) in songs.tracks" :class="{'track-fill':index%2==0}">
+                  <td>
+                    <div class="w-ply">
+                      <em>{{index+1}}</em>
+                      <span :class="[track.click?'tracks-cli':'tracks-ply']" :data-tag="index"></span>
+                    </div>
+                  </td>
+                  <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
+                  <td>{{track.duration}}</td>
+                  <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
+                  <td class="p-over"><a href="#" :title="track.albName">{{track.albName}}</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="playlist-cmt">
+          <div class="u-title">
+            <h3>评论</h3>
+            <span class="u-lft">{{`共${cmtNumber}条评论`}}</span>
+          </div>
+          <div class="iptarea">
+            <img src="http://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=50y50">
+            <div class="area">
+              <!-- onchange、onkeydown、onkeyup为了兼容IE9及以下:onchange="this.value=this.value.substring(0, 140)" onkeydown="this.value=this.value.substring(0, 140)" onkeyup="this.value=this.value.substring(0, 140)"-->
+              <textarea placeholder="评论" v-model="cmtContent" :maxlength="maxlength"></textarea>
+              <div class="btn-wrap">
+                <i class="emj"></i>
+                <i class="at" @click="addAT"></i>
+                <a href="javascript:;">评论</a>
+                <span>{{cmtCount}}</span>
+              </div>
+              <div class="corr">
+                <em>◆</em>
+                <span>◆</span>
+              </div>
+            </div>
+          </div>
+          <div class="u-cmt" v-show="cmts">
+            <h3 >最新评论</h3>
+            <div class="cmt1" v-for="cmt in cmts">
+              <div class="cmt-head">
+                <a href="/#"><img :src="cmt.user.avatarUrl"></a>
+              </div>
+              <div class="cmt-wrap">
+                <div class="cmt-rel">
+                  <a href="">{{cmt.user.nickname}}</a>：{{cmt.content}}
+                </div>
+                <div class="isRpl" v-if="cmt.beReplied.length">
+                  <span>
+                    <i class="bd">◆</i>
+                    <i class="db">◆</i>
+                  </span>
+                  <a href="/#">{{cmt.beReplied[0].user.nickname}}</a>：{{cmt.beReplied[0].content}}
+                </div>
+                <div class="cmt-desc">
+                  <span>{{cmt.time}}</span>
+                  <a href="/#" class="rpl">回复</a>
+                  <a href="/#" class="rpl-ct"><i class="nofav"></i>{{`(${cmt.likedCount})`}}</a>
+                </div>
+              </div>
+            </div>
+            <div class="cmt-tab" v-if="cmtLength>1"> 
+              <a href="javascript:;" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}" @click="cmtClick(-1)">上一页</a>
+              <a href="javascript:;" :class="[cmtIndex.first[0].isclick?'page-cli':'page']" @click="cmtClick(null,0)">{{cmtIndex.first[0].num}}</a>
+              <span v-show="cmtFrontMore">...</span>
+              <a href="javascript:;" :class="[val.isclick?'page-cli':'page']" v-for="(val,index) in cmtIndex.others" @click="cmtClick(null,index+1)">{{val.num}}</a>
+              <span v-show="cmtNextMore">...</span>
+              <a href="javascript:;" :class="[cmtIndex.last[0].isclick?'page-cli':'page']" @click="cmtClick(null,cmtIndex.others.length+1)">{{cmtIndex.last[0].num}}</a>
+              <a href="javascript:;" class="nxt" :class="{'disa-nxt':cmtIndex.last[0].isclick}" @click="cmtClick(1)">下一页</a>
+           </div>
+          </div>
+          <div class="loading" v-show="!cmts">
+            <i></i>
+            加载中...
+          </div> 
+        </div>
       </div>
-      <div class="multi-dowm u-head">
-        <h3>网易云音乐多端下载</h3>
-        <ul class="dowm-methods">
-          <li><a class="m1" href="https://itunes.apple.com/app/id590338362" target="_blank"></a></li>
-          <li><a class="m2" href="http://music.163.com/api/pc/download/latest"  target="_blank"></a></li>
-          <li><a class="m3" href="http://music.163.com/api/android/download/latest2" target="_blank"></a></li>
-        </ul>
-        <p>同步歌单，随时畅听320k好音乐</p>
-      </div>
+      <div class="playlist-right">
+        <div class="ad-wrap">
+          <a href="#" class="ad"></a>
+          <a href="#"><img src="https://haitaoad.nosdn.127.net/ad.bid.material_f73d40bef46d4b0098283ea63ca4b579?imageView&thumbnail=200x220&quality=100"></a>
+        </div>
+        <div class="rela-cmd u-head">
+          <h3>相关推荐</h3>
+          <ul>
+            <li>
+              <div class="rela-msk">
+                <a href="#">
+                  <img src="http://p3.music.126.net/1L_rIf-sofhXEG1R2JQ5bQ==/1365593506719668.jpg?param=50y50">
+                </a>
+              </div>
+              <div class="rela-info">
+                <p class="rela-title p-over">
+                  <a href="#" title="传统世界音乐【器乐】">传统世界音乐【器乐】</a>
+                </p>
+                <p class="p-over">
+                  <span>by</span>
+                  <a href="#" title="紫de甘蓝">紫de甘蓝</a>
+                </p>
+              </div>
+            </li>
+            <li>
+              <div class="rela-msk">
+                <a href="#">
+                  <img src="http://p4.music.126.net/rnHLMLESV1c-PcFbDgAngg==/18775260557760255.jpg?param=50y50">
+                </a>
+              </div>
+              <div class="rela-info">
+                <p class="rela-title p-over">
+                  <a href="#" title="一个人的乌德琴">一个人的乌德琴</a>
+                </p>
+                <p class="p-over">
+                  <span>by</span>
+                  <a href="#" title="珠疯">珠疯</a>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="multi-dowm u-head">
+          <h3>网易云音乐多端下载</h3>
+          <ul class="dowm-methods">
+            <li><a class="m1" href="https://itunes.apple.com/app/id590338362" target="_blank"></a></li>
+            <li><a class="m2" href="http://music.163.com/api/pc/download/latest"  target="_blank"></a></li>
+            <li><a class="m3" href="http://music.163.com/api/android/download/latest2" target="_blank"></a></li>
+          </ul>
+          <p>同步歌单，随时畅听320k好音乐</p>
+        </div>
+      </div> 
     </div>
+    <div class="loading" v-show="!hasResult">
+      <i></i>
+      加载中...
+    </div> 
   </div>
 </template>
 
@@ -229,58 +239,27 @@ export default {
       hasCmt:null,//是否返回评论数据
       maxlength:140,//允许输入的最多字数
       cmtContent:"",//评论内容
-      cmtNumber:null,
-      cmtIndex:{
-        first:[
-                { num: 1, isclick: true},
-              ],
-        others:[
-
-              ],
-        last:[
-                { num: null, isclick: false},
-             ],
+      cmtNumber:null,//评论总数
+      cmtIndex:{//评论页码
+        first: [{ num: 1, isclick: true}],//第一页
+        others: [],//中间页
+        last: [{ num: null, isclick: false}],//最后一页
       },
       cmts:null,
     }
   },
   methods:{
-    initData:function(result){
-      //解构result.tracks
-      var originTracks = result.tracks,
-          list = new Array();
-      for ( let item of originTracks ){ 
-        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
-        duration = mouseBtnEv.changeTime(duration);
-        list.push({ duration, songName, albName, artName, click:false});
-      }
-      //初始化songs
-      this.songs = {
-        coverImgUrl:result.coverImgUrl,
-        name:result.name,
-        subscribedCount:result.subscribedCount,
-        shareCount:result.shareCount,
-        commentCount:result.commentCount,
-        tags:result.tags,
-        trackCount:result.trackCount,
-        playCount:result.playCount,
-        tracks:list,
-        creator:result.creator,
-        createtime:new Date(result.createTime).toLocaleDateString().replace(/\//g,"-"),
-        descDot:result.description.substr(0,99),
-        descMore: result.description.length>99?result.description:null,
-        isShowMore:false,   
-      };
-      return true;
-    },
+    //点击@按钮，评论内容中自动加入@字符
     addAT:function(){
       if (this.cmtContent.length < this.maxlength){
         this.cmtContent += "@";
       }  
     },
+    //歌单介绍-展开/收起按钮点击事件
     tabShowMore:function(){
       this.songs.isShowMore = !this.songs.isShowMore;
     },
+    //歌单播放按钮点击事件
     plyClick:function(index){
       var clickList = this.songs.tracks.map(function(item){
         return item.click;
@@ -292,6 +271,7 @@ export default {
       }
       mouseBtnEv.setNewVal(this.songs.tracks[index], 'click', true);
     },
+    //歌单播放按钮点击事件代理
     plySong:function(ev){
       var ev = ev||window.event;
       var target = ev.target||ev.srcElement;
@@ -399,12 +379,8 @@ export default {
 
       this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/756004544/page/${pageIndex}`)
         .then(response => {
-          console.log('评论数据get');
           this.cmts = response.data.comments;
-          for (let cmt of this.cmts){
-            cmt.time = mouseBtnEv.setCommentTime(cmt.time)
-          }
-         this.cmtNumber = response.data.total;
+          this.cmtNumber = response.data.total;
         })
         .catch(response => {
           console.log(response)
@@ -415,48 +391,83 @@ export default {
     } 
   },
   beforeCreate:function(){
-    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/752476047')
+    //请求歌单数据
+    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/756004544')
       .then(response => {
-        console.log('歌单数据get');
-        var result = response.data.result;
-        this.hasResult = this.initData(result);
+        this.hasResult = response.data.result;//初始化全部歌单数据
       })
       .catch(response => {
         console.log(response)
     });
-
-    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/comments/752476047/page/1')
+    //请求评论数据
+    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/comments/756004544/page/1')
       .then(response => {
-        console.log('评论数据get');
-        this.cmts = response.data.comments;
-        for (let cmt of this.cmts){
-          cmt.time = mouseBtnEv.setCommentTime(cmt.time)
-        }
-        this.cmtNumber = response.data.total;
+        this.cmts = response.data.comments;//初始化全部评论数据
+        this.cmtNumber = response.data.total;//初始化评论总数
       })
       .catch(response => {
         console.log(response)
     });
   },
   computed:{
+    //当前还允许继续输入的字数
     cmtCount:function(){
       var content = this.cmtContent;
       return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
     },
+    //评论页数（每页20条评论）
     cmtLength:function(){
       return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/20);
     },
+    //第一页之后是否显示...
     cmtFrontMore:function(){
       return this.cmtIndex.others[0].num>2;
     },
+    //最后一页之前是否显示...
     cmtNextMore:function(){
       var numb = this.cmtIndex.others;
       return this.cmtLength>10&&numb[numb.length-1].num<this.cmtLength-1;
     },
   },
   watch:{
+    //歌单数据返回后，提取、格式化需要的数据
+    hasResult:function(result){
+      //解构result.tracks
+      var originTracks = result.tracks,
+          list = new Array();
+      for ( let item of originTracks ){ 
+        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
+        duration = mouseBtnEv.changeTime(duration);
+        list.push({ duration, songName, albName, artName, click:false});
+      }
+      //初始化songs
+      this.songs = {
+        coverImgUrl:result.coverImgUrl,
+        name:result.name,
+        subscribedCount:result.subscribedCount,
+        shareCount:result.shareCount,
+        commentCount:result.commentCount,
+        tags:result.tags,
+        trackCount:result.trackCount,
+        playCount:result.playCount,
+        tracks:list,
+        creator:result.creator,
+        createtime:new Date(result.createTime).toLocaleDateString().replace(/\//g,"-"),
+        descDot:result.description.substr(0,99),
+        descMore: result.description.length>99?result.description:null,
+        isShowMore:false,   
+      };
+    },
+    //评论数据返回后，提取、格式化需要的数据
+    cmts:function(result){
+      if (result!==null){
+        for (let cmt of result){
+          cmt.time = mouseBtnEv.setCommentTime(cmt.time)
+        }
+      }
+    },
+    //确定当前评论页数
     cmtLength:function(newVal,oldVal){
-      console.log("??")
       if (oldVal===null){//页面打开时初始化
         var othersLen = newVal<11?newVal-2:7; 
         for (let i =0;i<othersLen;i++){
@@ -470,6 +481,18 @@ export default {
 </script>
 
 <style>
+.loading{
+  height: 500px;
+  line-height: 500px;
+  font-size:12px;
+  text-align: center;
+}
+.loading i{
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  background: url(../assets/loading.gif) no-repeat scroll 0 0;
+}
 .disa-nxt{
   pointer-events: none;
   color: rgb(202,202,202);
