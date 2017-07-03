@@ -377,7 +377,7 @@ export default {
         pageIndex = cmt.others[index-1].num;
       };
 
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/756004544/page/${pageIndex}`)
+      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/${pageIndex}`)
         .then(response => {
           this.cmts = response.data.comments;
           this.cmtNumber = response.data.total;
@@ -391,8 +391,9 @@ export default {
     } 
   },
   beforeCreate:function(){
+    console.log( this.$route.params.id )
     //请求歌单数据
-    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/detail/756004544')
+    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/detail/${this.$route.params.id}`)
       .then(response => {
         this.hasResult = response.data.result;//初始化全部歌单数据
       })
@@ -400,7 +401,7 @@ export default {
         console.log(response)
     });
     //请求评论数据
-    this.$http.get('http://123.206.211.77:33333/api/v1/playlist/comments/756004544/page/1')
+    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/1`)
       .then(response => {
         this.cmts = response.data.comments;//初始化全部评论数据
         this.cmtNumber = response.data.total;//初始化评论总数
@@ -879,12 +880,13 @@ export default {
 .content-title{
   vertical-align: top;
   margin-bottom: 12px;
+  margin-left: 64px;
 }
 .content-title i{
   display: inline-block;
   width: 54px;
   height: 24px;
-  margin-right: 10px;
+  margin: 0 10px 0 -64px;
   vertical-align: top;
   background: url(../assets/icon.png) no-repeat scroll 0 -243px;
 }
@@ -1063,6 +1065,11 @@ i{
 pre{
   font-size: 12px;
   font-family: inherit;
+  white-space: pre-wrap;       
+  white-space: -moz-pre-wrap;  
+  white-space: -pre-wrap;      
+  white-space: -o-pre-wrap;    
+  word-wrap: break-word;  
 }
 .playlist-tracks{
   margin-top: 27px;

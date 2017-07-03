@@ -64,7 +64,7 @@ let mouseBtnEv = {
     
     var timePara = {
       year:cmtTime.getFullYear(),
-      month:cmtTime.getMonth(),
+      month:cmtTime.getMonth()+1,
       date:cmtTime.getDate(),
       hour:cmtTime.getHours()>9?cmtTime.getHours():`0${cmtTime.getHours()}`,
       minute:cmtTime.getMinutes()>9?cmtTime.getMinutes():`0${cmtTime.getMinutes()}`

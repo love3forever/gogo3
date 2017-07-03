@@ -13,14 +13,14 @@
           <li v-for="item in hotitem">
             <div class="item-wrap">
               <img :src="item.img">
-              <a href="/#" class="msk"></a>
+              <router-link :to="'/use/playlist/'+item.playlistID" class="msk"></router-link>
               <div class="item-bottom">
                 <span class="ico"></span>
                 <span class="hot-num">{{item.playTimes}}</span>
                 <a href="/#" class="hotplay"></a>
               </div>
             </div>
-            <p><a href="/#" class="hot-descrp"><!--<sub v-if="item[3]"></sub>-->{{item.playlistTitle}}</a></p>
+            <p><router-link :to="'/use/playlist/'+item.playlistID" class="hot-descrp">{{item.playlistTitle}}</router-link><!--<sub v-if="item[3]"></sub>--></p>
           </li>
         </ul>
       </div>
