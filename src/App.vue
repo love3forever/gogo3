@@ -11,13 +11,12 @@
 
 <script>
 import topbar from './components/topbar'
-import origin from './components/origin'
 import foot from './components/foot'
 
 export default {
   name: 'app',
   components: {
-    topbar,origin,foot
+    topbar,foot
   },
   data () {
     return {

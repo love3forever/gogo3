@@ -136,7 +136,12 @@
                 </div>
               </div>
             </div>
-            <div class="cmt-tab" v-if="cmtLength>1"> 
+          </div>
+          <div class="loading" v-show="!cmts">
+            <i></i>
+            加载中...
+          </div> 
+          <div class="cmt-tab" v-if="cmtLength>1"> 
               <a href="javascript:;" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}" @click="cmtClick(-1)">上一页</a>
               <a href="javascript:;" :class="[cmtIndex.first[0].isclick?'page-cli':'page']" @click="cmtClick(null,0)">{{cmtIndex.first[0].num}}</a>
               <span v-show="cmtFrontMore">...</span>
@@ -145,11 +150,6 @@
               <a href="javascript:;" :class="[cmtIndex.last[0].isclick?'page-cli':'page']" @click="cmtClick(null,cmtIndex.others.length+1)">{{cmtIndex.last[0].num}}</a>
               <a href="javascript:;" class="nxt" :class="{'disa-nxt':cmtIndex.last[0].isclick}" @click="cmtClick(1)">下一页</a>
            </div>
-          </div>
-          <div class="loading" v-show="!cmts">
-            <i></i>
-            加载中...
-          </div> 
         </div>
       </div>
       <div class="playlist-right">
@@ -391,7 +391,6 @@ export default {
     } 
   },
   beforeCreate:function(){
-    console.log( this.$route.params.id )
     //请求歌单数据
     this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/detail/${this.$route.params.id}`)
       .then(response => {

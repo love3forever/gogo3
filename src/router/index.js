@@ -17,14 +17,14 @@ export default new Router({
 			path: '/',component: origin,		  
 		},
 		{
-		  path: '/home',component: origin,
-		  children:[
-		  	{path:'discover',component:origin},
-		  	{path:'foot',component:foot},
-		  ]
+			path: '/home',component: origin,
+			children:[
+				{path:'discover',component:origin},
+				{path:'foot',component:foot},
+			]
 		},   
 		{
-			path: '/playlist',component: originlist,		  
+			path: '/use/playlist',component: originlist,		  
 		},
 		{
 			path: '/use/playlist/:id',component: playlist,	
