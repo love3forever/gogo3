@@ -4,19 +4,30 @@
       <div class="playlist-left">
         <div class="playlist-head">
           <div class="playlist-cover">
-            <img :src="songs.coverImgUrl">
-            <span></span>
+            <img id="a-pic":src="songs.coverImgUrl">
+            <span id="a-song"></span>
+            <div id="a-rgtply" class="u-rgt">
+              <i></i>
+              <a href="">生成外链播放器</a>
+            </div>
           </div>
           <div class="playlist-content">
             <div class="content-title">
-              <i></i>
-              <h2>{{songs.name}}</h2>
+              <i id="songIcon"></i>
+              <h2>
+                {{songs.name}}
+                <a class="plyMv" href="javascript:;">
+                  <i></i>
+                </a>    
+              </h2> 
             </div>
             <div class="content-author">
-              <a href="/#"><img :src="songs.creator.avatarUrl"></a>
-              <span><a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
-              <sup></sup>
-              <span>{{songs.createtime}}&nbsp创建</span>
+              <p class="a-author">
+                <span>歌手:<a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+              </p>
+              <p class="a-author">
+                <span>所属专辑:<a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+              </p>
             </div>
             <div class="content-opreation">
               <a href="#" class="btn-play">
@@ -37,16 +48,9 @@
               </a>
               <div class="clear"></div>
             </div>
-            <div class="content-tag">
-              <b>标签：</b>
-              <a href="#" class="u-tag" v-for="tag in songs.tags">
-                <i>{{tag}}</i>
-              </a>
-              <div class="clear"></div>
-            </div>
             <pre v-show="!songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
             <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
-            <div class="show-more" v-if="songs.descMore">
+            <div id="a-showmore" class="show-more" v-if="songs.descMore">
               <a href="javascript:;" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
               <i class="u-ico" :class="{'u-icoActive':songs.isShowMore}"></i>
             </div>
@@ -56,11 +60,6 @@
           <div class="u-title">
             <h3>歌曲列表</h3>
             <span class="u-lft">{{`${songs.trackCount}首歌`}}</span>
-            <span class="u-rgt">播放：<strong>{{songs.playCount}}</strong>次</span>
-            <div class="u-rgt">
-              <i></i>
-              <a href="">生成外链播放器</a>
-            </div>
           </div>
           <div class="u-content">
             <table class="tracks-table">
@@ -375,7 +374,7 @@ export default {
         pageIndex = cmt.others[index-1].num;
       };
 
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/${pageIndex}`)
+      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/${pageIndex}`)
         .then(response => {
           this.cmts = response.data.comments;
           this.cmtNumber = response.data.total;
@@ -390,7 +389,7 @@ export default {
   },
   beforeCreate:function(){
     //请求歌单数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/detail/${this.$route.params.id}`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/detail/551088906`)
       .then(response => {
         this.hasResult = response.data.result;//初始化全部歌单数据
       })
@@ -398,7 +397,7 @@ export default {
         console.log(response)
     });
     //请求评论数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/1`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/1`)
       .then(response => {
         this.cmts = response.data.comments;//初始化全部评论数据
         this.cmtNumber = response.data.total;//初始化评论总数
@@ -479,710 +478,37 @@ export default {
 </script>
 
 <style>
-.loading{
-  height: 500px;
-  line-height: 500px;
-  font-size:12px;
-  text-align: center;
+p.a-author{
+  margin:10px 0;
 }
-.loading i{
-  width: 16px;
-  height: 16px;
-  vertical-align: middle;
-  background: url(../assets/loading.gif) no-repeat scroll 0 0;
+#songIcon{
+  background-position: 0 -463px;
 }
-.disa-nxt{
-  pointer-events: none;
-  color: rgb(202,202,202);
-  background-position: -75px -620px; 
-}
-.disa-frt{
-  pointer-events: none;
-  color: rgb(202,202,202);
-  background-position: 0 -620px; 
-}
-.page-cli{
-  margin: 0 1px 0 2px;
-  padding: 0 8px;
-  cursor: default;
-  pointer-events: none;
-  border: 1px solid rgb(162, 22, 27);
-  color: white;
-  background: url(../assets/button.png) no-repeat scroll 0 -650px;
-}
-.page{
-  margin: 0 1px 0 2px;
-  border: 1px solid rgb(204,204,204);
-  padding: 0 8px;
-}
-.page:hover{
-  border: 1px solid rgb(51,51,51);
-}
-.cmt-tab{
-  color: rgb(51,51,51);
-}
-.cmt-tab a{
+.plyMv {
   display: inline-block;
-  height: 22px;
-
-  border-radius: 2px;
-  line-height: 24px;
 }
-.frt{
-  width: 54px;
-  padding-left:12px;
-  border: 1px solid rgb(204,204,204);
-  background:  url(../assets/button.png) no-repeat scroll 0 -560px;
-}
-.frt:hover{
-   background-position: 0 -590px;
-}
-.nxt{
-  width: 54px;
-  padding-right:12px;
-  border: 1px solid rgb(204,204,204);
-  background:  url(../assets/button.png) no-repeat scroll -75px -560px;
-}
-.nxt:hover{
-  background-position: -75px -590px;
-}
-.cmt-tab{
-  margin: 20px 0;
-  text-align: center;
-}
-.cmt1{
-  overflow: hidden;
-}
-.isRpl{
-  position: relative;
-  margin-top:10px;
-  padding: 8px 19px;
-  border: 1px solid rgb(222,222,222);
-  background-color: rgb(244,244,244);
-  line-height: 20px;
-}
-.isRpl span{
-  position: absolute;
-  top:-7px;
-  left: 20px;
-  font-size: 12px;
-  line-height: 14px;
-}
-.bd{
+.plyMv i{
   display: block;
-  color: rgb(222,222,222);
-}
-.db{
-  display: block;
-  color:  rgb(244,244,244);
-  margin-top:-13px;
-}
-.nofav{
-  width: 15px;
-  height: 14px;
-  margin-right: 3px;
-  background:  url(../assets/icon2.png) no-repeat scroll -150px 0;
-}
-.rpl{
-  padding-left: 8px;
-  border-left: 1px solid rgb(205,204,204);
-}
-.rpl-ct{
-  margin-right: 8px;
-}
-.cmt-desc{
-  margin-top: 15px;
-}
-.cmt-desc a{
-  float: right;
-  vertical-align: middle;
-}
-.cmt-rel{
-  width: 580px;
-  line-height: 20px;
-  color: rgb(51,51,51);
-}
-.cmt-rel a,.isRpl a{
-  color: #0c73c2;
-}
-.cmt-rel a:hover,.cmt-desc a:hover,.isRpl a:hover{
-  text-decoration: underline;
-}
-.cmt-wrap{
-  float: left;
-  margin-left: 60px;
-}
-.cmt-head{
-  float: left;
-  margin-right: -50px;
-}
-.cmt-head img{
-  display: block;
-  width: 50px;
-  height: 50px;
-}
-.cmt1{
-
-  padding: 15px 0;
-  border-top: 1px dotted rgb(204,204,204);
-}
-.u-cmt h3{
-  font-size: 12px;
-  height: 20px;
-  margin: 0 0 -1px 0;
-  border-bottom: 1px solid rgb(207,207,207);
-}
-.emj{
-  width: 18px;
+  width: 21px;
   height: 18px;
-  margin: 3px 10px 0 0;
-  cursor: pointer;
-  background:  url(../assets/icon.png) no-repeat scroll -40px -490px;
-}
-.at{
-  width: 18px;
-  height: 18px;
-  margin-top: 3px;
-  cursor: pointer;
-  background:  url(../assets/icon.png) no-repeat scroll -60px -490px;
-}
-.btn-wrap{
-  padding-top: 10px;
-  vertical-align: middle;
-  overflow: hidden;
-}
-.btn-wrap span{
-  float: right;
-  height: 25px;
-  margin-right: 10px;
-  line-height: 25px;
-  color: rgb(153,153,153);
-}
-.btn-wrap a{
-  float: right;
-  width: 46px;
-  height: 25px;
-  line-height: 25px;
-  text-align: center;
-  color: white;
-  background:  url(../assets/button.png) no-repeat scroll -84px -64px;
-}
-.corr{
-  position: absolute;
-  left: -7px;
-  top: 12px;
-  width: 13px;
-  height: 14px;
-  font-size: 15px;
-  font-family: SimSun;
-
-}
-.corr em{
-  display: block;
-  font-style: normal;
-  color: rgb(205,205,205);
-  height: 10px;
-}
-.corr span{
-  color: white;
-  display: block;
-  margin: -10px 0 0 1px;
-  height: 10px;
-}
-.iptarea{
-  margin: 20px 0;
-  vertical-align: top;
-  overflow: hidden;
-}
-.iptarea img{
-  float: left;
-  width: 50px;
-  height: 50px;
-  margin-right: -50px;
-  vertical-align: top;
-}
-.area{
-  float: left;
-  position: relative;
-  margin-left: 62px;
-  vertical-align: top;
-}
-.area textarea{
-  width: 564px;
-  height: 50px;
-  padding: 5px 6px 6px 6px;
-  border-color: rgb(205,205,205);
-  border-radius: 2px;
-  font-size: 12px;
-  font-family:Arial, Helvetica, sans-serif;
-  resize: none;
-}
-.playlist-cmt{
-  margin-top: 40px;
-  font-size: 12px;
-}
-.rela-title a{
-  font-size: 14px;
-  color: black;
-}  
-.rela-info{
-  margin: 0 0 0 60px;
-}
-.rela-info a:hover{
-  text-decoration: underline;
-}
-.rela-info p{
-  width: 140px;
   margin: 0;
-  font-size: 12px;
-  line-height: 24px;
+  background:  url(../assets/icon.png) no-repeat scroll 0 -18px;
 }
-.rela-msk{
-  margin: 0 -60px 0 0;
+#a-song{
+ background:  url(../assets/coverall.png) no-repeat scroll -140px -580px;
 }
-.rela-msk img{
-  display: block;
-  width: 50px;
-  height: 50px;
+#a-pic{
+  width: 130px;
+  height: 130px;
+  margin: 34px;
 }
-.rela-cmd ul{
-  margin: 0 0 25px 0;
-  padding: 0;
-  list-style-type: none;
+#a-rgtply{
+  float: none;
+  margin-top: 16px;
+  text-align: center;
 }
-.rela-cmd li{
-  width: 200px;
-  height: 50px;
-  margin: 0 0 15px 0;
-  overflow: hidden;
-}
-.rela-cmd div{
-  float: left;
-}
-.m1{
-  width: 42px;
-}
-.m1:hover{
-  background: url(../assets/sprite.png) no-repeat scroll 0 -472px;
-}
-.m2{
-  width: 116px;
-}
-.m2:hover{
-  background: url(../assets/sprite.png) no-repeat scroll -42px -472px;
-}
-.m3{
-  width: 42px;
-}
-.m3:hover{
-  background: url(../assets/sprite.png) no-repeat scroll -158px -472px;
-}
-.dowm-methods{
-  height: 65px;
-  margin:0 0 10px 0;
-  padding: 0;
-  background: url(../assets/sprite.png) no-repeat scroll 0 -392px;
-  list-style-type: none;
-  overflow:hidden;
-}
-.dowm-methods a{
-  display: block;
-  height: 48px;
-}
-.dowm-methods li{
-  float: left;
-}
-.u-head{
-  font-size: 12px;
-  margin: 20px 0;
-}
-.u-head h3{
-  height: 23px;
-  margin: 0 0 20px 0;
-  border-bottom: 1px solid rgb(204,204,204);
-  color: rgb(51,51,51);
-  font-size: inherit;
-}
-.u-head p{
-  color: rgb(153,153,153);
-}
-.ad-wrap{
-  position: relative;
-  width: 200px;
-  height: 220px;
-  margin-bottom: 40px;
-}
-.ad-wrap img{
-  width: 100%;
-  height: 100%;
-}
-.ad{
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 24px;
-  height: 18px;
-  background: url(../assets/short.png) no-repeat scroll 0 0;
-}
-.playlist{
-  font-size: 0;
-  -webkit-text-size-adjust:none;
-  border-right: 1px solid rgb(204,204,204);
+#a-showmore{
   text-align: left;
 }
-.playlist-left{
-  display: inline-block;
-  width: 640px;
-  height: 100%;
-  padding: 47px 30px 40px 39px;
-  border-right: 1px solid rgb(204,204,204);
-  vertical-align:top;
-
-}
-.playlist-right{
-  display: inline-block;
-  width: 200px;
-  height: 100%;
-  padding: 20px 40px 40px 30px;
-  vertical-align:top;
-}
-.playlist-head{
-  vertical-align: top;
-}
-.playlist-cover{
-  position: relative;
-  display: inline-block;
-  width: 200px;
-  height: 200px;
-  vertical-align:top;
-}
-.playlist-cover img{
-  width: 100%;
-  height: 100%;
-}
-.playlist-cover span{
-  position: absolute;
-  left: -4px;
-  top:-4px;
-  width: 208px;
-  height: 208px;
-  background: url(../assets/coverall.png) no-repeat scroll 0 -1285px;
-}
-.playlist-content{
-  display: inline-block;
-  width: 410px;
-  margin-left: 30px;
-  vertical-align:top;
-}
-.content-title{
-  vertical-align: top;
-  margin-bottom: 12px;
-  margin-left: 64px;
-}
-.content-title i{
-  display: inline-block;
-  width: 54px;
-  height: 24px;
-  margin: 0 10px 0 -64px;
-  vertical-align: top;
-  background: url(../assets/icon.png) no-repeat scroll 0 -243px;
-}
-.content-title h2{
-  display: inline-block;
-  margin: 0;
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: normal;
-  color: rgb(51,51,51);
-  vertical-align: top;
-}
-.content-author{
-  height: 35px;
-  margin-bottom: 20px;
-  vertical-align: middle;
-  font-size: 12px;
-  color: rgb(153,153,153);
-}
-.content-author img{
-  vertical-align: middle;
-  width: 35px;
-  height: 35px;
-}
-.content-author sup{
-  display: inline-block;
-  width:12px; 
-  height:13px;
-  margin: -4px 15px 0 0;
-  vertical-align: middle;
-  background: url(../assets/icon.png) no-repeat scroll -65px -840px;
-}
-.author-link{
-  color: #0c73c2;
-  margin-left: 10px;
-}
-.author-link:hover,.show-more a:hover{
-  text-decoration: underline;
-}
-.content-opreation a{
-  float: left;
-  height: 31px;
-  line-height: 31px;
-  overflow: hidden;
-}
-i{
-   display: inline-block;
-   height: 100%;
-   font-style: normal;
-   overflow: hidden;
-}
-.ply{
-  float: left;
-  width: 20px;
-  height: 18px;
-  margin: 6px 2px 2px 0;
-  background: url(../assets/button2.png) no-repeat scroll 0 -1622px;
-  overflow: hidden;
-}
-.ply:hover{
-    background: url(../assets/button2.png) no-repeat scroll -28px -1622px;
-}
-.btn-play{
-  padding-right: 5px;
-  background: url(../assets/button2.png) no-repeat scroll 100% -428px;
-}
-.btn-play:hover{
-  background: url(../assets/button2.png) no-repeat scroll 100% -510px;
-}
-.btn-play i{
-  color: white;
-  padding: 0 7px 0 8px;
-  background: url(../assets/button2.png) no-repeat scroll 0 -387px;
-}
-.btn-play i:hover{
-  background: url(../assets/button2.png) no-repeat scroll 0 -469px;
-}
-.add-to{
-  width: 31px;
-  margin: 0 5px 0 -3px;
-  background: url(../assets/button2.png) no-repeat scroll 0 -1588px;
-}
-.add-to:hover{
-  background: url(../assets/button2.png) no-repeat scroll -40px -1588px;
-}
-.btn-fav,.btn-share,.btn-dl,.btn-cm{
-  padding-right: 5px;
-  margin-right: 6px;
-  background: url(../assets/button2.png) no-repeat scroll 100% -1020px;
-}
-.btn-fav:hover,.btn-share:hover,.btn-dl:hover,.btn-cm:hover{
-  background: url(../assets/button2.png) no-repeat scroll 100% -1106px;
-}
-.btn-fav i{ 
-  padding: 0 2px 0 28px;
-  background: url(../assets/button2.png) no-repeat scroll 0 -977px;
-}
-.btn-fav i:hover{
-  background: url(../assets/button2.png) no-repeat scroll 0 -1063px;
-}
-.btn-share i{ 
-  padding: 0 2px 0 28px;
-  background: url(../assets/button2.png) no-repeat scroll 0 -1225px;
-}
-.btn-share i:hover{
-  background: url(../assets/button2.png) no-repeat scroll 0 -1268px;
-}
-.btn-dl i{ 
-  padding: 0 2px 0 28px;
-  background: url(../assets/button2.png) no-repeat scroll 0 -2761px;
-}
-.btn-dl i:hover{
-  background: url(../assets/button2.png) no-repeat scroll 0 -2805px;
-}
-.btn-cm i{ 
-  padding: 0 2px 0 28px;
-  background: url(../assets/button2.png) no-repeat scroll 0 -1465px;
-}
-.btn-cm i:hover{
-  background: url(../assets/button2.png) no-repeat scroll 0 -1508px;
-}
-.content-tag{
-
-  margin: 25px 0 5px 0;
-}
-.clear{
-  clear: both;
-}
-.content-tag b{
-  float: left;
-  font-size: 12px;
-  font-weight: normal;
-  height: 22px;
-  line-height: 22px;
-}
-.u-tag{
-  float: left;
-  height: 22px;
-  line-height: 22px;
-  padding-right: 10px;
-  margin: 0 10px 3px 0;
-  background: url(../assets/button2.png) no-repeat scroll 100% -27px;
-}
-.u-tag:hover{
-  background: url(../assets/button2.png) no-repeat scroll 100% -1430px;
-}
-.u-tag i{
-  padding: 0 3px 0 13px;
-  background: url(../assets/button2.png) no-repeat scroll 0 0;
-}
-.u-tag i:hover{
-  background: url(../assets/button2.png) no-repeat scroll 0 -1400px;
-}
-.playlist p{
-  margin: 0;
-  font-size: 12px;
-}
-.show-more{
-  text-align: right;
-}
-.fr{
-  color: #0c73c2; 
-}
-.u-ico{
-  display: inline-block;
-  width: 11px;
-  height: 8px;
-  background: url(../assets/icon.png) no-repeat scroll -65px -520px;
-}
-.u-icoActive{
-  background: url(../assets/icon.png) no-repeat scroll -45px -520px;
-}
-.u-desc{
-  font-weight: normal;
-}
-pre{
-  font-size: 12px;
-  font-family: inherit;
-  white-space: pre-wrap;       
-  white-space: -moz-pre-wrap;  
-  white-space: -pre-wrap;      
-  white-space: -o-pre-wrap;    
-  word-wrap: break-word;  
-}
-.playlist-tracks{
-  margin-top: 27px;
-}
-.u-title{
-  height: 33px;
-  border-bottom: 2px solid #c20c0c;
-  font-size: 12px;
-  color: rgb(51,51,51);
-}
-.u-title h3{
-  float: left;
-  height: 26px;
-  margin: 0;
-  font-size: 20px;
-  font-weight: normal;
-}
-.u-title span{
-  height: 16px;
-  line-height: 16px;
-  color: rgb(102,102,102);
-  margin: 9px 0 0 20px;
-}
-.u-title strong{
-  color: #c20c0c;
-}
-.u-lft{
-  float: left;
-}
-.u-rgt{
-  float: right;
-}
-div.u-rgt{
-  margin-top: 8px;
-  vertical-align: bottom;
-}
-div.u-rgt i{
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background: url(../assets/icon.png) no-repeat scroll -34px -863px;
-  vertical-align: bottom;
-}
-div.u-rgt a{
-  color: #4996d1;
-  text-decoration: underline;
-}
-.tracks-table{
-  width: 100%;
-  border: 1px solid rgb(217,217,217);
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 12px;
-}
-.tracks-table thead{
-  width: 100%;
-}
-.tracks-table th{
-  height: 38px;
-  padding: 0;
-  margin: 0;
-  background: url(../assets/table.png) repeat-x scroll 0 0;
-}
-.w1{
-  width: 74px;
-}
-.w2{
-  width: 111px;
-}
-.w3{
-  width: 89px;
-}
-.w4{
-  width: 127px;
-}
-.u-wrap{
-  font-weight: normal;
-  height: 18px;
-  padding: 8px 10px;
-  background: url(../assets/table.png) no-repeat scroll 0 -56px;
-}
-.w1 div{
-  background: none;
-}
-.tracks-table td{
-  padding:6px 10px;
-}
-.tracks-ply{
-  float: right;
-  width: 17px;
-  height: 17px;
-  background: url(../assets/table.png) no-repeat scroll 0 -103px;
-}
-.tracks-ply:hover{
-  background: url(../assets/table.png) no-repeat scroll 0 -128px;
-}
-.tracks-cli{
-  float: right;
-  width: 17px;
-  height: 17px;
-  background: url(../assets/table.png) no-repeat scroll -20px -128px;
-}
-.w-ply{
-  height: 18px;
-  line-height: 18px;
-}
-.w-ply em{
-  font-style: normal;
-}
-td a{
-  color: rgb(51,51,51);
-}
-td a:hover{
-  text-decoration: underline;
-}
-.track-fill{
-  background: rgb(247,247,247);
-}
 </style>
+

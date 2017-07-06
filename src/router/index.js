@@ -4,6 +4,7 @@ import origin from '@/components/origin'
 import foot from '@/components/foot'
 import originlist from '@/components/origin-list'
 import playlist from '@/components/play-list'
+import comment from '@/components/comment'
 
 Vue.use(Router)
 
@@ -24,7 +25,8 @@ export default new Router({
 			]
 		},   
 		{
-			path: '/use/playlist',component: originlist,		  
+			//path: '/use/playlist',component: originlist,
+			path: '/use/playlist',component: comment,			  
 		},
 		{
 			path: '/use/playlist/:id',component: playlist,	
