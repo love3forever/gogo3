@@ -3,13 +3,9 @@
     <div  v-show="hasResult">
       <div class="playlist-left">
         <div class="playlist-head">
-          <div class="playlist-cover">
+          <div id="a-cover" class="playlist-cover">
             <img id="a-pic":src="songs.coverImgUrl">
             <span id="a-song"></span>
-            <div id="a-rgtply" class="u-rgt">
-              <i></i>
-              <a href="">生成外链播放器</a>
-            </div>
           </div>
           <div class="playlist-content">
             <div class="content-title">
@@ -26,7 +22,7 @@
                 <span>歌手:<a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
               </p>
               <p class="a-author">
-                <span>所属专辑:<a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+                <span>发行时间:<a href="javascript:;" id="rel-time">{{songs.creator.nickname}}</a></span>
               </p>
             </div>
             <div class="content-opreation">
@@ -48,16 +44,45 @@
               </a>
               <div class="clear"></div>
             </div>
-            <pre v-show="!songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
-            <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
-            <div id="a-showmore" class="show-more" v-if="songs.descMore">
-              <a href="javascript:;" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
-              <i class="u-ico" :class="{'u-icoActive':songs.isShowMore}"></i>
+          </div>
+        </div>
+        <div class="track-info">
+          <h3>专辑介绍：</h3>
+          <p>无论是谁都有一个成长的过程，同时也要感谢那些想尽办法要将你置于死地的人，如果不是他们步步紧逼，也不会有今天的我们。</p>
+        </div>
+        <div class="playlist-tracks">
+          <div class="u-title">
+            <h3>歌曲列表</h3>
+            <span class="u-lft">{{`${songs.trackCount}首歌`}}</span>
+            <div class="u-rgt">
+              <i></i>
+              <a href="">生成外链播放器</a>
             </div>
-            <div class="upload-lrc">
-              <a href="javascript:;">上传歌词</a>
-              <a href="javascript:;">报错</a>              
-            </div>
+          </div>
+          <div class="u-content">
+            <table class="tracks-table">
+              <thead>
+                <tr>
+                  <th class="w1"><div class="u-wrap"></div></th>
+                  <th><div class="u-wrap">歌曲标题</div></th>
+                  <th class="w2"><div class="u-wrap">时长</div></th>
+                  <th class="w3"><div class="u-wrap">歌手</div></th>
+                </tr>
+              </thead>
+              <tbody @click="plySong">
+                <tr v-for="(track,index) in songs.tracks" :class="{'track-fill':index%2==0}">
+                  <td>
+                    <div class="w-ply">
+                      <em>{{index+1}}</em>
+                      <span :class="[track.click?'tracks-cli':'tracks-ply']" :data-tag="index"></span>
+                    </div>
+                  </td>
+                  <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
+                  <td>{{track.duration}}</td>
+                  <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="playlist-cmt">
@@ -186,7 +211,7 @@
 import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
-  name: 'comment',
+  name: 'track',
   data () {
     return {
       hasResult:false,//是否返回歌单数据
@@ -448,7 +473,30 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.track-info{
+  margin-top:20px;
+  font-size: 12px;
+}
+.track-info h3{
+  margin:0;
+  font-size: 12px;
+}
+.track-info p{
+  color: rgb(102,102,102);
+  text-indent: 2em;
+  line-height: 24px;
+  margin-top: 4px;
+}
+#rel-time{
+  color: inherit;
+}
+#a-cover{
+  width: 177px;
+  height: 177px;
+  border: 0;
+  margin-right: 20px;
+}
 .upload-lrc{
   margin-top: 48px;
   text-align: right;
@@ -458,37 +506,17 @@ export default {
   text-decoration: underline;
   color: rgb(153,153,153);
 }
-p.a-author{
-  margin:10px 0;
-}
-#songIcon{
-  background-position: 0 -463px;
-}
-.plyMv {
-  display: inline-block;
-}
-.plyMv i{
-  display: block;
-  width: 21px;
-  height: 18px;
-  margin: 0;
-  background:  url(../assets/icon.png) no-repeat scroll 0 -18px;
-}
 #a-song{
- background:  url(../assets/coverall.png) no-repeat scroll -140px -580px;
+  width: 209px;
+  height: 177px;
+  left: 0;
+  top: 0;
+  background:  url(../assets/coverall.png) no-repeat scroll 0 -986px;
 }
 #a-pic{
-  width: 130px;
-  height: 130px;
-  margin: 34px;
-}
-#a-rgtply{
-  float: none;
-  margin-top: 16px;
-  text-align: center;
-}
-#a-showmore{
-  text-align: left;
+  width: 177px;
+  height: 177px;
+  margin: 0;
 }
 </style>
 
