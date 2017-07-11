@@ -4,7 +4,7 @@
       <div class="playlist-left">
         <div class="playlist-head">
           <div class="playlist-cover">
-            <img id="a-pic":src="songs.coverImgUrl">
+            <img id="a-pic":src="desInfo.songPic">
             <span id="a-song"></span>
             <div id="a-rgtply" class="u-rgt">
               <i></i>
@@ -15,18 +15,18 @@
             <div class="content-title">
               <i id="songIcon"></i>
               <h2>
-                {{songs.name}}
-                <a class="plyMv" href="javascript:;">
+                {{desInfo.songName}}
+                <a class="plyMv" href="javascript:;" v-if="desInfo.mvid">
                   <i></i>
                 </a>    
               </h2> 
             </div>
             <div class="content-author">
               <p class="a-author">
-                <span>歌手:<a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+                <span>歌手:<a href="/#" class="author-link">{{desInfo.singer.name}}</a></span>
               </p>
               <p class="a-author">
-                <span>所属专辑:<a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+                <span>所属专辑:<a href="/#" class="author-link">{{desInfo.track.name}}</a></span>
               </p>
             </div>
             <div class="content-opreation">
@@ -35,10 +35,10 @@
               </a>
               <a href="#" class="add-to"></a>
               <a href="#" class="btn-fav">
-                <i>{{`(${songs.subscribedCount})`}}</i>
+                <i>收藏</i>
               </a>
               <a href="#" class="btn-share">
-                <i>{{`(${songs.shareCount})`}}</i>
+                <i>分享</i>
               </a>
               <a href="#" class="btn-dl">
                 <i>下载</i>
@@ -48,7 +48,7 @@
               </a>
               <div class="clear"></div>
             </div>
-            <pre v-show="!songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
+            <pre v-show="!songs.isShowMore"><b class="u-desc"></b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
             <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
             <div id="a-showmore" class="show-more" v-if="songs.descMore">
               <a href="javascript:;" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
@@ -190,7 +190,14 @@ export default {
   data () {
     return {
       hasResult:false,//是否返回歌单数据
-      songs:{//歌单
+      desInfo:{
+        songName:null,
+        songPic:null,
+        mvid:0,
+        singer: {name:null,id:null},
+        track: {name:null,id:null},
+      },
+     songs:{//歌单
         coverImgUrl:null,
         name:null,
         subscribedCount:null,
@@ -228,28 +235,6 @@ export default {
     //歌单介绍-展开/收起按钮点击事件
     tabShowMore:function(){
       this.songs.isShowMore = !this.songs.isShowMore;
-    },
-    //歌单播放按钮点击事件
-    plyClick:function(index){
-      var clickList = this.songs.tracks.map(function(item){
-        return item.click;
-      });
-
-      var current = clickList.indexOf(true);
-      if (current>-1){
-        mouseBtnEv.setNewVal(this.songs.tracks[current], 'click', false);
-      }
-      mouseBtnEv.setNewVal(this.songs.tracks[index], 'click', true);
-    },
-    //歌单播放按钮点击事件代理
-    plySong:function(ev){
-      var ev = ev||window.event;
-      var target = ev.target||ev.srcElement;
-
-      if (target.nodeName.toLowerCase() == "span"){
-        var index = parseInt(target.dataset.tag);
-        this.plyClick(index);             
-      }
     },
     //评论翻页按钮，改变不同类型按钮的isclick值
     cmtClearTrue:function(cmt,index,len,val){
@@ -360,9 +345,10 @@ export default {
   },
   beforeCreate:function(){
     //请求歌单数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/detail/551088906`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/song/detail/${this.$route.params.id}`)
       .then(response => {
-        this.hasResult = response.data.result;//初始化全部歌单数据
+        this.hasResult = response.data.songs[0];//初始化全部歌单数据
+        console.log(this.hasResult)
       })
       .catch(response => {
         console.log(response)
@@ -401,29 +387,16 @@ export default {
     //歌单数据返回后，提取、格式化需要的数据
     hasResult:function(result){
       //解构result.tracks
-      var originTracks = result.tracks,
-          list = new Array();
-      for ( let item of originTracks ){ 
-        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
-        duration = mouseBtnEv.changeTime(duration);
-        list.push({ duration, songName, albName, artName, click:false});
-      }
-      //初始化songs
-      this.songs = {
-        coverImgUrl:result.coverImgUrl,
-        name:result.name,
-        subscribedCount:result.subscribedCount,
-        shareCount:result.shareCount,
-        commentCount:result.commentCount,
-        tags:result.tags,
-        trackCount:result.trackCount,
-        playCount:result.playCount,
-        tracks:list,
-        creator:result.creator,
-        createtime:new Date(result.createTime).toLocaleDateString().replace(/\//g,"-"),
-        descDot:result.description.substr(0,99),
-        descMore: result.description.length>99?result.description:null,
-        isShowMore:false,   
+
+      var album = result.album,
+          artists = result.artists[0];
+          console.log(album)
+      this.desInfo = {
+        songName:result.name,
+        songPic:album.picUrl,
+        mvid:result.mvid,
+        singer: {name:artists.name,id:artists.id},
+        track: {name:album.name,id:album.id},
       };
     },
     //评论数据返回后，提取、格式化需要的数据

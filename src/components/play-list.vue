@@ -81,7 +81,12 @@
                       <span :class="[track.click?'tracks-cli':'tracks-ply']" :data-tag="index"></span>
                     </div>
                   </td>
-                  <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
+                  <!-- <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td> -->
+                 <td class="p-over">
+                   <router-link :to="'/song/'+track.id" :title="track.songName">
+                    {{track.songName}}
+                   </router-link>
+                 </td>
                   <td>{{track.duration}}</td>
                   <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
                   <td class="p-over"><a href="#" :title="track.albName">{{track.albName}}</a></td>
@@ -434,9 +439,9 @@ export default {
       var originTracks = result.tracks,
           list = new Array();
       for ( let item of originTracks ){ 
-        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
+        let { id,duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
         duration = mouseBtnEv.changeTime(duration);
-        list.push({ duration, songName, albName, artName, click:false});
+        list.push({ id, duration, songName, albName, artName, click:false});
       }
       //初始化songs
       this.songs = {
