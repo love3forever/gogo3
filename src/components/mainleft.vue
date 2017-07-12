@@ -77,7 +77,9 @@
               <ol>
                 <li v-for="(song,index) in bill.songs">
                   <span class="song-num" :class="{'song-numtop':index<3}">{{index+1}}</span>
-                  <a href="/#" class="song-item" :title="song.songName">{{song.songName}}</a>
+                  <router-link :to="'/song/'+substractId(song.songHref)" class="song-item" :title="song.songName">
+                    {{song.songName}}
+                  </router-link>
                 </li>
               </ol>
               <div><a href="/#" class="view-allsong">查看全部></a></div>
@@ -137,6 +139,14 @@ export default {
         };
       },20);
     },
+    substractId:function(songHref){
+      var index = songHref.lastIndexOf('=');
+      if (index!== -1){
+        return songHref.substring(index+1);
+      } else {
+        return null;
+      }
+    }
   },
   computed:{
     hotitem:function(){

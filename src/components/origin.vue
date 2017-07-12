@@ -33,7 +33,6 @@ export default {
   beforeCreate:function(){
     this.$http.get('http://123.206.211.77:33333/api/v1/index/detail')
       .then(response => {
-        console.log('数据get');
         let { blk, hotdj,newAlbum,newSinger,recommendList } = response.data;
         this.rightData = {newSinger,hotdj};
         this.leftData = {blk,newAlbum,recommendList};

@@ -380,7 +380,7 @@ export default {
         pageIndex = cmt.others[index-1].num;
       };
 
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/${pageIndex}`)
+      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/1`)
         .then(response => {
           this.cmts = response.data.comments;
           this.cmtNumber = response.data.total;

@@ -330,7 +330,7 @@ export default {
         pageIndex = cmt.others[index-1].num;
       };
 
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/${pageIndex}`)
+      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/519500448/page/1`)
         .then(response => {
           this.cmts = response.data.comments;
           this.cmtNumber = response.data.total;
@@ -354,7 +354,7 @@ export default {
         console.log(response)
     });
     //请求评论数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/1`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/519500448/page/1`)
       .then(response => {
         this.cmts = response.data.comments;//初始化全部评论数据
         this.cmtNumber = response.data.total;//初始化评论总数

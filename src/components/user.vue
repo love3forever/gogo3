@@ -1,11 +1,101 @@
 <template>
-  <div class="main userhome">
-    <div class="uh-head">
-      <img src="http://p1.music.126.net/31NA7TgzLACMHO1Om1LQVw==/18636722092805728.jpg?param=180y180">
-      <div class="uh-des">
-        <div>
-        <h2><span>一只林轩</span></h2>
+  <div class="main">
+    <div class="userhome">
+      <div class="uh-head">
+        <img src="http://p1.music.126.net/31NA7TgzLACMHO1Om1LQVw==/18636722092805728.jpg?param=180y180">
+        <div class="uh-des">
+          <div class="uhd-head">
+            <h2>
+              <span>一只林轩</span>
+              <span class="userLv">
+                <em>6</em>
+                <i></i>
+              </span>
+              <i class="female"></i>
+              <a href="javascript:;" class="sendMsg"><i>发私信</i></a>
+              <a href="javascript:;" class="follow"><i>关&nbsp&nbsp注&nbsp</i></a>
+            </h2>
+          </div>
+          <ul class="uhd-conect">
+            <li id="li-frt">
+              <a href="javascript:;"><strong>31</strong></br>动态</a>
+            </li>
+            <li>
+              <a href="javascript:;"><strong>20</strong></br>关注</a>
+            </li>
+            <li>
+              <a href="javascript:;"><strong>249</strong></br>粉丝</a>
+            </li>
+          </ul>
+          <p class="self-intro">个人介绍：学生党，暂离。每月末回来，有事请留言或者加群Mamamoo部落粉丝群，群号码：493739853 ！ 私信已关闭，歌单:留言板(置顶) 做个歌单怎么这么难呢！ 笔芯～</p>
+          <p class="uh-loca"><span>所在地区：吉林省 - 延边朝鲜族自治州</span><span>年龄：95后</span></p>
+          <p class="uh-social">社交网络：<a href="" title="新浪微博" class="weibo"></a></p>
         </div>
+      </div>
+      <div class="uh-vid">
+        <div class="u-title">
+          <h3>一只林轩创建的专栏</h3>
+        </div>
+        <ul class="uh-vidio">
+          <li>
+            <a href="" class="vid-pic"><img src="http://p1.music.126.net/DHYfWefTsKDcR5pyzXS9Og==/1408474409807840.jpg?param=50y50"></a>
+            <div class="vid-name"><a href="">只有音乐是我解药</a></div>
+            <div class="vid-read">阅读总量：100000+</div>
+            <div class="vid-update">最近更新2016-08-27</div>
+            <div class="vid-circ">2期</div>
+          </li>
+        </ul>
+      </div>
+      <div class="uh-vid">
+        <div class="u-title">
+          <h3>一只林轩创建的电台</h3>
+        </div>
+        <ul class="uh-vidio">
+          <li>
+            <a href="" class="vid-pic"><img src="http://p1.music.126.net/Gdh7VcGd22emCGjHiNMgtw==/3439272373022999.jpg?param=50y50"></a>
+            <div class="vid-rec"><a href="">晓苏电台</a></div>
+            <div class="vid-update">订阅398749次</div>
+            <div class="vid-circ">551期</div>
+          </li>
+        </ul>
+      </div>
+      <div class="uh-crt">
+        <div class="u-title">
+          <h3>一只林轩创建的歌单（70）</h3>
+        </div>
+          <ul id="uh-listwrap" class="hot-item">
+            <li v-for="item in hotitem" class="uh-list">
+              <div class="item-wrap">
+                <img :src="item.img">
+                <router-link :to="'/use/playlist/'+'510911448'" class="msk"></router-link>
+                <div class="item-bottom">
+                  <span class="ico"></span>
+                  <span class="hot-num">{{item.playTimes}}</span>
+                  <a href="/#" class="hotplay"></a>
+                </div>
+              </div>
+              <p class="p-over uh-listdes"><router-link :to="'/use/playlist/'+'233333'" class="hot-descrp">{{item.playlistTitle}}</router-link><!--<sub v-if="item[3]"></sub>--></p>
+            </li>
+          </ul>
+      </div>
+      <div class="uh-fav">
+        <div class="u-title">
+          <h3>一只林轩收藏的歌单（270）</h3>
+        </div>
+          <ul id="uh-listwrap" class="hot-item">
+            <li v-for="item in hotitem" class="uh-list">
+              <div class="item-wrap">
+                <img :src="item.img">
+                <router-link :to="'/use/playlist/'+'510911448'" class="msk"></router-link>
+                <div class="item-bottom">
+                  <span class="ico"></span>
+                  <span class="hot-num">{{item.playTimes}}</span>
+                  <a href="/#" class="hotplay"></a>
+                </div>
+              </div>
+              <p class="p-over uh-listdes"><router-link :to="'/use/playlist/'+'233333'" class="hot-descrp">{{item.playlistTitle}}</router-link><!--<sub v-if="item[3]"></sub>--></p>
+            </li>
+          </ul>
       </div>
     </div>
   </div>
@@ -18,268 +108,192 @@ export default {
   name: 'user',
   data () {
     return {
-      hasResult:false,//是否返回歌单数据
-      songs:{//歌单
-        coverImgUrl:null,
-        name:null,
-        subscribedCount:null,
-        shareCount:null,
-        commentCount:null,
-        tags:null,
-        trackCount:null,
-        playCount:null,
-        tracks:null,     //歌曲
-        creator:{},    //歌单创建者
-        createtime:null, //歌单创建时间
-        descDot:null,    //歌单介绍part1
-        descMore:null,   //歌单介绍part2
-        isShowMore:false,//歌单介绍是否展开
-      },
-      hasCmt:null,//是否返回评论数据
-      maxlength:140,//允许输入的最多字数
-      cmtContent:"",//评论内容
-      cmtNumber:null,//评论总数
-      cmtIndex:{//评论页码
-        first: [{ num: 1, isclick: true}],//第一页
-        others: [],//中间页
-        last: [{ num: null, isclick: false}],//最后一页
-      },
-      cmts:null,
+       hotitem:[
+          {img:"/static/hot01.jpg",playTimes:"220万",playlistTitle:"2017年五月最热新歌TOP50",art:"王萌"},
+          {img:"/static/hot02.jpg",playTimes:"25万",playlistTitle:"『福音之旅』聆听清风絮语，静沐斜阳暖心",art:"王萌"},
+          {img:"/static/hot03.jpg",playTimes:"48万",playlistTitle:"『电音故事』从生命的起源说起",art:"王萌"},
+          {img:"/static/hot04.jpg",playTimes:"18230",playlistTitle:"『哲学公开课』切实的幸福",art:"王萌"},
+          {img:"/static/hot05.jpg",playTimes:"220万",playlistTitle:"『锐韧Trap』风骚霸道，黑暗的迷人性格",art:"王萌"},
+          {img:"/static/hot06.jpg",playTimes:"220万",playlistTitle:"健身小白应该注意些啥？",art:"王萌"},
+          {img:"/static/hot07.jpg",playTimes:"220万",playlistTitle:"Deep House深窈之道",art:"王萌"},
+          {img:"/static/hot08.jpg",playTimes:"220万",playlistTitle:"刘瑜：色",art:"王萌"},
+      ],
     }
   },
-  methods:{
-    //点击@按钮，评论内容中自动加入@字符
-    addAT:function(){
-      if (this.cmtContent.length < this.maxlength){
-        this.cmtContent += "@";
-      }  
-    },
-    //歌单介绍-展开/收起按钮点击事件
-    tabShowMore:function(){
-      this.songs.isShowMore = !this.songs.isShowMore;
-    },
-    //歌单播放按钮点击事件
-    plyClick:function(index){
-      var clickList = this.songs.tracks.map(function(item){
-        return item.click;
-      });
-
-      var current = clickList.indexOf(true);
-      if (current>-1){
-        mouseBtnEv.setNewVal(this.songs.tracks[current], 'click', false);
-      }
-      mouseBtnEv.setNewVal(this.songs.tracks[index], 'click', true);
-    },
-    //歌单播放按钮点击事件代理
-    plySong:function(ev){
-      var ev = ev||window.event;
-      var target = ev.target||ev.srcElement;
-
-      if (target.nodeName.toLowerCase() == "span"){
-        var index = parseInt(target.dataset.tag);
-        this.plyClick(index);             
-      }
-    },
-    //评论翻页按钮，改变不同类型按钮的isclick值
-    cmtClearTrue:function(cmt,index,len,val){
-      if (index===0){//第一页
-        cmt.first[0].isclick = val;
-      } else if (index===len-1){//最后一页
-        cmt.last[0].isclick = val;
-      } else {//其它
-        cmt.others[index-1].isclick = val;
-      };
-    },
-    //确定评论翻页后，列表显示的页数（cmtIndex.others）
-    cmtNum:function(cmt,type,diff){
-      if(type){
-        cmt.others.forEach(function(val,ind){
-          val.num = ind+diff;
-        });
-      } else {
-        cmt.others.forEach(function(val){
-          val.num += diff;
-        });
-      };
-    },
-    //确定按下切换评论的按钮之前，已经被按下的按钮索引
-    cmtCalcuCurrent:function(cmt){
-      var clickList = new Array();
-
-      for (let page in cmt){
-        clickList.push(...cmt[page].map(function(val){
-            return val.isclick
-          })
-        );
-      }
-
-      var len = clickList.length;
-      var current = clickList.findIndex(function(val){
-        return val===true;
-      });
-      return { cmt,len,current }
-    },
-    //按钮列表页数改变后，确定应被按下的按钮
-    cmtSetTrue:function(cmt, len, current, index,cmtLength){
-      var diff = null;
-      //再次按中同一个按钮不会触发click事件，因此此处无需加current!==index
-      if (cmtLength<11){ //总页数少于11页时，无需省略页数  
-        this.cmtClearTrue(cmt,index,len,true);
-      } else {
-        if (index===0){
-          diff=2;//2=len-cmt.others.length,指的是第一页+最后一页
-          this.cmtNum(cmt,true,diff);
-          this.cmtClearTrue(cmt,index,len,true);
-        } else if(index===len-1){
-          diff = cmtLength-len+2;//40
-          this.cmtNum(cmt,true,diff);
-          this.cmtClearTrue(cmt,index,len,true);
-        } else {
-          var targetNum = cmt.others[index-1].num;
-          switch (true)
-          {
-            case targetNum<6:
-              diff=2;
-              this.cmtNum(cmt,true,diff);
-              this.cmtClearTrue(cmt,targetNum-1,len,true);
-              break;
-            case targetNum>cmtLength-5:
-              diff = cmtLength-len+2;
-              this.cmtNum(cmt,true,diff);
-              this.cmtClearTrue(cmt,targetNum-diff+1,len,true);
-              break;
-            default:
-              diff = targetNum-cmt.others[3].num;
-              this.cmtNum(cmt,false,diff);
-              cmt.others[3].isclick = true;
-              break;
-          }
-        };
-      };
-    },
-    //切换评论按钮点击事件
-    cmtClick:function(add,index){
-      this.cmts = null;//新一页评论数据返回之前隐藏当前评论
-      var { cmt, len, current} = this.cmtCalcuCurrent(this.cmtIndex);
-      if (add!==null){//上一页、下一页
-        var index = current+add;
-      }
-
-      var pageIndex = null;
-      if (index===0){
-        pageIndex = cmt.first[0].num;
-      } else if (index===len-1) {
-        pageIndex = cmt.last[0].num;
-      } else {
-        pageIndex = cmt.others[index-1].num;
-      };
-
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/${pageIndex}`)
-        .then(response => {
-          this.cmts = response.data.comments;
-          this.cmtNumber = response.data.total;
-        })
-        .catch(response => {
-          console.log(response)
-      });
-      
-      this.cmtClearTrue(cmt,current,len,false);
-      this.cmtSetTrue(cmt, len, current, index,this.cmtLength);
-    } 
-  },
-  beforeCreate:function(){
-    //请求歌单数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/detail/551088906`)
-      .then(response => {
-        this.hasResult = response.data.result;//初始化全部歌单数据
-      })
-      .catch(response => {
-        console.log(response)
-    });
-    //请求评论数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/1`)
-      .then(response => {
-        this.cmts = response.data.comments;//初始化全部评论数据
-        this.cmtNumber = response.data.total;//初始化评论总数
-      })
-      .catch(response => {
-        console.log(response)
-    });
-  },
-  computed:{
-    //当前还允许继续输入的字数
-    cmtCount:function(){
-      var content = this.cmtContent;
-      return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
-    },
-    //评论页数（每页20条评论）
-    cmtLength:function(){
-      return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/20);
-    },
-    //第一页之后是否显示...
-    cmtFrontMore:function(){
-      return this.cmtIndex.others[0].num>2;
-    },
-    //最后一页之前是否显示...
-    cmtNextMore:function(){
-      var numb = this.cmtIndex.others;
-      return this.cmtLength>10&&numb[numb.length-1].num<this.cmtLength-1;
-    },
-  },
-  watch:{
-    //歌单数据返回后，提取、格式化需要的数据
-    hasResult:function(result){
-      //解构result.tracks
-      var originTracks = result.tracks,
-          list = new Array();
-      for ( let item of originTracks ){ 
-        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
-        duration = mouseBtnEv.changeTime(duration);
-        list.push({ duration, songName, albName, artName, click:false});
-      }
-      //初始化songs
-      this.songs = {
-        coverImgUrl:result.coverImgUrl,
-        name:result.name,
-        subscribedCount:result.subscribedCount,
-        shareCount:result.shareCount,
-        commentCount:result.commentCount,
-        tags:result.tags,
-        trackCount:result.trackCount,
-        playCount:result.playCount,
-        tracks:list,
-        creator:result.creator,
-        createtime:new Date(result.createTime).toLocaleDateString().replace(/\//g,"-"),
-        descDot:result.description.substr(0,99),
-        descMore: result.description.length>99?result.description:null,
-        isShowMore:false,   
-      };
-    },
-    //评论数据返回后，提取、格式化需要的数据
-    cmts:function(result){
-      if (result!==null){
-        for (let cmt of result){
-          cmt.time = mouseBtnEv.setCommentTime(cmt.time)
-        }
-      }
-    },
-    //确定当前评论页数
-    cmtLength:function(newVal,oldVal){
-      if (oldVal===null){//页面打开时初始化
-        var othersLen = newVal<11?newVal-2:7; 
-        for (let i =0;i<othersLen;i++){
-            this.cmtIndex.others.push({num:2+i,isclick: false});
-          }
-      } 
-      this.cmtIndex.last[0].num = newVal;
-    }
-  }
 }
 </script>
 
 <style>
+.uh-vid h3{
+  color: rgb(102,102,102);
+}
+.uh-vidio div{
+  float: left;
+  height: 50px;
+  margin-left: 10px;
+  font-size: 12px;
+  line-height: 50px;
+  text-align: left;
+  vertical-align: middle;
+}
+div.vid-circ{
+  width: 50px;
+  text-align: right;
+}
+.vid-read{
+  width: 160px;
+}
+.vid-update{
+  width: 190px;
+}
+.vid-rec{
+  width: 500px;
+  padding-right: 38px;
+}
+.vid-rec a,.vid-name a{
+  color: rgb(0,0,0);
+}
+.vid-rec:hover,.vid-name:hover{
+  text-decoration: underline;
+}
+.uh-vidio{
+  list-style-type: none;
+  padding: 0;
+  border: 1px solid rgb(229,229,229);
+  border-top: 0;
+  margin: 0 0 24px 0;
+}
+.uh-vidio li{
+  height: 50px;
+  padding: 10px 0;
+}
+.vid-name{
+  width: 331px;
+  padding-right: 38px;
+}
+.vid-pic{
+  float: left;
+  width: 50px;
+  height: 50px;
+  margin-left: 20px;
+}
+.vid-pic img{
+  width: 100%;
+  height: 100%;
+}
+.uh-listdes{
+  margin: 8px 0 3px 0;
+}
+.uh-listdes a{
+  color: rgb(0,0,0);
+  font-size: 14px;
+}
+#uh-listwrap{
+  margin-left: -50px;
+}
+li.uh-list{
+  height: 165px;
+  padding-left: 50px;
+  float: left;
+}
+.weibo{
+  background: url(../assets/logo.png) no-repeat scroll 0 0;
+}
+.uh-social a{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 20px;
+  vertical-align: middle;
+}
+.uh-loca{
+    overflow: hidden;
+}
+.uh-loca span{
+  margin-right: 20px;
+}
+.uhd-conect{
+  list-style-type: none;
+  padding: 0;
+  overflow: hidden;
+}
+.uhd-conect li{
+  float: left;
+  padding:0 40px 0 20px;
+  border-left: 1px solid rgb(221,221,221);
+  text-align: center;
+}
+.uhd-conect strong{
+  font-size: 24px;
+  font-weight: normal;
+}
+.uhd-conect a:hover{
+  color: #4996d1;
+}
+#li-frt{
+  border:0;
+}
+.uhd-head{
+  overflow: hidden;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(221,221,221);
+}
+.follow{
+  float: left;
+  width: 40px;
+  height: 31px;
+  margin: 4px 0 0 15px;
+  padding-left: 30px;
+  background: url(../assets/button.png) no-repeat scroll 0 -720px;
+  line-height: 31px;
+  color: white;
+}
+.sendMsg{
+  float: left;
+  width: 75px;
+  height: 31px;
+  margin: 4px 0 0 15px;
+  background: url(../assets/button.png) no-repeat scroll 0 -810px;
+  line-height: 31px;
+}
+.sendMsg i,.follow i{
+  float: right;
+  margin-right: 8px;
+}
+.female{
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 8px 0 0 9px;
+  background: url(../assets/icon.png) no-repeat scroll -41px -27px;
+}
+.userLv{
+  height: 19px;
+  padding-left: 29px;
+  margin: 8px 0 0 10px;
+  background: url(../assets/icon2.png) no-repeat scroll -135px -190px;
+  color: rgb(224,58,36);
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: bold;
+  vertical-align: middle;
+}
+.userLv em{
+  float: left;
+}
+.userLv i{
+  float: right;
+  width: 9px;
+  height: 19px;
+  background: url(../assets/icon2.png) no-repeat scroll -191px -190px;
+}
 .uh-des{
   padding-left: 228px;
+}
+.uh-des p{
+  font-size: 12px;
+  line-height: 21px;
+  margin: 0 0 5px 0;
 }
 .uh-des h2{
   float: left;
@@ -287,6 +301,9 @@ export default {
   font-size: 22px;
   font-weight: normal;
   color: black;
+}
+.uh-des span{
+  float: left;
 }
 .uh-head{
   position: relative;
