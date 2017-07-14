@@ -71,3 +71,20 @@ class SongCommentsWithPage(Resource):
                 404, message='do request with a right songId and\
                  page number, current id:{} and current page:{}\
                  '.format(songId, page))
+
+
+@songAPI.resource('/lyrics/<string:songId>')
+class LyricsOfSong(Resource):
+    """docstring for LyricsOfSong"""
+
+    def get(self, songId):
+        if songId:
+            data = data_poster.get_lyric(songId)
+            if data:
+                return output(jsonify(data))
+            else:
+                abort(404, message='no lyrics for song:{}'.format(songId))
+        else:
+            abort(
+                404, message='do request with a right songId, \
+                current id:{}'.format(songId))

@@ -19,8 +19,9 @@ user_follows_URL = 'http://music.163.com/weapi/user/getfollows/{}?csrf_token='
 user_fans_URL = 'http://music.163.com/weapi/user/getfolloweds?csrf_token='
 playlist_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/A_PL_0_{}?csrf_token='
 playlist_detail_URL = 'http://music.163.com/api/playlist/detail?id={}'
-song_comments_URL = 'http://music.163.com/api/v1/resource/comments/R_SO_4_{}/?rid=R_SO_4_{}&offset={}&total=true&limit=100'
+song_comments_URL = 'http://music.163.com/api/v1/resource/comments/R_SO_4_{}/?rid=R_SO_4_{}&offset={}&total=true&limit=20'
 song_detail_URL = 'http://music.163.com/api/song/detail?ids=[{}]'
+song_lyric_URL = 'http://music.163.com/api/song/lyric?id={}&lv=-1&tv=-1'
 session = Session()
 
 
@@ -262,6 +263,7 @@ def get_playlist_comments(playlistId):
 
 
 def get_playlist_detail(playlistId):
+    # 根据歌单id获取歌单详情
     detail_url = playlist_detail_URL.format(playlistId)
     detail_origin_data = get_data_from_web(detail_url)
     if detail_origin_data:
@@ -283,6 +285,7 @@ def get_song_detail(songId):
 
 
 def get_song_comments(songId):
+    # 根据歌曲ID获取全部评论
     data_list = []
     data_flag = True
     data_times = 0
@@ -302,6 +305,7 @@ def get_song_comments(songId):
 
 
 def get_playlist_comments_withoffset(playlistid, page):
+    # 根据歌单id和page获取歌单评论
     data_list = {}
     postURL = playlist_comments_URL.format(playlistid)
     post_param = get_playlist_comments_param(playlistid)
@@ -315,11 +319,48 @@ def get_playlist_comments_withoffset(playlistid, page):
 
 
 def get_song_comments_withoffset(songId, page):
+    # 根据歌曲id和page获取评论
     comments_url = song_comments_URL.format(
         songId, songId, 20 * (page - 1))
     response_data = get_data_from_web(comments_url)
     return json.loads(response_data.content)
 
 
+def get_lyric(songId):
+    lyricURL = song_lyric_URL.format(songId)
+    response_data = get_data_from_web(lyricURL)
+    lyric_data = json.loads(response_data.content)
+    if lyric_data:
+        # 修改歌词和翻译歌词
+        try:
+            lyric = lyric_data['lrc']['lyric']
+        except Exception as e:
+            print(str(e))
+        else:
+            lyric_str = convert_lyric(lyric)
+            lyric_data['lrc']['lyric'] = lyric_str
+
+        try:
+            tlyric = lyric_data['tlyric']['lyric']
+        except Exception as e:
+            print(str(e))
+        else:
+            tlyric_str = convert_lyric(tlyric)
+            lyric_data['tlyric']['lyric'] = tlyric_str
+        return lyric_data
+    else:
+        return None
+
+
+def convert_lyric(lyric):
+    if lyric:
+        lyric_data = lyric.split('\n')
+        lyric_pure = [x[10:] for x in lyric_data[1:]]
+        lyric_result = '\n'.join(lyric_pure)
+        return lyric_result
+    else:
+        return None
+
+
 if __name__ == '__main__':
-    print get_song_comments_withoffset('490006672', 1)
+    print get_lyric('405343230')
