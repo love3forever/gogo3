@@ -5,18 +5,20 @@
 # @Link    : https://eclipsesv.com
 # @Version : $Id$
 import json
-import time
 from requests import Session
 from bs4 import BeautifulSoup
-from params_dicts import get_user_follows_param, get_user_fans_param, get_playlist_comments_param
+from params_dicts import get_user_follows_param, get_user_fans_param, \
+    get_playlist_comments_param, get_user_playlist_param, \
+    get_user_playrecord_week, get_user_playrecord_all
 from encrypter import encrypted_request
-from functools import wraps
 
 host_url = 'https://music.163.com/{}'
 indexURL = 'https://music.163.com/discover'
 playlist_URL = 'https://music.163.com/playlist?id={}'
 user_follows_URL = 'http://music.163.com/weapi/user/getfollows/{}?csrf_token='
 user_fans_URL = 'http://music.163.com/weapi/user/getfolloweds?csrf_token='
+user_playlist_URL = 'http://music.163.com/weapi/user/playlist?csrf_token='
+user_playrecord_URL = 'http://music.163.com/weapi/v1/play/record?csrf_token='
 playlist_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/A_PL_0_{}?csrf_token='
 playlist_detail_URL = 'http://music.163.com/api/playlist/detail?id={}'
 song_comments_URL = 'http://music.163.com/api/v1/resource/comments/R_SO_4_{}/?rid=R_SO_4_{}&offset={}&total=true&limit=20'
@@ -233,13 +235,20 @@ def data_poster(uid, postURL, keyword, getparamFunc):
         data_flag = True
         data_times = 0
         while data_flag:
-            post_param['offset'] = str(data_times * 100)
+            post_param['offset'] = int(data_times * 100)
+            print(post_param)
             encrtyed_param = encrypted_request(post_param)
             response_data = post_data_to_web(postURL, encrtyed_param)
+            print(response_data)
             if response_data[keyword]:
                 data_list.extend(response_data[keyword])
+                print(data_list)
             data_times += 1
-            data_flag = response_data['more']
+            try:
+                data_flag = response_data['more']
+            except Exception as e:
+                print(str(e))
+                data_flag = False
         return data_list
     else:
         print('{} should be callable'.format(str(getparamFunc)))
@@ -254,6 +263,21 @@ def get_user_follows(userid):
 def get_user_fans(userid):
     # 根据用户id获取粉丝列表
     return data_poster(userid, user_fans_URL, 'followeds', get_user_fans_param)
+
+
+def get_user_playlist(userid):
+    # 根据用户id获取用户歌单
+    return data_poster(userid, user_playlist_URL,
+                       'playlist', get_user_playlist_param)
+
+
+def get_user_playrecord(userid, kind):
+    # 根据用户id获取用户播放记录
+    if kind:
+        getFunc = get_user_playrecord_all
+    else:
+        getFunc = get_user_playrecord_week
+    return data_poster(userid, user_playrecord_URL, 'allData', getFunc)
 
 
 def get_playlist_comments(playlistId):
@@ -363,4 +387,4 @@ def convert_lyric(lyric):
 
 
 if __name__ == '__main__':
-    print get_lyric('405343230')
+    print get_user_playlist('66891851')

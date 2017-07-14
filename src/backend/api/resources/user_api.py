@@ -32,7 +32,8 @@ class UserFollows(Resource):
             else:
                 return abort(404, 'user {} follows nobody'.format(userId))
         else:
-            return abort(404, 'do request with right user id, current id:{}'.format(userId))
+            return abort(404, 'do request with right user id, \
+                current id:{}'.format(userId))
 
 
 @userAPI.resource('/<string:userId>/fans')
@@ -52,4 +53,27 @@ class UserFans(Resource):
             else:
                 return abort(404, 'user {} has no fans at all'.format(userId))
         else:
-            return abort(404, 'do request with right user id, current id:{}'.format(userId))
+            return abort(404, 'do request with right user id, \
+                current id:{}'.format(userId))
+
+
+@userAPI.resource('/<string:userId>/playlist')
+class UserPlaylist(Resource):
+    """docstring for UserPlaylist"""
+
+    def get(self, userId):
+        if userId:
+            data = data_poster.get_user_playlist(userId)
+            if data:
+                result = {
+                    'user': userId,
+                    'playlist': data,
+                    'code': 200
+                }
+                return output(jsonify(result))
+            else:
+                return abort(404, 'user {} has no playlist at all'
+                             .format(userId))
+        else:
+            return abort(404, 'do request with right user id, \
+                current id:{}'.format(userId))

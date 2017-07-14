@@ -15,6 +15,19 @@ post_data = {
 playlist_comments = {"rid": "A_PL_0_{}", "offset": "0", "total": "true",
                      "limit": "100", "csrf_token": ""}
 
+user_playlist = {
+    'uid': '',
+    'offset': "0",
+    'limit': "20",
+}
+
+
+user_playrecord_week = {"uid": "66891851", "type": "0",
+                        "limit": "1000", "offset": "0", "total": "true"}
+
+user_playrecord_all = {"uid": "66891851", "type": "0",
+                       "limit": "1000", "offset": "0", "total": "true"}
+
 
 def get_user_follows_param(userId):
     follows_data = post_data
@@ -28,7 +41,25 @@ def get_user_fans_param(userId):
     return fans_data
 
 
+def get_user_playlist_param(userId):
+    playlist_data = user_playlist
+    playlist_data['uid'] = userId
+    return playlist_data
+
+
 def get_playlist_comments_param(playlistId):
     comments_param = playlist_comments
     comments_param['rid'] = comments_param['rid'].format(playlistId)
     return comments_param
+
+
+def get_user_playrecord_week(userId):
+    record_data = user_playrecord_week
+    record_data['uid'] = userId
+    return record_data
+
+
+def get_user_playrecord_all(userId):
+    record_data = user_playrecord_all
+    record_data['uid'] = userId
+    return record_data

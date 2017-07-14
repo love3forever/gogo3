@@ -100,6 +100,10 @@ class Test_Playlist_Api(unittest.TestCase):
         rv = self.app.get('/api/v1/song/lyrics/405343230')
         assert rv.status_code == 200
 
+    def test_user_playlist(self):
+        rv = self.app.get('/api/v1/user/77159064/playlist')
+        assert rv.status_code == 200
+
 
 class Test_Index_Api(unittest.TestCase):
     """docstring for ClassName"""
