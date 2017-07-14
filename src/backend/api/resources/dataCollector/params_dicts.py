@@ -15,18 +15,45 @@ post_data = {
 playlist_comments = {"rid": "A_PL_0_{}", "offset": "0", "total": "true",
                      "limit": "100", "csrf_token": ""}
 
+# user_playlist = {
+#     'uid': '',
+#     'offset': "0",
+#     'limit': "20",
+# }
+
 user_playlist = {
-    'uid': '',
-    'offset': "0",
-    'limit': "20",
+    "csrf_token": "",
+    "limit": "36",
+    "offset": "0",
+    "total": "true",
+    "uid": "66891851",
+    "wordwrap": "7"
 }
 
 
-user_playrecord_week = {"uid": "66891851", "type": "0",
-                        "limit": "1000", "offset": "0", "total": "true"}
+# user_playrecord_week = {"uid": "66891851", "type": "0",
+#                         "limit": "1000", "offset": "0", "total": "true"}
 
-user_playrecord_all = {"uid": "66891851", "type": "0",
-                       "limit": "1000", "offset": "0", "total": "true"}
+# user_playrecord_all = {"uid": "66891851", "type": "0",
+#                        "limit": "1000", "offset": "0", "total": "true"}
+
+user_playrecord_all = {
+    "csrf_token": "",
+    "limit": "1000",
+    "offset": "0",
+    "total": "true",
+    "type": "-1",
+    "uid": "66891851"
+}
+
+user_playrecord_week = {
+    "csrf_token": "",
+    "limit": "1000",
+    "offset": "0",
+    "total": "true",
+    "type": "-1",
+    "uid": "66891851"
+}
 
 
 def get_user_follows_param(userId):

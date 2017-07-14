@@ -24,6 +24,7 @@ playlist_detail_URL = 'http://music.163.com/api/playlist/detail?id={}'
 song_comments_URL = 'http://music.163.com/api/v1/resource/comments/R_SO_4_{}/?rid=R_SO_4_{}&offset={}&total=true&limit=20'
 song_detail_URL = 'http://music.163.com/api/song/detail?ids=[{}]'
 song_lyric_URL = 'http://music.163.com/api/song/lyric?id={}&lv=-1&tv=-1'
+artist_index_URL = 'http://music.163.com/artist?id={}'
 session = Session()
 
 
@@ -236,13 +237,10 @@ def data_poster(uid, postURL, keyword, getparamFunc):
         data_times = 0
         while data_flag:
             post_param['offset'] = int(data_times * 100)
-            print(post_param)
             encrtyed_param = encrypted_request(post_param)
             response_data = post_data_to_web(postURL, encrtyed_param)
-            print(response_data)
             if response_data[keyword]:
                 data_list.extend(response_data[keyword])
-                print(data_list)
             data_times += 1
             try:
                 data_flag = response_data['more']
@@ -386,5 +384,35 @@ def convert_lyric(lyric):
         return None
 
 
+##########################################
+# 获取歌手相关内容 ############
+##########################################
+
+def get_artist_index_page(artistId):
+    index_url = artist_index_URL.format(artistId)
+    index_data = get_data_from_web(index_url)
+    index_info = {}
+    if index_data:
+        index_soup = BeautifulSoup(index_data.content, 'lxml')
+        top_50_songs = index_soup.select('#song-list-pre-cache > textarea')
+        if top_50_songs:
+            songs = top_50_songs[0].string
+            index_info.setdefault('top50', json.loads(songs))
+        pic_info = index_soup.select('.n-artist > img')
+        index_info.setdefault('img', pic_info[0]['src'] or None)
+        try:
+            artist_name = index_soup.select('#artist-name')[0].string
+            artist_alias = index_soup.select('#artist-alias')[0].string
+        except Exception as e:
+            print(str(e))
+        else:
+            index_info.setdefault('artist_name', artist_name)
+            index_info.setdefault('artist_alias', artist_alias)
+        return index_info
+    else:
+        return None
+
+
 if __name__ == '__main__':
-    print get_user_playlist('66891851')
+    # print get_user_playlist('66891851')
+    print get_artist_index_page('5346')

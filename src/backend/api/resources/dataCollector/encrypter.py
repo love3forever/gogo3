@@ -37,7 +37,6 @@ def rsaEncrypt(text, pubKey, modulus):
 
 def encrypted_request(text):
     text = json.dumps(text)
-    print(text)
     secKey = createSecretKey(16)
     encText = aesEncrypt(aesEncrypt(text, nonce), secKey)
     encSecKey = rsaEncrypt(secKey, pubKey, modulus)
@@ -45,5 +44,4 @@ def encrypted_request(text):
         'params': encText,
         'encSecKey': encSecKey
     }
-    print(data)
     return data
