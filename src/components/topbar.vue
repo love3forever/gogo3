@@ -5,7 +5,6 @@
       <ul class="inbl" id="btnlist">
         <li class="inbl" v-for="(item,index) in title" track-by="$index" @click="mouseClick(index)" :class="{'btnCliact': item[1]}">
           <router-link to="/home"><span>{{item[0]}}</span><sub :class="{'subHide': !item[1]}"></sub></router-link>       
-          <!-- <a href="/#"><span>{{item[0]}}</span><sub :class="{'subHide': !item[1]}"></sub></a> -->
         </li>
       </ul>
       <div class="wrap" id="search">

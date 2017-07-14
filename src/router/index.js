@@ -4,9 +4,12 @@ import origin from '@/components/origin'
 import foot from '@/components/foot'
 import originlist from '@/components/origin-list'
 import playlist from '@/components/play-list'
-import comment from '@/components/comment'
+import song from '@/components/song'
 import track from '@/components/track'
 import user from '@/components/user'
+import fans from '@/components/user-fans'
+import fav from '@/components/user-fav'
+import gens from '@/components/user-general'
 
 Vue.use(Router)
 
@@ -28,13 +31,21 @@ export default new Router({
 		},   
 		{
 			//path: '/use/playlist',component: originlist,
-			path: '/use/playlist',component: user,			  
+			path: '/user/:id',component: user,	
+			children :[
+				{path:'',component:gens},
+				{path:'fans',component:fans},
+				{path:'fav',component:fav},
+			]		  
 		},
 		{
-			path: '/use/playlist/:id',component: playlist,	
+			path: '/album',component: track,	
 		},
 		{
-			path: '/song/:id',component: comment,	
+			path: '/playlist/:id',component: playlist,	
+		},
+		{
+			path: '/song/:id',component: song,	
 		},
 	]
 })

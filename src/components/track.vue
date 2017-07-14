@@ -9,7 +9,7 @@
           </div>
           <div class="playlist-content">
             <div class="content-title">
-              <i id="songIcon"></i>
+              <i id="trackIcon"></i>
               <h2>
                 {{songs.name}}
                 <a class="plyMv" href="javascript:;">
@@ -52,7 +52,7 @@
         </div>
         <div class="playlist-tracks">
           <div class="u-title">
-            <h3>歌曲列表</h3>
+            <h3>包含歌曲列表</h3>
             <span class="u-lft">{{`${songs.trackCount}首歌`}}</span>
             <div class="u-rgt">
               <i></i>
@@ -414,7 +414,7 @@ export default {
     },
     //第一页之后是否显示...
     cmtFrontMore:function(){
-      return this.cmtIndex.others[0].num>2;
+      return this.cmtLength>10&&this.cmtIndex.others[0].num>2;
     },
     //最后一页之前是否显示...
     cmtNextMore:function(){
@@ -474,6 +474,9 @@ export default {
 </script>
 
 <style scoped>
+#trackIcon{
+  background-position: 0 -186px;
+}
 .track-info{
   margin-top:20px;
   font-size: 12px;

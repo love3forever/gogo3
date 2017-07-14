@@ -14,7 +14,7 @@
             </div>
             <div class="content-author">
               <a href="/#"><img :src="songs.creator.avatarUrl"></a>
-              <span><a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+              <span><router-link :to="'/user/'+songs.creator.userId" class="author-link">{{songs.creator.nickname}}</router-link></span>
               <sup></sup>
               <span>{{songs.createtime}}&nbsp创建</span>
             </div>
@@ -88,8 +88,15 @@
                    </router-link>
                  </td>
                   <td>{{track.duration}}</td>
-                  <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
-                  <td class="p-over"><a href="#" :title="track.albName">{{track.albName}}</a></td>
+                  <td class="p-over">
+                    <a href="#" :title="track.artName">{{track.artName}}</a>
+                  </td>
+                  <td class="p-over">
+                    <router-link to="/album" :title="track.albName">
+                      {{track.albName}}
+                    <!-- <a href="#" :title="track.albName">{{track.albName}}</a></td> -->
+                    </router-link>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -245,6 +252,7 @@ export default {
       maxlength:140,//允许输入的最多字数
       cmtContent:"",//评论内容
       cmtNumber:null,//评论总数
+      maxNum:20,//每页最多20条，多余20则翻页
       cmtIndex:{//评论页码
         first: [{ num: 1, isclick: true}],//第一页
         others: [],//中间页
@@ -418,13 +426,13 @@ export default {
       var content = this.cmtContent;
       return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
     },
-    //评论页数（每页20条评论）
+    //评论页数
     cmtLength:function(){
-      return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/20);
+      return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/this.maxNum);
     },
     //第一页之后是否显示...
     cmtFrontMore:function(){
-      return this.cmtIndex.others[0].num>2;
+      return this.cmtLength>10&&this.cmtIndex.others[0].num>2;
     },
     //最后一页之前是否显示...
     cmtNextMore:function(){

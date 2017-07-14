@@ -70,8 +70,8 @@ let mouseBtnEv = {
       minute:cmtTime.getMinutes()>9?cmtTime.getMinutes():`0${cmtTime.getMinutes()}`
     };
 
-    if (diff<2*1000){
-      return `1秒前` 
+    if (diff<60*1000){
+      return `刚刚`
     } else if(diff<60*60*1000){
       return `${parseInt(diff/(60*1000))}分钟前`
     } else if(diff<60*60*2*1000) {

@@ -44,19 +44,34 @@
                 <i>下载</i>
               </a>
               <a href="#" class="btn-cm">
-                <i>{{`(${songs.commentCount})`}}</i>
+                <i>{{cmtNumber}}</i>
               </a>
               <div class="clear"></div>
             </div>
-            <pre v-show="!songs.isShowMore"><b class="u-desc"></b>{{songs.descDot}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
+            <pre class="lyricshow"><b class="u-desc"></b>{{lyc}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
             <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
             <div id="a-showmore" class="show-more" v-if="songs.descMore">
               <a href="javascript:;" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
               <i class="u-ico" :class="{'u-icoActive':songs.isShowMore}"></i>
             </div>
             <div class="upload-lrc">
-              <a href="javascript:;">上传歌词</a>
-              <a href="javascript:;">报错</a>              
+              <a href="javascript:;" v-if="wholeLyc&&wholeLyc.sgc">上传歌词</a>
+              <a href="javascript:;" v-if="wholeLyc&&wholeLyc.sfy">翻译歌词</a>
+              <a href="javascript:;">报错</a> 
+              <p class="transLyc">
+                <span v-if="wholeLyc&&wholeLyc.lyricUser">
+                  贡献歌词：
+                  <a>{{wholeLyc.lyricUser.nickname}}</a>
+                </span>
+                <span v-if="wholeLyc&&wholeLyc.transUser">
+                  贡献翻译：
+                  <a>{{wholeLyc.transUser.nickname}}</a>
+                </span> 
+                <span v-if="wholeLyc&&wholeLyc.qfy">
+                  暂时没有翻译，
+                  <a id="qfy">求翻译</a>
+                </span>
+              </p>             
             </div>
           </div>
         </div>
@@ -197,6 +212,8 @@ export default {
         singer: {name:null,id:null},
         track: {name:null,id:null},
       },
+      wholeLyc:null,
+      lyc:null,
      songs:{//歌单
         coverImgUrl:null,
         name:null,
@@ -330,7 +347,7 @@ export default {
         pageIndex = cmt.others[index-1].num;
       };
 
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/519500448/page/1`)
+      this.$http.get(`http://123.206.211.77:33333/api/v1/song/comments/${this.$route.params.id}/page/${pageIndex}`)
         .then(response => {
           this.cmts = response.data.comments;
           this.cmtNumber = response.data.total;
@@ -348,13 +365,21 @@ export default {
     this.$http.get(`http://123.206.211.77:33333/api/v1/song/detail/${this.$route.params.id}`)
       .then(response => {
         this.hasResult = response.data.songs[0];//初始化全部歌单数据
-        console.log(this.hasResult)
+      })
+      .catch(response => {
+        console.log(response)
+    });
+    //请求歌词数据
+    this.$http.get(`http://123.206.211.77:33333/api/v1/song/lyrics/${this.$route.params.id}`)
+      .then(response => {
+        this.wholeLyc = response.data;//初始化歌词数据
+        console.log(this.wholeLyc)
       })
       .catch(response => {
         console.log(response)
     });
     //请求评论数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/519500448/page/1`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/song/comments/${this.$route.params.id}/page/1`)
       .then(response => {
         this.cmts = response.data.comments;//初始化全部评论数据
         this.cmtNumber = response.data.total;//初始化评论总数
@@ -375,22 +400,26 @@ export default {
     },
     //第一页之后是否显示...
     cmtFrontMore:function(){
-      return this.cmtIndex.others[0].num>2;
+      return this.cmtLength>10&&this.cmtIndex.others[0].num>2;
     },
     //最后一页之前是否显示...
     cmtNextMore:function(){
       var numb = this.cmtIndex.others;
       return this.cmtLength>10&&numb[numb.length-1].num<this.cmtLength-1;
     },
+    desLyc:function(){
+
+    },
+    dosLyc:function(){
+
+    }
   },
   watch:{
     //歌单数据返回后，提取、格式化需要的数据
     hasResult:function(result){
       //解构result.tracks
-
       var album = result.album,
           artists = result.artists[0];
-          console.log(album)
       this.desInfo = {
         songName:result.name,
         songPic:album.picUrl,
@@ -416,12 +445,45 @@ export default {
           }
       } 
       this.cmtIndex.last[0].num = newVal;
+    },
+    wholeLyc:function(wholeLyc){
+      var tlyric = null,
+          lyc = null,
+          finaLyc = [];
+
+      if (wholeLyc.tlyric&&wholeLyc.tlyric.lyric){
+        tlyric = wholeLyc.tlyric.lyric.split('\n');
+        lyc = wholeLyc.lrc.lyric.split('\n');
+        
+        for (let i = 0;i<lyc.length;i++){
+          finaLyc.push(lyc[i],tlyric[i])
+        }
+        this.lyc =  finaLyc.join('\n');
+      } else if (wholeLyc.lrc&&wholeLyc.lrc.lyric){
+        this.lyc = wholeLyc.lrc.lyric;
+      }
     }
   }
 }
 </script>
 
 <style>
+.lyricshow{
+  line-height: 23px;
+}
+#qfy{
+  color: rgb(153,153,153);
+}
+.transLyc{
+  padding-top: 10px;
+  vertical-align: middle;
+}
+.transLyc span{
+  margin-left: 10px;
+}
+p.transLyc a{
+  color: #0c73c2;
+}
 .upload-lrc{
   margin-top: 48px;
   text-align: right;

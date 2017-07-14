@@ -13,14 +13,14 @@
           <li v-for="item in hotitem">
             <div class="item-wrap">
               <img :src="item.img">
-              <router-link :to="'/use/playlist/'+item.playlistID" class="msk"></router-link>
+              <router-link :to="'/playlist/'+item.playlistID" class="msk"></router-link>
               <div class="item-bottom">
                 <span class="ico"></span>
                 <span class="hot-num">{{item.playTimes}}</span>
                 <a href="/#" class="hotplay"></a>
               </div>
             </div>
-            <p><router-link :to="'/use/playlist/'+item.playlistID" class="hot-descrp">{{item.playlistTitle}}</router-link><!--<sub v-if="item[3]"></sub>--></p>
+            <p><router-link :to="'/playlist/'+item.playlistID" class="hot-descrp">{{item.playlistTitle}}</router-link><!--<sub v-if="item[3]"></sub>--></p>
           </li>
         </ul>
       </div>
@@ -43,10 +43,10 @@
                 <li v-for="(top,index) in disk[num%2]">
                   <div>
                     <img :src="top[0]">
-                    <a href="/#" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></a>
+                    <router-link to="/album" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></router-link>
                     <a href="/#" title="播放" class="disk-play" v-show="top[3]"></a>
                   </div>
-                  <p><a href="/#" class="disk-des">{{top[1]}}</a></p>
+                  <p><router-link to="/album" class="disk-des">{{top[1]}}</router-link></p>
                   <p><a href="/#" class="disk-singer">{{top[2]}}</a></p>
                 </li>
               </ul>
