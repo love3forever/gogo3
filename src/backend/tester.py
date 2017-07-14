@@ -9,7 +9,7 @@ import unittest
 from api.resources.dataCollector.data_poster import indexURL,\
     get_data_from_web, parse_index_data, get_playlist_data,\
     get_user_follows, get_user_fans, get_playlist_comments, \
-    get_song_detail, get_song_comments,get_playlist_comments_withoffset
+    get_song_detail, get_song_comments, get_playlist_comments_withoffset
 
 from api.server import app
 
@@ -81,7 +81,11 @@ class Test_Playlist_Api(unittest.TestCase):
         assert rv.status_code == 200
 
     def test_song_comments(self):
-        rv = self.app.get('/api/v1/song/comments/18374880')
+        rv = self.app.get('/api/v1/song/comments/490006672')
+        assert rv.status_code == 200
+
+    def test_song_comments_withoffset(self):
+        rv = self.app.get('/api/v1/song/comments/490006672/page/1')
         assert rv.status_code == 200
 
     def test_user_follows(self):

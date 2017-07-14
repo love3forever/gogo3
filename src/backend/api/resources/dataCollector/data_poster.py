@@ -314,5 +314,12 @@ def get_playlist_comments_withoffset(playlistid, page):
     return data_list
 
 
+def get_song_comments_withoffset(songId, page):
+    comments_url = song_comments_URL.format(
+        songId, songId, 20 * (page - 1))
+    response_data = get_data_from_web(comments_url)
+    return json.loads(response_data.content)
+
+
 if __name__ == '__main__':
-    print str(get_playlist_comments_withoffset('763639683', 1))
+    print get_song_comments_withoffset('490006672', 1)

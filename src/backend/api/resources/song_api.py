@@ -28,7 +28,8 @@ class SongDetail(Resource):
                 abort(404, message='no song detail for {}'.format(songId))
         else:
             abort(
-                404, message='do request with a right songId, current id:{}'.format(songId))
+                404, message='do request with a right songId, \
+                current id:{}'.format(songId))
 
 
 @songAPI.resource('/comments/<string:songId>')
@@ -39,9 +40,34 @@ class SongComments(Resource):
         if songId:
             data = data_poster.get_song_comments(songId)
             if data:
-                return output(jsonify(data))
+                result = {
+                    "songid": songId,
+                    "comments": data,
+                    "code": 200
+                }
+                return output(jsonify(result))
             else:
                 abort(404, message='no song comments for {}'.format(songId))
         else:
             abort(
-                404, message='do request with a right songId, current id:{}'.format(songId))
+                404, message='do request with a right songId, \
+                current id:{}'.format(songId))
+
+
+@songAPI.resource('/comments/<string:songId>/page/<int:page>')
+class SongCommentsWithPage(Resource):
+    """docstring for SongCommentsWithPage"""
+
+    def get(self, songId, page):
+        if songId:
+            data = data_poster.get_song_comments_withoffset(songId, page)
+            if data:
+                return output(jsonify(data))
+            else:
+                abort(404, message='no song comments for {} on page {}'.format(
+                    songId, page))
+        else:
+            abort(
+                404, message='do request with a right songId and\
+                 page number, current id:{} and current page:{}\
+                 '.format(songId, page))
