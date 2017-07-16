@@ -77,3 +77,25 @@ class UserPlaylist(Resource):
         else:
             return abort(404, 'do request with right user id, \
                 current id:{}'.format(userId))
+
+
+@userAPI.resource('/<string:userId>/detail')
+class UserDetail(Resource):
+    """docstring for UserDetail"""
+
+    def get(self, userId):
+        if userId:
+            data = data_poster.get_user_index(userId)
+            if data:
+                result = {
+                    'user': userId,
+                    'code': 200,
+                    'detail': data
+                }
+                return output(jsonify(result))
+            else:
+                return abort(404, 'user {} has no detail info at all'
+                             .format(userId))
+        else:
+            return abort(404, 'do request with right user id, \
+                current id:{}'.format(userId))

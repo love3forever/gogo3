@@ -15,6 +15,7 @@ from encrypter import encrypted_request
 host_url = 'https://music.163.com/{}'
 indexURL = 'https://music.163.com/discover'
 playlist_URL = 'https://music.163.com/playlist?id={}'
+user_index_URL = 'http://music.163.com/user/home?id={}'
 user_follows_URL = 'http://music.163.com/weapi/user/getfollows/{}?csrf_token='
 user_fans_URL = 'http://music.163.com/weapi/user/getfolloweds?csrf_token='
 user_playlist_URL = 'http://music.163.com/weapi/user/playlist?csrf_token='
@@ -26,6 +27,7 @@ song_detail_URL = 'http://music.163.com/api/song/detail?ids=[{}]'
 song_lyric_URL = 'http://music.163.com/api/song/lyric?id={}&lv=-1&tv=-1'
 artist_index_URL = 'http://music.163.com/artist?id={}'
 artist_album_URL = 'http://music.163.com/artist/album?id={}&limit=200'
+
 session = Session()
 
 
@@ -252,6 +254,10 @@ def data_poster(uid, postURL, keyword, getparamFunc):
     else:
         print('{} should be callable'.format(str(getparamFunc)))
 
+##########################################
+# 获取用户相关内容 #########################
+##########################################
+
 
 def get_user_follows(userid):
     # 根据用户id获取关注列表
@@ -277,6 +283,74 @@ def get_user_playrecord(userid, kind):
     else:
         getFunc = get_user_playrecord_week
     return data_poster(userid, user_playrecord_URL, 'allData', getFunc)
+
+
+def get_user_index(userid):
+    # 根据用户id获取基本信息
+    index_url = user_index_URL.format(userid)
+    index_data = get_data_from_web(index_url)
+    if index_data:
+        index_content = index_data.content
+        index_soup = BeautifulSoup(index_content, 'lxml')
+        index_box = index_soup.select('#head-box')[0]
+        index_data = {}
+        img_tag = index_box.select('#ava > img')
+        if len(img_tag):
+            index_data.setdefault(
+                'img', img_tag[0]['src'])
+        wrapper_tag = index_box.select('#j-name-wrap')
+        if len(wrapper_tag):
+            index_name_wrapper = wrapper_tag[0]
+            index_name = index_name_wrapper.select('.tit')[0].string
+            index_data.setdefault('name', index_name)
+            index_level = index_name_wrapper.select('.lev')[0].next
+            index_data.setdefault('level', index_level)
+            genders = {
+                "u-icn-00": "unknown",
+                "u-icn-01": "male",
+                "u-icn-02": "famale"
+            }
+            index_gender = ''
+            for item in genders.keys():
+                if len(index_name_wrapper.select('.{}'.format(item))):
+                    index_gender = genders[item]
+                    break
+            index_data.setdefault('gender', index_gender)
+        events_tag = index_box.select('#event_count')
+        if len(events_tag):
+            index_events = events_tag[0].string
+            index_data.setdefault('events', index_events)
+        follow_tag = index_box.select('#follow_count')
+        if len(follow_tag):
+            index_follows = follow_tag[0].string
+            index_data.setdefault('follows', index_follows)
+        fans_tag = index_box.select('#fan_count')
+        if len(fans_tag):
+            index_fans = index_box.select('#fan_count')[0].string
+            index_data.setdefault('fans', index_fans)
+        age_tag = index_box.select('#age')
+        if len(age_tag):
+            index_location = age_tag[0]
+            location_tag = index_location.find_previous_siblings("span")
+            if len(location_tag):
+                index_location_detail = location_tag[0].string
+                index_data.setdefault('location', index_location_detail)
+        networks_tag = index_box.select('.u-logo')
+        if len(networks_tag):
+            index_networks = networks_tag[0]
+            index_social_networks = {}
+            for item in index_networks.select('li > a'):
+                print(item)
+                index_social_networks.setdefault(item['title'], item['href'])
+            index_data.setdefault('social_networks', index_social_networks)
+        return index_data
+    else:
+        return None
+
+
+##########################################
+# 获取歌单相关内容 #########################
+##########################################
 
 
 def get_playlist_comments(playlistId):
@@ -439,4 +513,4 @@ def get_artist_album(artistId):
 
 if __name__ == '__main__':
     # print get_user_playlist('66891851')
-    print get_artist_album('5346')
+    print get_user_index('98038167')
