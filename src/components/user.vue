@@ -6,7 +6,7 @@
         <div class="uh-des">
           <div class="uhd-head">
             <h2>
-              <span>一只林轩</span>
+              <span>{{user.name}}</span>
               <span class="userLv">
                 <em>6</em>
                 <i></i>
@@ -21,15 +21,15 @@
               <a href="javascript:;"><strong>31</strong></br>动态</a>
             </li>
             <li>
-              <router-link to="/user/fav"><strong>20</strong></br>关注</router-link>
+              <router-link :to="`/user/${this.$route.params.id}/fav`"><strong>20</strong></br>关注</router-link>
             </li>
             <li>
-             <router-link to="/user/fans"><strong>249</strong></br>粉丝</router-link>
+             <router-link :to="`/user/${this.$route.params.id}/fans`"><strong>249</strong></br>粉丝</router-link>
             </li>
           </ul>
-          <p class="self-intro">个人介绍：学生党，暂离。每月末回来，有事请留言或者加群Mamamoo部落粉丝群，群号码：493739853 ！ 私信已关闭，歌单:留言板(置顶) 做个歌单怎么这么难呢！ 笔芯～</p>
-          <p class="uh-loca"><span>所在地区：吉林省 - 延边朝鲜族自治州</span><span>年龄：95后</span></p>
-          <p class="uh-social">社交网络：<a href="" title="新浪微博" class="weibo"></a></p>
+          <p class="self-intro" v-if="user.signature">{{`个人介绍：${user.signature}`}}</p>
+<!--           <p class="uh-loca"><span>所在地区：吉林省 - 延边朝鲜族自治州</span><span>年龄：95后</span></p>
+          <p class="uh-social">社交网络：<a href="" title="新浪微博" class="weibo"></a></p> -->
         </div>
       </div>
       <router-view></router-view>
@@ -44,7 +44,13 @@ export default {
   name: 'user',
   data () {
     return {
-
+      playlistCreateCount:0,
+      playlistCreate:[],
+      user:{
+        signature:null,
+        pic:null,
+        name:null,
+      }
     }
   },
 }
@@ -147,6 +153,7 @@ export default {
 }
 .uh-des{
   padding-left: 228px;
+  height: 197px;
 }
 .uh-des p{
   font-size: 12px;
@@ -159,6 +166,7 @@ export default {
   font-size: 22px;
   font-weight: normal;
   color: black;
+  line-height: 35px;
 }
 .uh-des span{
   float: left;

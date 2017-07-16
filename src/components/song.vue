@@ -48,11 +48,11 @@
               </a>
               <div class="clear"></div>
             </div>
-            <pre class="lyricshow"><b class="u-desc"></b>{{lyc}}<b class="u-desc" v-show="songs.descMore">...</b></pre>
-            <pre v-show="songs.isShowMore"><b class="u-desc">介绍：</b>{{songs.descMore}}</pre>
-            <div id="a-showmore" class="show-more" v-if="songs.descMore">
-              <a href="javascript:;" class="fr" @click="tabShowMore">{{songs.isShowMore?"收起":"展开"}}</a>
-              <i class="u-ico" :class="{'u-icoActive':songs.isShowMore}"></i>
+            <pre class="lyricshow"><b class="u-desc"></b>{{lyc.part1}}</pre>
+            <pre class="lyricshowMore" v-show="lyc.isFlod"><b class="u-desc"></b>{{lyc.part2}}</pre>
+            <div id="a-showmore" class="show-more" v-if="lyc.part2">
+              <a href="javascript:;" class="fr" @click="tabShowMore">{{lyc.isFlod?"收起":"展开"}}</a>
+              <i class="u-ico" :class="{'u-icoActive':lyc.isFlod}"></i>
             </div>
             <div class="upload-lrc">
               <a href="javascript:;" v-if="wholeLyc&&wholeLyc.sgc">上传歌词</a>
@@ -213,22 +213,10 @@ export default {
         track: {name:null,id:null},
       },
       wholeLyc:null,
-      lyc:null,
-     songs:{//歌单
-        coverImgUrl:null,
-        name:null,
-        subscribedCount:null,
-        shareCount:null,
-        commentCount:null,
-        tags:null,
-        trackCount:null,
-        playCount:null,
-        tracks:null,     //歌曲
-        creator:{},    //歌单创建者
-        createtime:null, //歌单创建时间
-        descDot:null,    //歌单介绍part1
-        descMore:null,   //歌单介绍part2
-        isShowMore:false,//歌单介绍是否展开
+      lyc:{
+        part1:null,
+        part2:null,
+        isFlod:false,
       },
       hasCmt:null,//是否返回评论数据
       maxlength:140,//允许输入的最多字数
@@ -251,7 +239,7 @@ export default {
     },
     //歌单介绍-展开/收起按钮点击事件
     tabShowMore:function(){
-      this.songs.isShowMore = !this.songs.isShowMore;
+      this.lyc.isFlod = !this.lyc.isFlod;
     },
     //评论翻页按钮，改变不同类型按钮的isclick值
     cmtClearTrue:function(cmt,index,len,val){
@@ -358,7 +346,7 @@ export default {
       
       this.cmtClearTrue(cmt,current,len,false);
       this.cmtSetTrue(cmt, len, current, index,this.cmtLength);
-    } 
+    },
   },
   beforeCreate:function(){
     //请求歌单数据
@@ -373,7 +361,6 @@ export default {
     this.$http.get(`http://123.206.211.77:33333/api/v1/song/lyrics/${this.$route.params.id}`)
       .then(response => {
         this.wholeLyc = response.data;//初始化歌词数据
-        console.log(this.wholeLyc)
       })
       .catch(response => {
         console.log(response)
@@ -457,11 +444,13 @@ export default {
         
         for (let i = 0;i<lyc.length;i++){
           finaLyc.push(lyc[i],tlyric[i])
-        }
-        this.lyc =  finaLyc.join('\n');
+        };       
       } else if (wholeLyc.lrc&&wholeLyc.lrc.lyric){
-        this.lyc = wholeLyc.lrc.lyric;
+        finaLyc = wholeLyc.lrc.lyric.split('\n');
       }
+
+      this.lyc.part1 =  finaLyc.slice(0,14).join('\n');
+      this.lyc.part2 =  finaLyc.slice(14).join('\n');
     }
   }
 }
@@ -469,6 +458,12 @@ export default {
 
 <style>
 .lyricshow{
+  height: 327px;
+  margin: 13px 0 0 0;
+  line-height: 23px;
+}
+.lyricshowMore{
+  margin: 0;
   line-height: 23px;
 }
 #qfy{

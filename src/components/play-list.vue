@@ -13,7 +13,7 @@
               <h2>{{songs.name}}</h2>
             </div>
             <div class="content-author">
-              <a href="/#"><img :src="songs.creator.avatarUrl"></a>
+              <a href="'/user/'+songs.creator.id"><img :src="songs.creator.avatarUrl"></a>
               <span><router-link :to="'/user/'+songs.creator.userId" class="author-link">{{songs.creator.nickname}}</router-link></span>
               <sup></sup>
               <span>{{songs.createtime}}&nbsp创建</span>
@@ -81,22 +81,14 @@
                       <span :class="[track.click?'tracks-cli':'tracks-ply']" :data-tag="index"></span>
                     </div>
                   </td>
-                  <!-- <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td> -->
                  <td class="p-over">
                    <router-link :to="'/song/'+track.id" :title="track.songName">
                     {{track.songName}}
                    </router-link>
                  </td>
                   <td>{{track.duration}}</td>
-                  <td class="p-over">
-                    <a href="#" :title="track.artName">{{track.artName}}</a>
-                  </td>
-                  <td class="p-over">
-                    <router-link to="/album" :title="track.albName">
-                      {{track.albName}}
-                    <!-- <a href="#" :title="track.albName">{{track.albName}}</a></td> -->
-                    </router-link>
-                  </td>
+                  <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
+                  <td class="p-over"><a href="#" :title="track.albName">{{track.albName}}</a></td>
                 </tr>
               </tbody>
             </table>
@@ -252,7 +244,6 @@ export default {
       maxlength:140,//允许输入的最多字数
       cmtContent:"",//评论内容
       cmtNumber:null,//评论总数
-      maxNum:20,//每页最多20条，多余20则翻页
       cmtIndex:{//评论页码
         first: [{ num: 1, isclick: true}],//第一页
         others: [],//中间页
@@ -388,7 +379,7 @@ export default {
         pageIndex = cmt.others[index-1].num;
       };
 
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/1`)
+      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/${this.$route.params.id}/page/${pageIndex}`)
         .then(response => {
           this.cmts = response.data.comments;
           this.cmtNumber = response.data.total;
@@ -426,13 +417,13 @@ export default {
       var content = this.cmtContent;
       return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
     },
-    //评论页数
+    //评论页数（每页20条评论）
     cmtLength:function(){
-      return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/this.maxNum);
+      return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/20);
     },
     //第一页之后是否显示...
     cmtFrontMore:function(){
-      return this.cmtLength>10&&this.cmtIndex.others[0].num>2;
+      return this.cmtIndex.others[0].num>2;
     },
     //最后一页之前是否显示...
     cmtNextMore:function(){

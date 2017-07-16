@@ -1,70 +1,76 @@
 <template>
-  <div class="uh-content">
-    <div class="uh-vid">
-      <div class="u-title">
-        <h3>一只林轩创建的专栏</h3>
-      </div>
-      <ul class="uh-vidio">
-        <li>
-          <a href="" class="vid-pic"><img src="http://p1.music.126.net/DHYfWefTsKDcR5pyzXS9Og==/1408474409807840.jpg?param=50y50"></a>
-          <div class="vid-name"><a href="">只有音乐是我解药</a></div>
-          <div class="vid-read">阅读总量：100000+</div>
-          <div class="vid-update">最近更新2016-08-27</div>
-          <div class="vid-circ">2期</div>
-        </li>
-      </ul>
-    </div>
-    <div class="uh-vid">
-      <div class="u-title">
-        <h3>一只林轩创建的电台</h3>
-      </div>
-      <ul class="uh-vidio">
-        <li>
-          <a href="" class="vid-pic"><img src="http://p1.music.126.net/Gdh7VcGd22emCGjHiNMgtw==/3439272373022999.jpg?param=50y50"></a>
-          <div class="vid-rec"><a href="">晓苏电台</a></div>
-          <div class="vid-update">订阅398749次</div>
-          <div class="vid-circ">551期</div>
-        </li>
-      </ul>
-    </div>
-    <div class="uh-crt">
-      <div class="u-title">
-        <h3>一只林轩创建的歌单（70）</h3>
-      </div>
-        <ul id="uh-listwrap" class="hot-item">
-          <li v-for="item in hotitem" class="uh-list">
-            <div class="item-wrap">
-              <img :src="item.img">
-              <router-link :to="'/use/playlist/'+'510911448'" class="msk"></router-link>
-              <div class="item-bottom">
-                <span class="ico"></span>
-                <span class="hot-num">{{item.playTimes}}</span>
-                <a href="/#" class="hotplay"></a>
-              </div>
-            </div>
-            <p class="p-over uh-listdes"><router-link :to="'/use/playlist/'+'233333'" class="hot-descrp">{{item.playlistTitle}}</router-link></p>
+  <div>
+    <div class="uh-content" v-if="playlistCreate">
+  <!--     <div class="uh-vid">
+        <div class="u-title">
+          <h3>一只林轩创建的专栏</h3>
+        </div>
+        <ul class="uh-vidio">
+          <li>
+            <a href="" class="vid-pic"><img src="http://p1.music.126.net/DHYfWefTsKDcR5pyzXS9Og==/1408474409807840.jpg?param=50y50"></a>
+            <div class="vid-name"><a href="">只有音乐是我解药</a></div>
+            <div class="vid-read">阅读总量：100000+</div>
+            <div class="vid-update">最近更新2016-08-27</div>
+            <div class="vid-circ">2期</div>
           </li>
         </ul>
-    </div>
-    <div class="uh-fav">
-      <div class="u-title">
-        <h3>一只林轩收藏的歌单（270）</h3>
       </div>
-        <ul id="uh-listwrap" class="hot-item">
-          <li v-for="item in hotitem" class="uh-list">
-            <div class="item-wrap">
-              <img :src="item.img">
-              <router-link :to="'/use/playlist/'+'510911448'" class="msk"></router-link>
-              <div class="item-bottom">
-                <span class="ico"></span>
-                <span class="hot-num">{{item.playTimes}}</span>
-                <a href="/#" class="hotplay"></a>
-              </div>
-            </div>
-            <p class="p-over uh-listdes"><router-link :to="'/use/playlist/'+'233333'" class="hot-descrp">{{item.playlistTitle}}</router-link></p>
+      <div class="uh-vid">
+        <div class="u-title">
+          <h3>一只林轩创建的电台</h3>
+        </div>
+        <ul class="uh-vidio">
+          <li>
+            <a href="" class="vid-pic"><img src="http://p1.music.126.net/Gdh7VcGd22emCGjHiNMgtw==/3439272373022999.jpg?param=50y50"></a>
+            <div class="vid-rec"><a href="">晓苏电台</a></div>
+            <div class="vid-update">订阅398749次</div>
+            <div class="vid-circ">551期</div>
           </li>
         </ul>
+      </div> -->
+      <div class="uh-crt">
+        <div class="u-title">
+          <h3>{{`创建的歌单${playlistCreateCount}`}}</h3>
+        </div>
+          <ul id="uh-listwrap" class="hot-item">
+            <li v-for="item in playlistCreate" class="uh-list">
+              <div class="item-wrap">
+                <img :src="item.img" class="creat-wrap">
+                <router-link :to="'/playlist/'+item.id" class="msk"></router-link>
+                <div class="item-bottom">
+                  <span class="ico"></span>
+                  <span class="hot-num">{{item.playTimes}}</span>
+                  <a href="/#" class="hotplay"></a>
+                </div>
+              </div>
+              <p class="p-over uh-listdes"><router-link :to="'/playlist/'+item.id" class="hot-descrp">{{item.playlistTitle}}</router-link></p>
+            </li>
+          </ul>
+      </div>
+  <!--     <div class="uh-fav">
+        <div class="u-title">
+          <h3>一只林轩收藏的歌单（270）</h3>
+        </div>
+          <ul id="uh-listwrap" class="hot-item">
+            <li v-for="item in hotitem" class="uh-list">
+              <div class="item-wrap">
+                <img :src="item.img">
+                <router-link :to="'/use/playlist/'+'510911448'" class="msk"></router-link>
+                <div class="item-bottom">
+                  <span class="ico"></span>
+                  <span class="hot-num">{{item.playTimes}}</span>
+                  <a href="/#" class="hotplay"></a>
+                </div>
+              </div>
+              <p class="p-over uh-listdes"><router-link :to="'/use/playlist/'+'233333'" class="hot-descrp">{{item.playlistTitle}}</router-link></p>
+            </li>
+          </ul>
+      </div> -->
     </div>
+    <div class="loading" v-if="!playlistCreate">
+      <i></i>
+      加载中...
+    </div> 
   </div>
 </template>
 
@@ -75,22 +81,41 @@ export default {
   name: 'user',
   data () {
     return {
-       hotitem:[
-          {img:"/static/hot01.jpg",playTimes:"220万",playlistTitle:"2017年五月最热新歌TOP50",art:"王萌"},
-          {img:"/static/hot02.jpg",playTimes:"25万",playlistTitle:"『福音之旅』聆听清风絮语，静沐斜阳暖心",art:"王萌"},
-          {img:"/static/hot03.jpg",playTimes:"48万",playlistTitle:"『电音故事』从生命的起源说起",art:"王萌"},
-          {img:"/static/hot04.jpg",playTimes:"18230",playlistTitle:"『哲学公开课』切实的幸福",art:"王萌"},
-          {img:"/static/hot05.jpg",playTimes:"220万",playlistTitle:"『锐韧Trap』风骚霸道，黑暗的迷人性格",art:"王萌"},
-          {img:"/static/hot06.jpg",playTimes:"220万",playlistTitle:"健身小白应该注意些啥？",art:"王萌"},
-          {img:"/static/hot07.jpg",playTimes:"220万",playlistTitle:"Deep House深窈之道",art:"王萌"},
-          {img:"/static/hot08.jpg",playTimes:"220万",playlistTitle:"刘瑜：色",art:"王萌"},
-      ],
+      playlistCreate:[],
+      playlistCreateCount:0,
     }
   },
+  beforeCreate:function(){
+    //请求歌单数据
+    this.$http.get(`http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/playlist`)
+      .then(response => {
+         var result= response.data.playlist;//初始化全部歌单数据
+         this.playlistCreateCount = result.length;
+
+         for (var item of result){
+          console.log(item)
+          this.playlistCreate.push({
+            id:item.id,
+            img:item.coverImgUrl,
+            playTimes:item.playCount,
+            playlistTitle:item.name,
+          });
+         }
+
+      })
+      .catch(response => {
+        console.log(response)
+    });
+  },
+
 }
 </script>
 
 <style>
+.creat-wrap{
+  width: 140px;
+  height: 140px;
+}
 .uh-vid h3{
   color: rgb(102,102,102);
 }
