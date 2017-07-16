@@ -27,5 +27,26 @@ class ArtistIndex(Resource):
             else:
                 abort('no data for artist with id:{}'.format(artistId))
         else:
-            abort(
-                'please request with correct artist id, \current id is:{}'.format(artistId))
+            abort('please request with correct artist id, \
+                current id is:{}'.format(artistId))
+
+
+@artistAPI.resource('/<string:artistId>/albums')
+class ArtistAlbums(Resource):
+    """docstring for ArtistAlbums"""
+
+    def get(self, artistId):
+        if artistId:
+            album_data = data_poster.get_artist_album(artistId)
+            if album_data:
+                album_return = {
+                    'artistId': artistId,
+                    'albums': album_data,
+                    'code': 200
+                }
+                return output(jsonify(album_return))
+            else:
+                abort('no albums for artist with id:{}'.format(artistId))
+        else:
+            abort('please request with correct artist id, \
+                current id is:{}'.format(artistId))

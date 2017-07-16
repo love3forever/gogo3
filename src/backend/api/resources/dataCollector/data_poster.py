@@ -25,6 +25,7 @@ song_comments_URL = 'http://music.163.com/api/v1/resource/comments/R_SO_4_{}/?ri
 song_detail_URL = 'http://music.163.com/api/song/detail?ids=[{}]'
 song_lyric_URL = 'http://music.163.com/api/song/lyric?id={}&lv=-1&tv=-1'
 artist_index_URL = 'http://music.163.com/artist?id={}'
+artist_album_URL = 'http://music.163.com/artist/album?id={}&limit=200'
 session = Session()
 
 
@@ -385,7 +386,7 @@ def convert_lyric(lyric):
 
 
 ##########################################
-# 获取歌手相关内容 ############
+# 获取歌手相关内容 #########################
 ##########################################
 
 def get_artist_index_page(artistId):
@@ -413,6 +414,29 @@ def get_artist_index_page(artistId):
         return None
 
 
+def get_artist_album(artistId):
+    album_url = artist_album_URL.format(artistId)
+    album_data = get_data_from_web(album_url)
+    if album_data:
+        album_soup = BeautifulSoup(album_data.content, 'lxml')
+        album_list = album_soup.select('ul[id="m-song-module"] > li')
+        album_result = []
+        for album in album_list:
+            img = album.select('img')[0]
+            img_url = img['src']
+            title = album.select('.s-fc0')[0].string
+            time = album.select('.s-fc3')[0].string
+            album_info = {
+                'img': img_url,
+                'name': title,
+                'time': time
+            }
+            album_result.append(album_info)
+        return album_result
+    else:
+        return None
+
+
 if __name__ == '__main__':
     # print get_user_playlist('66891851')
-    print get_artist_index_page('5346')
+    print get_artist_album('5346')
