@@ -25,7 +25,7 @@ class SongDetail(Resource):
             if data:
                 return output(jsonify(data))
             else:
-                abort(404, message='no song detail for {}'.format(songId))
+                abort(404, description='no song detail for {}'.format(songId))
         else:
             abort(
                 404, message='do request with a right songId, \
@@ -47,7 +47,7 @@ class SongComments(Resource):
                 }
                 return output(jsonify(result))
             else:
-                abort(404, message='no song comments for {}'.format(songId))
+                abort(404, description='no song comments for {}'.format(songId))
         else:
             abort(
                 404, message='do request with a right songId, \
@@ -64,8 +64,8 @@ class SongCommentsWithPage(Resource):
             if data:
                 return output(jsonify(data))
             else:
-                abort(404, message='no song comments for {} on page {}'.format(
-                    songId, page))
+                abort(404, description='no song comments for {} on page {}\
+                    '.format(songId, page))
         else:
             abort(
                 404, message='do request with a right songId and\
@@ -83,7 +83,7 @@ class LyricsOfSong(Resource):
             if data:
                 return output(jsonify(data))
             else:
-                abort(404, message='no lyrics for song:{}'.format(songId))
+                abort(404, description='no lyrics for song:{}'.format(songId))
         else:
             abort(
                 404, message='do request with a right songId, \

@@ -25,7 +25,7 @@ class Recommand(Resource):
         if index_data:
             return output(jsonify(index_data))
         else:
-            abort(404, 'no data avaliable')
+            abort(404, description='no data avaliable')
 
 
 @indexAPI.resource('/direct')
@@ -37,4 +37,4 @@ class DirectData(Resource):
         if index_data:
             return output(jsonify(index_data))
         else:
-            abort(404, 'no data avaliable')
+            abort(404, description='no data avaliable')
