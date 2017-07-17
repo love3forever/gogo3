@@ -242,6 +242,8 @@ def data_poster(uid, postURL, keyword, getparamFunc):
             post_param['offset'] = int(data_times * 100)
             encrtyed_param = encrypted_request(post_param)
             response_data = post_data_to_web(postURL, encrtyed_param)
+            if keyword not in response_data.keys():
+                break
             if response_data[keyword]:
                 data_list.extend(response_data[keyword])
             data_times += 1
@@ -535,5 +537,7 @@ def get_artist_album(artistId):
 
 
 if __name__ == '__main__':
-    print get_user_playlist('77159064')
+    # print get_user_playlist('77159064')
     # print get_user_index('98038167')
+    print get_user_fans('376717241')
+    print get_user_follows('105711803')
