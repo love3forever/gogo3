@@ -63,10 +63,11 @@ class UserPlaylist(Resource):
 
     def get(self, userId):
         if userId:
-            data = data_poster.get_user_playlist(userId)
+            data, creator = data_poster.get_user_playlist(userId)
             if data:
                 result = {
                     'user': userId,
+                    'nickname': creator,
                     'playlist': data,
                     'code': 200
                 }

@@ -279,6 +279,7 @@ def get_user_playlist(userid):
             'own': [],
             'other': []
         }
+        creator = None
         for playlist in user_data:
             convert_data = {
                 'name': playlist['name'],
@@ -288,10 +289,12 @@ def get_user_playlist(userid):
             }
             if str(playlist['userId']) == str(userid):
                 user_playlist_result['own'].append(convert_data)
+                if not creator:
+                    creator = playlist['creator']['nickname']
             else:
                 user_playlist_result['other'].append(convert_data)
 
-        return user_playlist_result
+        return user_playlist_result, creator
     else:
         return None
 
