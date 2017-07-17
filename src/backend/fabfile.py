@@ -35,7 +35,6 @@ def pre_deploy():
 
 def deploy():
     code_dir = '~/git/gogo3'
-    run('ls')
     with settings(warn_only=True):
         if run("ls {}".format(code_dir)).failed:
             run("git clone https://github.com/love3forever/gogo3.git {}".format(code_dir))
