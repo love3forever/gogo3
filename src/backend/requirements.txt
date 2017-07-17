@@ -4,3 +4,5 @@ lxml==3.7.3
 bs4==0.0.1
 pycrypto==2.6.1
 codecov==2.0.9
+gunicorn==19.7.1
+Fabric==1.13.2
