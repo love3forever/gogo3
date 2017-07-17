@@ -30,9 +30,9 @@ class UserFollows(Resource):
                 }
                 return output(jsonify(result))
             else:
-                return abort(404, 'user {} follows nobody'.format(userId))
+                abort(404, 'user {} follows nobody'.format(userId))
         else:
-            return abort(404, 'do request with right user id, \
+            abort(404, 'do request with right user id, \
                 current id:{}'.format(userId))
 
 
@@ -51,9 +51,9 @@ class UserFans(Resource):
                 }
                 return output(jsonify(result))
             else:
-                return abort(404, 'user {} has no fans at all'.format(userId))
+                abort(404, 'user {} has no fans at all'.format(userId))
         else:
-            return abort(404, 'do request with right user id, \
+            abort(404, 'do request with right user id, \
                 current id:{}'.format(userId))
 
 
@@ -73,10 +73,10 @@ class UserPlaylist(Resource):
                 }
                 return output(jsonify(result))
             else:
-                return abort(404, 'user {} has no playlist at all'
-                             .format(userId))
+                abort(404, 'user {} has no playlist at all'
+                      .format(userId))
         else:
-            return abort(404, 'do request with right user id, \
+            abort(404, 'do request with right user id, \
                 current id:{}'.format(userId))
 
 
@@ -95,8 +95,7 @@ class UserDetail(Resource):
                 }
                 return output(jsonify(result))
             else:
-                return abort(404, 'user {} has no detail info at all'
-                             .format(userId))
+                abort(404, 'user {} has no detail info at all'.format(userId))
         else:
-            return abort(404, 'do request with right user id, \
+            abort(404, 'do request with right user id, \
                 current id:{}'.format(userId))
