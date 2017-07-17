@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="uh-content" v-if="playlistCreate">
+    <div class="uh-content" v-if="playlist">
   <!--     <div class="uh-vid">
         <div class="u-title">
           <h3>一只林轩创建的专栏</h3>
@@ -28,46 +28,54 @@
           </li>
         </ul>
       </div> -->
-      <div class="uh-crt">
+      <div class="uh-crt" v-if="playlistCreateCount">
         <div class="u-title">
-          <h3>{{`创建的歌单${playlistCreateCount}`}}</h3>
+          <h3>{{`${userName}创建的歌单（${playlistCreateCount}）`}}</h3>
         </div>
-          <ul id="uh-listwrap" class="hot-item">
+          <ul id="uh-crtlistwrap" class="hot-item">
             <li v-for="item in playlistCreate" class="uh-list">
               <div class="item-wrap">
-                <img :src="item.img" class="creat-wrap">
-                <router-link :to="'/playlist/'+item.id" class="msk"></router-link>
+                <img :src="item.coverImgUrl" class="creat-wrap">
+                <router-link :to="'/playlist/'+item.playlistId" class="msk"></router-link>
                 <div class="item-bottom">
                   <span class="ico"></span>
-                  <span class="hot-num">{{item.playTimes}}</span>
+                  <span class="hot-num">{{item.playCount}}</span>
                   <a href="/#" class="hotplay"></a>
                 </div>
               </div>
-              <p class="p-over uh-listdes"><router-link :to="'/playlist/'+item.id" class="hot-descrp">{{item.playlistTitle}}</router-link></p>
+              <p class="p-over uh-listdes">
+                <router-link :to="'/playlist/'+item.playlistId" class="hot-descrp">
+                  {{item.name}}
+                </router-link>
+              </p>
             </li>
           </ul>
       </div>
-  <!--     <div class="uh-fav">
+      <div class="uh-fav" v-if="playlistLikeCount">
         <div class="u-title">
-          <h3>一只林轩收藏的歌单（270）</h3>
+          <h3>{{`${userName}收藏的歌单（${playlistLikeCount}）`}}</h3>
         </div>
-          <ul id="uh-listwrap" class="hot-item">
-            <li v-for="item in hotitem" class="uh-list">
+          <ul id="uh-likelistwrap" class="hot-item">
+            <li v-for="item in playlistLike" class="uh-list">
               <div class="item-wrap">
-                <img :src="item.img">
-                <router-link :to="'/use/playlist/'+'510911448'" class="msk"></router-link>
+                <img :src="item.coverImgUrl"  class="creat-wrap">
+                <router-link :to="'/playlist/'+item.playlistId" class="msk"></router-link>
                 <div class="item-bottom">
                   <span class="ico"></span>
-                  <span class="hot-num">{{item.playTimes}}</span>
+                  <span class="hot-num">{{item.playCount}}</span>
                   <a href="/#" class="hotplay"></a>
                 </div>
               </div>
-              <p class="p-over uh-listdes"><router-link :to="'/use/playlist/'+'233333'" class="hot-descrp">{{item.playlistTitle}}</router-link></p>
+              <p class="p-over uh-listdes">
+                <router-link :to="'/playlist/'+item.playlistId" class="hot-descrp">
+                  {{item.name}}
+                </router-link>
+              </p>
             </li>
           </ul>
-      </div> -->
+      </div>
     </div>
-    <div class="loading" v-if="!playlistCreate">
+    <div class="loading" v-if="!playlist">
       <i></i>
       加载中...
     </div> 
@@ -81,33 +89,34 @@ export default {
   name: 'user',
   data () {
     return {
-      playlistCreate:[],
-      playlistCreateCount:0,
+      playlist:null,  
     }
   },
   beforeCreate:function(){
     //请求歌单数据
     this.$http.get(`http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/playlist`)
       .then(response => {
-         var result= response.data.playlist;//初始化全部歌单数据
-         this.playlistCreateCount = result.length;
-
-         for (var item of result){
-          console.log(item)
-          this.playlistCreate.push({
-            id:item.id,
-            img:item.coverImgUrl,
-            playTimes:item.playCount,
-            playlistTitle:item.name,
-          });
-         }
-
+         this.playlist = response.data.playlist;//初始化全部歌单数据
+         this.userName = response.data.nickname;
       })
       .catch(response => {
         console.log(response)
     });
   },
-
+ computed:{
+  playlistCreateCount:function(){
+    return this.playlist.own?this.playlist.own.length:0;
+  },
+  playlistCreate:function(){
+    return this.playlist.own?this.playlist.own:null;
+  },
+  playlistLikeCount:function(){
+    return this.playlist.other?this.playlist.other.length:0;
+  },
+  playlistLike:function(){
+    return this.playlist.other?this.playlist.other:null;
+  },
+ }
 }
 </script>
 
@@ -180,8 +189,9 @@ div.vid-circ{
   color: rgb(0,0,0);
   font-size: 14px;
 }
-#uh-listwrap{
+#uh-crtlistwrap,#uh-likelistwrap{
   margin-left: -50px;
+  width: 950px;
 }
 li.uh-list{
   height: 165px;

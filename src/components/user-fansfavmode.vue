@@ -1,21 +1,23 @@
 <template>
-  <div class="fansfav-mode">
+  <div class="fansfav-mode" v-if="list">
     <ul class="uh-fans">
-      <li>
-        <a href="" class="fans-pic"><img src="http://p1.music.126.net/bvAv9YNFMemNAiZlbGDOfA==/3401888987155718.jpg?param=60y60"></a>
+      <li v-for="(user,index) in list" :class="{'colorGrey':colored(index)}">
+        <a href="" class="fans-pic">
+          <img :src="user.avatarUrl">
+        </a>
         <div class="fans-info">
-          <a href="" class="fans-name">瞧那谁</a><i class="female"></i>
+          <router-link :to="'/user/'+user.userId" class="fans-name">{{user.nickname}}</router-link>
+          <i class="female"></i>
           <p class="fans-conect">
-            <a href="">动态<span>0</span></a><span class="line">|</span>
-            <a href="">关注<span>0</span></a><span class="line">|</span>
-            <a href="">粉丝<span>0</span></a>
+            <a href="javascript:;">动态<span>{{user.eventCount}}</span></a><span class="line">|</span>
+            <a>关注<span>{{user.followeds}}</span></a><span class="line">|</span>
+            <a href="">粉丝<span>{{user.follows}}</span></a>
           </p>
         </div>
         <div class="fans-fav">
           <a href="javascript:;" class="follow"><i>关&nbsp&nbsp注&nbsp</i></a>
         </div>
       </li>
-      <li></li>
     </ul>
   </div>
 </template>
@@ -25,11 +27,23 @@ import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'fansfavmode',
-
+  props:['list'],
+  methods:{
+    colored:function(index){
+      if (index%4===2||index%4===3){
+        return true;
+      } else {
+        return false;
+      };        
+    }
+  }
 }
 </script>
 
 <style>
+.colorGrey{
+  background-color: rgb(250,250,250);
+}
 .fans-conect a span{
   color:  #0c73c2;
 }

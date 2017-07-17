@@ -101,18 +101,18 @@
             <h3 >最新评论</h3>
             <div class="cmt1" v-for="cmt in cmts">
               <div class="cmt-head">
-                <a href="/#"><img :src="cmt.user.avatarUrl"></a>
+                <router-link :to="'/user/'+cmt.user.userId"><img :src="cmt.user.avatarUrl"></router-link>
               </div>
               <div class="cmt-wrap">
                 <div class="cmt-rel">
-                  <a href="">{{cmt.user.nickname}}</a>：{{cmt.content}}
+                  <router-link :to="'/user/'+cmt.user.userId">{{cmt.user.nickname}}</router-link>：{{cmt.content}}
                 </div>
                 <div class="isRpl" v-if="cmt.beReplied.length">
                   <span>
                     <i class="bd">◆</i>
                     <i class="db">◆</i>
                   </span>
-                  <a href="/#">{{cmt.beReplied[0].user.nickname}}</a>：{{cmt.beReplied[0].content}}
+                  <router-link :to="'/user/'+cmt.beReplied[0].user.userId">{{cmt.beReplied[0].user.nickname}}</router-link>：{{cmt.beReplied[0].content}}
                 </div>
                 <div class="cmt-desc">
                   <span>{{cmt.time}}</span>

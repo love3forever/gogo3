@@ -3,7 +3,7 @@
    <div class="left-content">
       <div class="left-top">
         <div class="lefthead">
-          <a href="/#" class="hot-title">热门推荐</a>
+          <a href="javascript:;" class="hot-title">热门推荐</a>
           <ul>
             <li v-for="hot in hotrecommend" :class="{'li-sp':hot[1]}"><a href="/#" class="hot-subtitle">{{hot[0]}}</a></li>
           </ul>
@@ -32,7 +32,7 @@
       </div>
       <div class="left-center">
         <div class="lefthead">
-          <a href="/#" class="hot-title">新碟上架</a>
+          <a href="javascript:;" class="hot-title">新碟上架</a>
           <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
         <div class="disk">
@@ -57,8 +57,8 @@
       </div>
       <div class="left-bottom">
         <div class="lefthead">
-          <a href="/#" class="hot-title">榜单</a>
-          <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
+          <a href="javascript:;" class="hot-title">榜单</a>
+          <span><a href="javascript:;" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
         <div class="song-list">
           <dl class="bill" v-for="(bill,num) in billborad">

@@ -1,14 +1,14 @@
 <template>
-  <div class="main">
+  <div class="main" v-if="user">
     <div class="userhome">
       <div class="uh-head">
-        <img src="http://p1.music.126.net/31NA7TgzLACMHO1Om1LQVw==/18636722092805728.jpg?param=180y180">
+        <img :src="user.img">
         <div class="uh-des">
           <div class="uhd-head">
             <h2>
               <span>{{user.name}}</span>
               <span class="userLv">
-                <em>6</em>
+                <em>{{user.level}}</em>
                 <i></i>
               </span>
               <i class="female"></i>
@@ -18,22 +18,26 @@
           </div>
           <ul class="uhd-conect">
             <li id="li-frt">
-              <a href="javascript:;"><strong>31</strong></br>动态</a>
+              <a href="javascript:;"><strong>{{user.events}}</strong></br>动态</a>
             </li>
             <li>
-              <router-link :to="`/user/${this.$route.params.id}/fav`"><strong>20</strong></br>关注</router-link>
+              <router-link :to="`/user/${this.$route.params.id}/fav`"><strong>{{user.follows}}</strong></br>关注</router-link>
             </li>
             <li>
-             <router-link :to="`/user/${this.$route.params.id}/fans`"><strong>249</strong></br>粉丝</router-link>
+             <router-link :to="`/user/${this.$route.params.id}/fans`"><strong>{{user.fans}}</strong></br>粉丝</router-link>
             </li>
           </ul>
-          <p class="self-intro" v-if="user.signature">{{`个人介绍：${user.signature}`}}</p>
-<!--           <p class="uh-loca"><span>所在地区：吉林省 - 延边朝鲜族自治州</span><span>年龄：95后</span></p>
-          <p class="uh-social">社交网络：<a href="" title="新浪微博" class="weibo"></a></p> -->
+          <!-- <p class="self-intro" v-if="user.signature">{{`个人介绍：${user.signature}`}}</p> -->
+          <p class="uh-loca"><span>{{user.location}}</span><span>年龄：95后</span></p>
+          <p class="uh-social">社交网络：<a href="" title="新浪微博" class="weibo"></a></p>
         </div>
       </div>
       <router-view></router-view>
     </div>
+    <div class="loading" v-if="!user">
+      <i></i>
+      加载中...
+    </div> 
   </div>
 </template>
 
@@ -44,14 +48,18 @@ export default {
   name: 'user',
   data () {
     return {
-      playlistCreateCount:0,
-      playlistCreate:[],
-      user:{
-        signature:null,
-        pic:null,
-        name:null,
-      }
+      user:null
     }
+  },
+  beforeCreate:function(){
+    //请求歌单数据
+    this.$http.get(`http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/detail`)
+      .then(response => {
+         this.user = response.data.detail;//初始化用户基本信息
+      })
+      .catch(response => {
+        console.log(response)
+    });
   },
 }
 </script>

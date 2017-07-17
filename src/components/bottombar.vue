@@ -2,7 +2,7 @@
   <div class="bottombar" v-if="isshow">
     <ul class="inbl">
       <li class="inbl" v-for="(item,index) in subtitle" @click="mouseClick(index)">
-        <router-link to="/user" class="btm-tab"  :class="{'btnInact': item[1]}">
+        <router-link to="/" class="btm-tab"  :class="{'btnInact': item[1]}">
           <em :class="{'emInact': item[1]}">{{item[0]}}</em>
         </router-link>
       </li>
