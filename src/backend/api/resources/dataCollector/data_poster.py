@@ -272,8 +272,28 @@ def get_user_fans(userid):
 
 def get_user_playlist(userid):
     # 根据用户id获取用户歌单
-    return data_poster(userid, user_playlist_URL,
-                       'playlist', get_user_playlist_param)
+    user_data = data_poster(userid, user_playlist_URL,
+                            'playlist', get_user_playlist_param)
+    if user_data:
+        user_playlist_result = {
+            'own': [],
+            'other': []
+        }
+        for playlist in user_data:
+            convert_data = {
+                'name': playlist['name'],
+                'playCount': playlist['playCount'],
+                'playlistId': playlist['id'],
+                'coverImgUrl': playlist['coverImgUrl']
+            }
+            if str(playlist['userId']) == str(userid):
+                user_playlist_result['own'].append(convert_data)
+            else:
+                user_playlist_result['other'].append(convert_data)
+
+        return user_playlist_result
+    else:
+        return None
 
 
 def get_user_playrecord(userid, kind):
@@ -512,5 +532,5 @@ def get_artist_album(artistId):
 
 
 if __name__ == '__main__':
-    # print get_user_playlist('66891851')
-    print get_user_index('98038167')
+    print get_user_playlist('77159064')
+    # print get_user_index('98038167')
