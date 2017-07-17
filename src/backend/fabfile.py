@@ -42,7 +42,10 @@ def deploy():
     with cd(code_dir):
         run("git pull")
         run("sudo pip install -r ./src/backend/requirements.txt")
-        run("nohup gunicorn -w 2 -b 0.0.0.0:33333 ./src/backend/api/server:app &")
+        with cd('./src/backend/api/'):
+            run(
+                'ps -ef | grep 0.0.0.0:33333 | grep -v grep | awk "{print $2}" | xargs kill')
+            run("nohup gunicorn -w 2 -b 0.0.0.0:33333 server:app &")
     # with cd(code_dir):
     #     run("ps -ef | grep 0.0.0.0:33333 | grep -v grep \
     #         | awk '{print $2}' | head -n 1 | xargs kill")
