@@ -64,14 +64,14 @@ let mouseBtnEv = {
     
     var timePara = {
       year:cmtTime.getFullYear(),
-      month:cmtTime.getMonth(),
+      month:cmtTime.getMonth()+1,
       date:cmtTime.getDate(),
       hour:cmtTime.getHours()>9?cmtTime.getHours():`0${cmtTime.getHours()}`,
       minute:cmtTime.getMinutes()>9?cmtTime.getMinutes():`0${cmtTime.getMinutes()}`
     };
 
-    if (diff<2*1000){
-      return `1秒前` 
+    if (diff<60*1000){
+      return `刚刚`
     } else if(diff<60*60*1000){
       return `${parseInt(diff/(60*1000))}分钟前`
     } else if(diff<60*60*2*1000) {

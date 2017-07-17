@@ -3,7 +3,7 @@
    <div class="left-content">
       <div class="left-top">
         <div class="lefthead">
-          <a href="/#" class="hot-title">热门推荐</a>
+          <a href="javascript:;" class="hot-title">热门推荐</a>
           <ul>
             <li v-for="hot in hotrecommend" :class="{'li-sp':hot[1]}"><a href="/#" class="hot-subtitle">{{hot[0]}}</a></li>
           </ul>
@@ -13,14 +13,14 @@
           <li v-for="item in hotitem">
             <div class="item-wrap">
               <img :src="item.img">
-              <a href="/#" class="msk"></a>
+              <router-link :to="'/playlist/'+item.playlistID" class="msk"></router-link>
               <div class="item-bottom">
                 <span class="ico"></span>
                 <span class="hot-num">{{item.playTimes}}</span>
                 <a href="/#" class="hotplay"></a>
               </div>
             </div>
-            <p><a href="/#" class="hot-descrp"><!--<sub v-if="item[3]"></sub>-->{{item.playlistTitle}}</a></p>
+            <p><router-link :to="'/playlist/'+item.playlistID" class="hot-descrp">{{item.playlistTitle}}</router-link><!--<sub v-if="item[3]"></sub>--></p>
           </li>
         </ul>
       </div>
@@ -32,7 +32,7 @@
       </div>
       <div class="left-center">
         <div class="lefthead">
-          <a href="/#" class="hot-title">新碟上架</a>
+          <a href="javascript:;" class="hot-title">新碟上架</a>
           <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
         <div class="disk">
@@ -43,10 +43,10 @@
                 <li v-for="(top,index) in disk[num%2]">
                   <div>
                     <img :src="top[0]">
-                    <a href="/#" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></a>
+                    <router-link to="/album" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></router-link>
                     <a href="/#" title="播放" class="disk-play" v-show="top[3]"></a>
                   </div>
-                  <p><a href="/#" class="disk-des">{{top[1]}}</a></p>
+                  <p><router-link to="/album" class="disk-des">{{top[1]}}</router-link></p>
                   <p><a href="/#" class="disk-singer">{{top[2]}}</a></p>
                 </li>
               </ul>
@@ -57,8 +57,8 @@
       </div>
       <div class="left-bottom">
         <div class="lefthead">
-          <a href="/#" class="hot-title">榜单</a>
-          <span><a href="/#" class="hot-subtitle">更多</a><sub></sub></span>
+          <a href="javascript:;" class="hot-title">榜单</a>
+          <span><a href="javascript:;" class="hot-subtitle">更多</a><sub></sub></span>
         </div>
         <div class="song-list">
           <dl class="bill" v-for="(bill,num) in billborad">
@@ -77,7 +77,9 @@
               <ol>
                 <li v-for="(song,index) in bill.songs">
                   <span class="song-num" :class="{'song-numtop':index<3}">{{index+1}}</span>
-                  <a href="/#" class="song-item" :title="song.songName">{{song.songName}}</a>
+                  <router-link :to="'/song/'+substractId(song.songHref)" class="song-item" :title="song.songName">
+                    {{song.songName}}
+                  </router-link>
                 </li>
               </ol>
               <div><a href="/#" class="view-allsong">查看全部></a></div>
@@ -137,6 +139,14 @@ export default {
         };
       },20);
     },
+    substractId:function(songHref){
+      var index = songHref.lastIndexOf('=');
+      if (index!== -1){
+        return songHref.substring(index+1);
+      } else {
+        return null;
+      }
+    }
   },
   computed:{
     hotitem:function(){

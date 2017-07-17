@@ -2,8 +2,9 @@
   <div class="bottombar" v-if="isshow">
     <ul class="inbl">
       <li class="inbl" v-for="(item,index) in subtitle" @click="mouseClick(index)">
-        <router-link to="/use/playlist" class="btm-tab"  :class="{'btnInact': item[1]}">{{item[0]}}</router-link>
-      <!--   <a href="/#" class="btm-tab" track-by="$index"  @click="mouseClick(index)" :class="{'btnInact': item[1]}">{{item[0]}}</a> -->
+        <router-link to="/" class="btm-tab"  :class="{'btnInact': item[1]}">
+          <em :class="{'emInact': item[1]}">{{item[0]}}</em>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -38,7 +39,7 @@ export default {
 <style>  
 .bottombar{
   height: 35px;
-  background: url(../assets/topbar.png) repeat-x scroll 0px -230px;
+  background: url(../assets/topbar.png) repeat-x scroll 0 -230px;
 }
 .bottombar ul{
   display: inline-block;
@@ -50,7 +51,6 @@ export default {
 .bottombar li{
   display: inline-block;
   margin: 0 17px;
-  width: 52px;
   height: 100%;
   line-height: 35px;
 }
@@ -59,9 +59,19 @@ export default {
   font-size: 10px;
   color: rgb(221,220,220);
   display: inline-block;
-  width: 100%;
+  height: 100%;
+  padding-left: 14px;
+}
+.btm-tab em{
+  float: left;
+  padding-right:  14px;
+  font-style: normal;
+  line-height: 37px;
+}
+.emInact,.btm-tab em:hover{
+  background: url(../assets/topbar.png) repeat-x scroll 100% -268px;
 }
 .btnInact,a.btm-tab:hover{
-  background-image: url(../assets/redclick.png);
+  background: url(../assets/topbar.png) repeat-x scroll 0% -268px;
 }
 </style>
