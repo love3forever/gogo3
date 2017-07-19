@@ -10,6 +10,8 @@ import user from '@/components/user'
 import fans from '@/components/user-fans'
 import fav from '@/components/user-fav'
 import gens from '@/components/user-general'
+import artist from '@/components/artist'
+import artisthot from '@/components/artist-hot'
 
 Vue.use(Router)
 
@@ -30,13 +32,18 @@ export default new Router({
 			]
 		},   
 		{
-			//path: '/use/playlist',component: originlist,
 			path: '/user/:id',component: user,	
 			children :[
 				{path:'',component:gens},
 				{path:'fans',component:fans},
 				{path:'fav',component:fav},
 			]		  
+		},
+		{
+			path: '/artist',component: artist,	
+			children:[
+				{path:'',component:artisthot}
+			]
 		},
 		{
 			path: '/album',component: track,	
