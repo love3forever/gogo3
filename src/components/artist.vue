@@ -111,7 +111,7 @@ export default {
   },
   beforeCreate:function(){
     //请求歌手数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/artist/5346/index`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/artist/${this.$route.params.id}/index`)
       .then(response => {
         this.result = response.data;
         console.log(response.data)
@@ -136,10 +136,10 @@ export default {
 
       if (topsongs){
         for ( let song of topsongs){
-          let { duration, id:songId, name:songName, alias, mvid, album:{id:albumId}, album:{name:albumName, score}} = song;
+          let { duration, id:songId, name:songName, alias, mvid, album:{id:albumId}, album:{name:albumName}, score} = song;
 
           duration = mouseBtnEv.changeTime(duration);
-          list.push({ duration, songId, songName, alias, mvid, albumId, albumName, score});
+          list.push({ duration, songId, songName, alias, mvid, albumId, albumName, score, click:false});
         }
         return list;
       } else {

@@ -40,7 +40,7 @@ export default new Router({
 			]		  
 		},
 		{
-			path: '/artist',component: artist,	
+			path: '/artist/:id',component: artist,	
 			children:[
 				{path:'',component:artisthot}
 			]
