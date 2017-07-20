@@ -116,6 +116,10 @@ class Test_Playlist_Api(unittest.TestCase):
         rv = self.app.get('/api/v1/user/98038167/detail')
         assert rv.status_code == 200
 
+    def test_index_apis(self):
+        rv = self.app.get('/api/v1/index/info')
+        assert rv.status_code == 200
+
 
 class Test_Index_Api(unittest.TestCase):
     """docstring for ClassName"""
