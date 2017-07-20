@@ -13,12 +13,12 @@
         </div>
         <ul class="artist-title">
           <li v-for="(title,index) in artistTitle" @click="titleClick(index)">
-            <a href="javascript:;" :class="{'titlecli-a':title.isclick}">
+            <router-link :to="title.path" :class="{'titlecli-a':title.isclick}">
               <em class="nor" :class="{'titlecli-em':title.isclick}">{{title.title}}</em>
-            </a>
+            </router-link>
           </li>
         </ul>
-        <router-view :top50="top50"></router-view>
+        <router-view :top="top50"></router-view>
       </div>
       <div class="playlist-right">
         <div class="ad-wrap">
@@ -88,10 +88,10 @@ export default {
   data () {
     return {
       artistTitle:[
-        { title:"热门50单曲",isclick:true },
-        { title:"所有专辑",isclick:false },
-        { title:"相关MV",isclick:false },
-        { title:"歌手介绍",isclick:false },
+        { title:"热门50单曲",isclick:true ,path:"/artist/"+this.$route.params.id+"/hot"},
+        { title:"所有专辑",isclick:false ,path:"/artist/"+this.$route.params.id+"/album"},
+/*        { title:"相关MV",isclick:false ,path:"/artist/"+this.$route.params.id+"/album"},
+        { title:"歌手介绍",isclick:false ,path:"/artist/"+this.$route.params.id+"/album"},*/
       ],
       result:null,
     }
@@ -114,7 +114,7 @@ export default {
     this.$http.get(`http://123.206.211.77:33333/api/v1/artist/${this.$route.params.id}/index`)
       .then(response => {
         this.result = response.data;
-        console.log(response.data)
+        console.log(this.result)
       })
       .catch(response => {
         console.log(response)
@@ -141,7 +141,7 @@ export default {
           duration = mouseBtnEv.changeTime(duration);
           list.push({ duration, songId, songName, alias, mvid, albumId, albumName, score, click:false});
         }
-        return list;
+        return {list};
       } else {
         return null;
       };

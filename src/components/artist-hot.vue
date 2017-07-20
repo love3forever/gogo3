@@ -32,7 +32,7 @@
              </div>
            </td>
             <td class="td3">{{track.duration}}</td>
-            <td class="p-over"><a href="#" :title="track.albumName">{{track.albumName}}</a></td>
+            <td class="p-over"><router-link :to="'/album/'+track.albumId">{{track.albumName}}</router-link></td>
             <td class="p-over">
               <span class="score-wrap">
                 <i class="score" :style="'width:'+track.score*92/100+'%'">
@@ -56,15 +56,9 @@ import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'track',
-  props:['top50'],
+  props:['top'],
   data () {
     return {
-      artistTitle:[
-        { title:"热门50单曲",isclick:true },
-        { title:"所有专辑",isclick:false },
-        { title:"相关MV",isclick:false },
-        { title:"歌手介绍",isclick:false },
-      ],
       result:null,
     }
   },
@@ -92,6 +86,11 @@ export default {
       }
     },
   },
+  computed:{
+    top50:function(){
+      return this.top?this.top.list:null;
+    }
+  }
 
 
 }

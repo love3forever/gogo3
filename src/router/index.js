@@ -12,6 +12,7 @@ import fav from '@/components/user-fav'
 import gens from '@/components/user-general'
 import artist from '@/components/artist'
 import artisthot from '@/components/artist-hot'
+import artistalbum from '@/components/artist-album'
 
 Vue.use(Router)
 
@@ -42,11 +43,13 @@ export default new Router({
 		{
 			path: '/artist/:id',component: artist,	
 			children:[
-				{path:'',component:artisthot}
+				{path:'',component:artisthot},
+				{path:'hot',component:artisthot},
+				{path:'album',component:artistalbum}
 			]
 		},
 		{
-			path: '/album',component: track,	
+			path: '/album/:id',component: track,	
 		},
 		{
 			path: '/playlist/:id',component: playlist,	

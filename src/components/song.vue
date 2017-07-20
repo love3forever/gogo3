@@ -23,7 +23,11 @@
             </div>
             <div class="content-author">
               <p class="a-author">
-                <span>歌手:<a href="/#" class="author-link">{{desInfo.singer.name}}</a></span>
+                <!-- <span>歌手:<a href="/#" class="author-link">{{desInfo.singer.name}}</a></span> -->
+                <span>歌手:
+                <!-- <a href="/#" class="author-link">{{desInfo.singer.name}}</a> -->
+                <router-link :to="'/artist/'+desInfo.singer.id" class="author-link">{{desInfo.singer.name}}</router-link>
+                </span>
               </p>
               <p class="a-author">
                 <span>所属专辑:<a href="/#" class="author-link">{{desInfo.track.name}}</a></span>

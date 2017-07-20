@@ -87,8 +87,16 @@
                    </router-link>
                  </td>
                   <td>{{track.duration}}</td>
-                  <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
-                  <td class="p-over"><a href="#" :title="track.albName">{{track.albName}}</a></td>
+                  <td class="p-over">
+                    <router-link :to="'/artist/'+track.artId" :title="track.artName">
+                      {{track.artName}}
+                    </router-link>
+                  </td>
+                  <td class="p-over">
+                    <router-link :to="'/album/'+track.albId" :title="track.albName">
+                      {{track.albName}}
+                    </router-link>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -438,9 +446,9 @@ export default {
       var originTracks = result.tracks,
           list = new Array();
       for ( let item of originTracks ){ 
-        let { id,duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
+        let { id,duration, name:songName, album:{name:albName}, album:{id:albId}, album:{artists:[{name:artName}]}, album:{artists:[{id:artId}]}} = item;
         duration = mouseBtnEv.changeTime(duration);
-        list.push({ id, duration, songName, albName, artName, click:false});
+        list.push({ id, duration, songName, albName, albId, artName, artId, click:false});
       }
       //初始化songs
       this.songs = {

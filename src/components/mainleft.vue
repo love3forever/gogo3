@@ -20,7 +20,7 @@
                 <a href="/#" class="hotplay"></a>
               </div>
             </div>
-            <p><router-link :to="'/playlist/'+item.playlistID" class="hot-descrp">{{item.playlistTitle}}</router-link><!--<sub v-if="item[3]"></sub>--></p>
+            <p><router-link :to="'/playlist/'+item.playlistID" class="hot-descrp">{{item.playlistTitle}}</router-link></p>
           </li>
         </ul>
       </div>
@@ -47,7 +47,7 @@
                     <a href="/#" title="播放" class="disk-play" v-show="top[3]"></a>
                   </div>
                   <p><router-link to="/album" class="disk-des">{{top[1]}}</router-link></p>
-                  <p><a href="/#" class="disk-singer">{{top[2]}}</a></p>
+                  <p><router-link :to="'/artist/'+top[4]" class="disk-singer">{{top[2]}}</router-link></p>
                 </li>
               </ul>
             </div>
@@ -77,7 +77,7 @@
               <ol>
                 <li v-for="(song,index) in bill.songs">
                   <span class="song-num" :class="{'song-numtop':index<3}">{{index+1}}</span>
-                  <router-link :to="'/song/'+substractId(song.songHref)" class="song-item" :title="song.songName">
+                  <router-link :to="'/song/'+song.songHref" class="song-item" :title="song.songName">
                     {{song.songName}}
                   </router-link>
                 </li>
@@ -139,14 +139,6 @@ export default {
         };
       },20);
     },
-    substractId:function(songHref){
-      var index = songHref.lastIndexOf('=');
-      if (index!== -1){
-        return songHref.substring(index+1);
-      } else {
-        return null;
-      }
-    }
   },
   computed:{
     hotitem:function(){
@@ -164,11 +156,11 @@ export default {
 
         for (var i=0;i<newAlbum.length;i++){
           if (i<5){       
-            outputDisk[0][i] = new Array(4);
-            outputDisk[0][i]=[newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false];
+            outputDisk[0][i] = new Array(6);
+            outputDisk[0][i] = [newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false,newAlbum[i].artistHref,newAlbum[i].artistHref,newAlbum[i].href];
           } else {
-            outputDisk[1][i-5] = new Array(4);
-            outputDisk[1][i-5]=[newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false];
+            outputDisk[1][i-5] = new Array(6);
+            outputDisk[1][i-5]=[newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false,newAlbum[i].artistHref,newAlbum[i].artistHref,newAlbum[i].href];
           };
         };
         return outputDisk;
