@@ -525,10 +525,12 @@ def get_artist_album(artistId):
             img_url = img['src']
             title = album.select('.s-fc0')[0].string
             time = album.select('.s-fc3')[0].string
+            album_id = album.select('.s-fc0')[0]['href'][10:]
             album_info = {
                 'img': img_url,
                 'name': title,
-                'time': time
+                'time': time,
+                'id': album_id
             }
             album_result.append(album_info)
         return album_result
@@ -539,5 +541,6 @@ def get_artist_album(artistId):
 if __name__ == '__main__':
     # print get_user_playlist('77159064')
     # print get_user_index('98038167')
-    print get_user_fans('376717241')
-    print get_user_follows('105711803')
+    # print get_user_fans('376717241')
+    # print get_user_follows('105711803')
+    print get_artist_album('5346')
