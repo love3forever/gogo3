@@ -333,7 +333,7 @@ def get_user_index(userid):
             genders = {
                 "u-icn-00": "unknown",
                 "u-icn-01": "male",
-                "u-icn-02": "famale"
+                "u-icn-02": "female"
             }
             index_gender = ''
             for item in genders.keys():
