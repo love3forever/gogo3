@@ -1,17 +1,17 @@
 <template>
   <div class="playlist main">
-    <div  v-show="hasResult">
+    <div  v-if="hasResult">
       <div class="playlist-left">
         <div class="playlist-head">
           <div id="a-cover" class="playlist-cover">
-            <img id="a-pic":src="songs.coverImgUrl">
+            <img id="a-pic":src="hasResult.picUrl">
             <span id="a-song"></span>
           </div>
           <div class="playlist-content">
             <div class="content-title">
               <i id="trackIcon"></i>
               <h2>
-                {{songs.name}}
+                {{hasResult.name}}
                 <a class="plyMv" href="javascript:;">
                   <i></i>
                 </a>    
@@ -19,10 +19,16 @@
             </div>
             <div class="content-author">
               <p class="a-author">
-                <span>歌手:<a href="/#" class="author-link">{{songs.creator.nickname}}</a></span>
+                <span>歌手:
+                  <router-link :to="'/artist/'+hasResult.singer_id" class="author-link">
+                    {{hasResult.singer}}
+                  </router-link>
+                </span>
               </p>
               <p class="a-author">
-                <span>发行时间:<a href="javascript:;" id="rel-time">{{songs.creator.nickname}}</a></span>
+                <span >发行时间:     
+                  {{hasResult.publish_time}}
+                </span>
               </p>
             </div>
             <div class="content-opreation">
@@ -31,16 +37,16 @@
               </a>
               <a href="#" class="add-to"></a>
               <a href="#" class="btn-fav">
-                <i>{{`(${songs.subscribedCount})`}}</i>
+                <i>收藏</i>
               </a>
               <a href="#" class="btn-share">
-                <i>{{`(${songs.shareCount})`}}</i>
+                <i>分享</i>
               </a>
               <a href="#" class="btn-dl">
                 <i>下载</i>
               </a>
               <a href="#" class="btn-cm">
-                <i>{{`(${songs.commentCount})`}}</i>
+                <i>{{cmtNumber}}</i>
               </a>
               <div class="clear"></div>
             </div>
@@ -48,12 +54,18 @@
         </div>
         <div class="track-info">
           <h3>专辑介绍：</h3>
-          <p>无论是谁都有一个成长的过程，同时也要感谢那些想尽办法要将你置于死地的人，如果不是他们步步紧逼，也不会有今天的我们。</p>
+<!--           <p>无论是谁都有一个成长的过程，同时也要感谢那些想尽办法要将你置于死地的人，如果不是他们步步紧逼，也不会有今天的我们。</p> -->
+            <pre v-show="!des.isShowMore">{{des.descDot}}<b class="u-desc" v-show="des.descMore">...</b></pre>
+            <pre v-show="des.isShowMore">{{des.descMore}}</pre>
+            <div class="show-more" v-if="des.descMore">
+              <a href="javascript:;" class="fr" @click="tabShowMore">{{des.isShowMore?"收起":"展开"}}</a>
+              <i class="u-ico" :class="{'u-icoActive':des.isShowMore}"></i>
+            </div>
         </div>
         <div class="playlist-tracks">
           <div class="u-title">
             <h3>包含歌曲列表</h3>
-            <span class="u-lft">{{`${songs.trackCount}首歌`}}</span>
+            <span class="u-lft">{{`${hasResult.songs.length}首歌`}}</span>
             <div class="u-rgt">
               <i></i>
               <a href="">生成外链播放器</a>
@@ -65,21 +77,29 @@
                 <tr>
                   <th class="w1"><div class="u-wrap"></div></th>
                   <th><div class="u-wrap">歌曲标题</div></th>
-                  <th class="w2"><div class="u-wrap">时长</div></th>
-                  <th class="w3"><div class="u-wrap">歌手</div></th>
+                  <th class="w5"><div class="u-wrap">时长</div></th>
+                  <th class="w6"><div class="u-wrap">歌手</div></th>
                 </tr>
               </thead>
               <tbody @click="plySong">
-                <tr v-for="(track,index) in songs.tracks" :class="{'track-fill':index%2==0}">
+                <tr v-for="(track,index) in songs" :class="{'track-fill':index%2==0}">
                   <td>
                     <div class="w-ply">
                       <em>{{index+1}}</em>
                       <span :class="[track.click?'tracks-cli':'tracks-ply']" :data-tag="index"></span>
                     </div>
                   </td>
-                  <td class="p-over"><a href="#" :title="track.songName">{{track.songName}}</a></td>
+                  <td class="p-over">
+                    <router-link :to="'/song/'+track.id" :title="track.name">
+                      {{track.name}}
+                    </router-link>
+                  </td>
                   <td>{{track.duration}}</td>
-                  <td class="p-over"><a href="#" :title="track.artName">{{track.artName}}</a></td>
+                  <td class="p-over">
+                    <router-link :to="'/artist/'+track.artists[0].id" :title="track.artists[0].name">
+                      {{track.artists[0].name}}
+                    </router-link>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -147,58 +167,7 @@
            </div>
         </div>
       </div>
-      <div class="playlist-right">
-        <div class="ad-wrap">
-          <a href="#" class="ad"></a>
-          <a href="#"><img src="https://haitaoad.nosdn.127.net/ad.bid.material_f73d40bef46d4b0098283ea63ca4b579?imageView&thumbnail=200x220&quality=100"></a>
-        </div>
-        <div class="rela-cmd u-head">
-          <h3>相关推荐</h3>
-          <ul>
-            <li>
-              <div class="rela-msk">
-                <a href="#">
-                  <img src="http://p3.music.126.net/1L_rIf-sofhXEG1R2JQ5bQ==/1365593506719668.jpg?param=50y50">
-                </a>
-              </div>
-              <div class="rela-info">
-                <p class="rela-title p-over">
-                  <a href="#" title="传统世界音乐【器乐】">传统世界音乐【器乐】</a>
-                </p>
-                <p class="p-over">
-                  <span>by</span>
-                  <a href="#" title="紫de甘蓝">紫de甘蓝</a>
-                </p>
-              </div>
-            </li>
-            <li>
-              <div class="rela-msk">
-                <a href="#">
-                  <img src="http://p4.music.126.net/rnHLMLESV1c-PcFbDgAngg==/18775260557760255.jpg?param=50y50">
-                </a>
-              </div>
-              <div class="rela-info">
-                <p class="rela-title p-over">
-                  <a href="#" title="一个人的乌德琴">一个人的乌德琴</a>
-                </p>
-                <p class="p-over">
-                  <span>by</span>
-                  <a href="#" title="珠疯">珠疯</a>
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="multi-dowm u-head">
-          <h3>网易云音乐多端下载</h3>
-          <ul class="dowm-methods">
-            <li><a class="m1" href="https://itunes.apple.com/app/id590338362" target="_blank"></a></li>
-            <li><a class="m2" href="http://music.163.com/api/pc/download/latest"  target="_blank"></a></li>
-            <li><a class="m3" href="http://music.163.com/api/android/download/latest2" target="_blank"></a></li>
-          </ul>
-          <p>同步歌单，随时畅听320k好音乐</p>
-        </div>
-      </div> 
+      <playlistRight></playlistRight> 
     </div>
     <div class="loading" v-show="!hasResult">
       <i></i>
@@ -208,28 +177,22 @@
 </template>
 
 <script>
+import playlistRight from './generalRight'
 import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'track',
+  components:{
+    playlistRight
+  },
   data () {
     return {
       hasResult:false,//是否返回歌单数据
-      songs:{//歌单
-        coverImgUrl:null,
-        name:null,
-        subscribedCount:null,
-        shareCount:null,
-        commentCount:null,
-        tags:null,
-        trackCount:null,
-        playCount:null,
-        tracks:null,     //歌曲
-        creator:{},    //歌单创建者
-        createtime:null, //歌单创建时间
-        descDot:null,    //歌单介绍part1
-        descMore:null,   //歌单介绍part2
-        isShowMore:false,//歌单介绍是否展开
+      songs:null,
+      des:{
+        isShowMore:false,
+        descDot:null,
+        descMore:null,
       },
       hasCmt:null,//是否返回评论数据
       maxlength:140,//允许输入的最多字数
@@ -252,19 +215,19 @@ export default {
     },
     //歌单介绍-展开/收起按钮点击事件
     tabShowMore:function(){
-      this.songs.isShowMore = !this.songs.isShowMore;
+      this.des.isShowMore = !this.des.isShowMore;
     },
     //歌单播放按钮点击事件
     plyClick:function(index){
-      var clickList = this.songs.tracks.map(function(item){
+      var clickList = this.songs.map(function(item){
         return item.click;
       });
 
       var current = clickList.indexOf(true);
       if (current>-1){
-        mouseBtnEv.setNewVal(this.songs.tracks[current], 'click', false);
+        mouseBtnEv.setNewVal(this.songs[current], 'click', false);
       }
-      mouseBtnEv.setNewVal(this.songs.tracks[index], 'click', true);
+      mouseBtnEv.setNewVal(this.songs[index], 'click', true);
     },
     //歌单播放按钮点击事件代理
     plySong:function(ev){
@@ -370,7 +333,7 @@ export default {
         pageIndex = cmt.others[index-1].num;
       };
 
-      this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/${pageIndex}`)
+      this.$http.get(`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/comments/${pageIndex}`)
         .then(response => {
           this.cmts = response.data.comments;
           this.cmtNumber = response.data.total;
@@ -385,15 +348,15 @@ export default {
   },
   beforeCreate:function(){
     //请求歌单数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/detail/551088906`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/detail`)
       .then(response => {
-        this.hasResult = response.data.result;//初始化全部歌单数据
+        this.hasResult = response.data;//初始化全部歌单数据
       })
       .catch(response => {
         console.log(response)
     });
     //请求评论数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/playlist/comments/551088906/page/1`)
+    this.$http.get(`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/comments/1`)
       .then(response => {
         this.cmts = response.data.comments;//初始化全部评论数据
         this.cmtNumber = response.data.total;//初始化评论总数
@@ -426,29 +389,18 @@ export default {
     //歌单数据返回后，提取、格式化需要的数据
     hasResult:function(result){
       //解构result.tracks
-      var originTracks = result.tracks,
-          list = new Array();
-      for ( let item of originTracks ){ 
-        let { duration, name:songName, album:{name:albName}, album:{artists:[{name:artName}]}} = item;
+      var list = new Array();
+      for ( let item of result.songs ){ 
+        let { duration, mvid, name, id, artists} = item;
+
         duration = mouseBtnEv.changeTime(duration);
-        list.push({ duration, songName, albName, artName, click:false});
+        list.push({ duration, mvid, name, id, artists, click:false});
       }
-      //初始化songs
-      this.songs = {
-        coverImgUrl:result.coverImgUrl,
-        name:result.name,
-        subscribedCount:result.subscribedCount,
-        shareCount:result.shareCount,
-        commentCount:result.commentCount,
-        tags:result.tags,
-        trackCount:result.trackCount,
-        playCount:result.playCount,
-        tracks:list,
-        creator:result.creator,
-        createtime:new Date(result.createTime).toLocaleDateString().replace(/\//g,"-"),
-        descDot:result.description.substr(0,99),
-        descMore: result.description.length>99?result.description:null,
-        isShowMore:false,   
+      this.songs = list;
+      this.des = {
+        isShowMore:false,
+        descDot:result.desc.substr(0,99),
+        descMore:result.desc.length>99?result.desc:null,
       };
     },
     //评论数据返回后，提取、格式化需要的数据
@@ -474,6 +426,16 @@ export default {
 </script>
 
 <style scoped>
+.track-info pre{
+  padding:0 24px;
+  line-height: 24px;
+}
+.w5{
+  width: 91px;
+}
+.w6{
+  width: 127px;
+}
 #trackIcon{
   background-position: 0 -186px;
 }

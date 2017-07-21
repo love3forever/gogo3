@@ -56,7 +56,6 @@ export default {
     this.$http.get(`http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/detail`)
       .then(response => {
          this.user = response.data.detail;//初始化用户基本信息
-         console.log(this.user)
       })
       .catch(response => {
         console.log(response)

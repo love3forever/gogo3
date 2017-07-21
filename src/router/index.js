@@ -23,39 +23,35 @@ export default new Router({
 	}),
 	routes: [
 		{
-			path: '/',component: origin,		  
+			path: '/', component: origin,		  
 		},
 		{
-			path: '/home',component: origin,
-			children:[
-				{path:'discover',component:origin},
-				{path:'foot',component:foot},
-			]
-		},   
+			path: '/home', component: origin,
+		}, 
 		{
-			path: '/user/:id',component: user,	
+			path: '/album/:id', component: track,	
+		},
+		{
+			path: '/playlist/:id', component: playlist,	
+		},
+		{
+			path: '/song/:id', component: song,	
+		},  
+		{
+			path: '/user/:id', component: user,	
 			children :[
-				{path:'',component:gens},
-				{path:'fans',component:fans},
-				{path:'fav',component:fav},
+				{ path: '', component: gens },
+				{ path: 'fans', component: fans },
+				{ path: 'fav', component: fav },
 			]		  
 		},
 		{
-			path: '/artist/:id',component: artist,	
+			path: '/artist/:id', component: artist,	
 			children:[
-				{path:'',component:artisthot},
-				{path:'hot',component:artisthot},
-				{path:'album',component:artistalbum}
+				{ path: '', component:artisthot },
+				{ path: 'hot', component:artisthot },
+				{ path: 'album', component:artistalbum }
 			]
-		},
-		{
-			path: '/album/:id',component: track,	
-		},
-		{
-			path: '/playlist/:id',component: playlist,	
-		},
-		{
-			path: '/song/:id',component: song,	
 		},
 	]
 })

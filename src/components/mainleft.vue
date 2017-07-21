@@ -43,10 +43,10 @@
                 <li v-for="(top,index) in disk[num%2]">
                   <div>
                     <img :src="top[0]">
-                    <router-link to="/album" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></router-link>
+                    <router-link :to="'/album/'+top[6]" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></router-link>
                     <a href="/#" title="播放" class="disk-play" v-show="top[3]"></a>
                   </div>
-                  <p><router-link to="/album" class="disk-des">{{top[1]}}</router-link></p>
+                  <p><router-link :to="'/album/'+top[6]" class="disk-des">{{top[1]}}</router-link></p>
                   <p><router-link :to="'/artist/'+top[4]" class="disk-singer">{{top[2]}}</router-link></p>
                 </li>
               </ul>
