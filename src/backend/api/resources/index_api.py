@@ -89,6 +89,14 @@ class APILists(Resource):
             '歌手专辑': {
                 'url': '/api/v1/artist/<string:artistId>/albums',
                 'example': '/api/v1/artist/5346/albums'
+            },
+            '专辑详情': {
+                'url': '/api/v1/album/<string:albumId>/detail',
+                'example': '/api/v1/album/35696416/detail'
+            },
+            '专辑评论': {
+                'url': '/api/v1/album/<string:albumId>/comments/<int:page>',
+                'example': '/api/v1/album/35696416/comments/1'
             }
         }
         return output(jsonify(apis))

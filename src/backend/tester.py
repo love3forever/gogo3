@@ -120,6 +120,14 @@ class Test_Playlist_Api(unittest.TestCase):
         rv = self.app.get('/api/v1/index/info')
         assert rv.status_code == 200
 
+    def test_album_detail(self):
+        rv = self.app.get("/api/v1/album/35696416/detail")
+        assert rv.status_code == 200
+
+    def test_album_comments(self):
+        rv = self.app.get("/api/v1/album/35696416/comments/1")
+        assert rv.status_code == 200
+
 
 class Test_Index_Api(unittest.TestCase):
     """docstring for ClassName"""

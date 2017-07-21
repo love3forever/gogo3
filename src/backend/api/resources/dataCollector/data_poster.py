@@ -9,7 +9,7 @@ from requests import Session
 from bs4 import BeautifulSoup
 from params_dicts import get_user_follows_param, get_user_fans_param, \
     get_playlist_comments_param, get_user_playlist_param, \
-    get_user_playrecord_week, get_user_playrecord_all
+    get_user_playrecord_week, get_user_playrecord_all, album_comments
 from encrypter import encrypted_request
 
 host_url = 'https://music.163.com/{}'
@@ -27,6 +27,8 @@ song_detail_URL = 'http://music.163.com/api/song/detail?ids=[{}]'
 song_lyric_URL = 'http://music.163.com/api/song/lyric?id={}&lv=-1&tv=-1'
 artist_index_URL = 'http://music.163.com/artist?id={}'
 artist_album_URL = 'http://music.163.com/artist/album?id={}&limit=200'
+album_detail_URL = 'http://music.163.com/album?id={}'
+album_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/R_AL_3_{}'
 
 session = Session()
 
@@ -538,9 +540,47 @@ def get_artist_album(artistId):
         return None
 
 
+##########################################
+# 获取专辑相关内容 #########################
+##########################################
+
+def get_album_detail(albumId):
+    album_url = album_detail_URL.format(albumId)
+    album_data = get_data_from_web(album_url)
+    if album_data:
+        album_soup = BeautifulSoup(album_data.content, 'lxml')
+        song_list = album_soup.select('#song-list-pre-cache > textarea')
+        if song_list:
+            detail_data = json.loads(song_list[0].string)
+            result_data = detail_data[0]['album']
+            result_data.setdefault('alias', detail_data[0]['alias'])
+            for item in detail_data:
+                del item['album']
+                del item['alias']
+            result_data.setdefault('songs', detail_data)
+            return result_data
+        else:
+            return None
+    else:
+        return None
+
+
+def get_album_comments_withoffset(albumId, page):
+    comments_url = album_comments_URL.format(albumId)
+    post_data = album_comments
+    post_data['rid'] = post_data['rid'].format(albumId)
+    post_data['offset'] = (page - 1) * post_data['limit']
+    encrtyed_param = encrypted_request(post_data)
+    response_data = post_data_to_web(comments_url, encrtyed_param)
+    data_list = {}
+    if response_data:
+        data_list = response_data
+    return data_list
+
+
 if __name__ == '__main__':
     # print get_user_playlist('77159064')
     # print get_user_index('98038167')
     # print get_user_fans('376717241')
     # print get_user_follows('105711803')
-    print get_artist_album('5346')
+    print json.dumps(get_album_detail('35696416')) 

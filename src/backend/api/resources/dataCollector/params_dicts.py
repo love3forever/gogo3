@@ -56,6 +56,14 @@ user_playrecord_week = {
 }
 
 
+album_comments = {
+    'limit': 20,
+    'offset': 0,
+    'rid': "R_AL_3_{}",
+    'total': 'true'
+}
+
+
 def get_user_follows_param(userId):
     follows_data = post_data
     follows_data['userId'] = userId
