@@ -11,7 +11,7 @@
       </h3>
       <ul>
         <li class="singer-wrap" v-for="(singer,index) in singerData">
-          <a class="singer" href="/#">
+          <router-link :to="'/user/'+singer.href" class="singer">
             <div class="head">
               <img :src="singer.img">
             </div>
@@ -19,7 +19,7 @@
               <h4><span>{{singer.name}}</span></h4>
               <p class="p-over">{{singer.desc}}</p>
             </div>
-          </a>
+          </router-link>
         </li>
       </ul>
       <a href="/#" class="singer-apply">申请成为音乐人</a>
@@ -28,9 +28,12 @@
       <h3><span>热门DJ</span></h3>
       <ul>
         <li class="dj-wrap" v-for="dj in djData">
-          <a href="/#" class="dj"><img :src="dj.img"></a>
+          <router-link :to="'/user/'+dj.href" class="dj"><img :src="dj.img"></router-link>
           <div class="info dj-info">
-            <p><a href="/#" class='dj-Name'>{{dj.name}}</a><sub class="dj-v"></sub></p>
+            <p>
+              <router-link :to="'/user/'+dj.href" class="dj-Name">{{dj.name}}</router-link>
+              <sub class="dj-v"></sub>
+            </p>
             <p class="p-over">{{dj.desc}}</p>
           </div>
         </li>

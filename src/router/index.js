@@ -10,6 +10,9 @@ import user from '@/components/user'
 import fans from '@/components/user-fans'
 import fav from '@/components/user-fav'
 import gens from '@/components/user-general'
+import artist from '@/components/artist'
+import artisthot from '@/components/artist-hot'
+import artistalbum from '@/components/artist-album'
 
 Vue.use(Router)
 
@@ -20,32 +23,35 @@ export default new Router({
 	}),
 	routes: [
 		{
-			path: '/',component: origin,		  
+			path: '/', component: origin,		  
 		},
 		{
-			path: '/home',component: origin,
-			children:[
-				{path:'discover',component:origin},
-				{path:'foot',component:foot},
-			]
-		},   
+			path: '/home', component: origin,
+		}, 
 		{
-			//path: '/use/playlist',component: originlist,
-			path: '/user/:id',component: user,	
+			path: '/album/:id', component: track,	
+		},
+		{
+			path: '/playlist/:id', component: playlist,	
+		},
+		{
+			path: '/song/:id', component: song,	
+		},  
+		{
+			path: '/user/:id', component: user,	
 			children :[
-				{path:'',component:gens},
-				{path:'fans',component:fans},
-				{path:'fav',component:fav},
+				{ path: '', component: gens },
+				{ path: 'fans', component: fans },
+				{ path: 'fav', component: fav },
 			]		  
 		},
 		{
-			path: '/album',component: track,	
-		},
-		{
-			path: '/playlist/:id',component: playlist,	
-		},
-		{
-			path: '/song/:id',component: song,	
+			path: '/artist/:id', component: artist,	
+			children:[
+				{ path: '', component:artisthot },
+				{ path: 'hot', component:artisthot },
+				{ path: 'album', component:artistalbum }
+			]
 		},
 	]
 })

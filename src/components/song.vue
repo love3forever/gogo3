@@ -23,10 +23,18 @@
             </div>
             <div class="content-author">
               <p class="a-author">
-                <span>歌手:<a href="/#" class="author-link">{{desInfo.singer.name}}</a></span>
+                <span>歌手:
+                  <router-link :to="'/artist/'+desInfo.singer.id" class="author-link">
+                    {{desInfo.singer.name}}
+                  </router-link>
+                </span>
               </p>
               <p class="a-author">
-                <span>所属专辑:<a href="/#" class="author-link">{{desInfo.track.name}}</a></span>
+                <span>所属专辑:
+                  <router-link :to="'/album/'+desInfo.track.id" class="author-link">
+                    {{desInfo.track.name}}
+                  </router-link>
+                </span>
               </p>
             </div>
             <div class="content-opreation">
@@ -137,58 +145,7 @@
            </div>
         </div>
       </div>
-      <div class="playlist-right">
-        <div class="ad-wrap">
-          <a href="#" class="ad"></a>
-          <a href="#"><img src="https://haitaoad.nosdn.127.net/ad.bid.material_f73d40bef46d4b0098283ea63ca4b579?imageView&thumbnail=200x220&quality=100"></a>
-        </div>
-        <div class="rela-cmd u-head">
-          <h3>相关推荐</h3>
-          <ul>
-            <li>
-              <div class="rela-msk">
-                <a href="#">
-                  <img src="http://p3.music.126.net/1L_rIf-sofhXEG1R2JQ5bQ==/1365593506719668.jpg?param=50y50">
-                </a>
-              </div>
-              <div class="rela-info">
-                <p class="rela-title p-over">
-                  <a href="#" title="传统世界音乐【器乐】">传统世界音乐【器乐】</a>
-                </p>
-                <p class="p-over">
-                  <span>by</span>
-                  <a href="#" title="紫de甘蓝">紫de甘蓝</a>
-                </p>
-              </div>
-            </li>
-            <li>
-              <div class="rela-msk">
-                <a href="#">
-                  <img src="http://p4.music.126.net/rnHLMLESV1c-PcFbDgAngg==/18775260557760255.jpg?param=50y50">
-                </a>
-              </div>
-              <div class="rela-info">
-                <p class="rela-title p-over">
-                  <a href="#" title="一个人的乌德琴">一个人的乌德琴</a>
-                </p>
-                <p class="p-over">
-                  <span>by</span>
-                  <a href="#" title="珠疯">珠疯</a>
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="multi-dowm u-head">
-          <h3>网易云音乐多端下载</h3>
-          <ul class="dowm-methods">
-            <li><a class="m1" href="https://itunes.apple.com/app/id590338362" target="_blank"></a></li>
-            <li><a class="m2" href="http://music.163.com/api/pc/download/latest"  target="_blank"></a></li>
-            <li><a class="m3" href="http://music.163.com/api/android/download/latest2" target="_blank"></a></li>
-          </ul>
-          <p>同步歌单，随时畅听320k好音乐</p>
-        </div>
-      </div> 
+      <playlistRight></playlistRight>
     </div>
     <div class="loading" v-show="!hasResult">
       <i></i>
@@ -198,10 +155,14 @@
 </template>
 
 <script>
+import playlistRight from './generalRight'
 import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'comment',
+  components:{
+    playlistRight
+  },
   data () {
     return {
       hasResult:false,//是否返回歌单数据
@@ -394,12 +355,6 @@ export default {
       var numb = this.cmtIndex.others;
       return this.cmtLength>10&&numb[numb.length-1].num<this.cmtLength-1;
     },
-    desLyc:function(){
-
-    },
-    dosLyc:function(){
-
-    }
   },
   watch:{
     //歌单数据返回后，提取、格式化需要的数据

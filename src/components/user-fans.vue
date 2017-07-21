@@ -31,7 +31,6 @@ export default {
     this.$http.get(`http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/fans`)
       .then(response => {
          this.fans = response.data.fans;//初始化全部歌单数据
-         console.log(this.fans)
       })
       .catch(response => {
         console.log(response)

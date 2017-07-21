@@ -21,26 +21,64 @@ import mainright from './mainright'
 
 export default {
   name: 'foot',
-  data () {
-    return {
-      leftData:null,
-      rightData:null,
-    }
-  },
   components:{
     slides,mainleft,mainright
+  },
+  data () {
+    return {
+      result:null
+    }
+  },
+  methods:{
+    substractId:function(obj,attr){
+      for (let value of obj){
+        let index = value[attr].lastIndexOf('=');
+        if (index!== -1){
+          value[attr] =  value[attr].substring(index+1);
+        } else {
+          value[attr] = null;
+        };
+      }
+    }
   },
   beforeCreate:function(){
     this.$http.get('http://123.206.211.77:33333/api/v1/index/detail')
       .then(response => {
-        let { blk, hotdj,newAlbum,newSinger,recommendList } = response.data;
-        this.rightData = {newSinger,hotdj};
-        this.leftData = {blk,newAlbum,recommendList};
+        this.result = response.data;
       })
       .catch(response => {
         console.log(response)
     });
   },
+  computed:{
+    leftData:function(){
+      if (this.result){
+        let { blk, newAlbum, recommendList } = this.result;
+        //数据(id)格式化
+        for (let item of blk){
+          this.substractId(item.songs,'songHref');
+        }
+        this.substractId(newAlbum,'artistHref');
+        this.substractId(newAlbum,'href');
+
+        return {blk, newAlbum, recommendList};
+      } else {
+        return null
+      };
+    },
+    rightData:function(){
+      if (this.result){
+        let { hotdj, newSinger} = this.result;
+        //数据(id)格式化
+        this.substractId(newSinger,'href');
+        this.substractId(hotdj,'href');
+        
+        return { hotdj, newSinger };
+      } else {
+        return null
+      };
+    }
+  }
 }
 </script>
 

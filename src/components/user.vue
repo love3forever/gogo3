@@ -11,7 +11,7 @@
                 <em>{{user.level}}</em>
                 <i></i>
               </span>
-              <i class="female"></i>
+              <i :class="user.gender"></i>
               <a href="javascript:;" class="sendMsg"><i>发私信</i></a>
               <a href="javascript:;" class="follow"><i>关&nbsp&nbsp注&nbsp</i></a>
             </h2>
@@ -117,9 +117,6 @@ export default {
   line-height: 31px;
   color: white;
 }
-.follow i{
-
-}
 .sendMsg{
   float: left;
   width: 75px;
@@ -138,6 +135,13 @@ export default {
   height: 20px;
   margin: 8px 0 0 9px;
   background: url(../assets/icon.png) no-repeat scroll -41px -27px;
+}
+.male{
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 8px 0 0 9px;
+  background: url(../assets/icon.png) no-repeat scroll -41px -57px;
 }
 .userLv{
   height: 19px;
