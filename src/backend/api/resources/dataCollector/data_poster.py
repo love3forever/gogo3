@@ -569,9 +569,10 @@ def get_album_detail(albumId):
                 del item['alias']
             result_data.setdefault('songs', detail_data)
             result_data.setdefault('singer', album_singer_name)
-            result_data.setdefault('sniger_id', album_singer_id)
+            result_data.setdefault('singer_id', album_singer_id)
             result_data.setdefault('publish_time', album_publish_time)
             result_data.setdefault('publish_company', album_publish_company)
+            result_data.setdefault('desc', album_desc)
             return result_data
         else:
             return None
