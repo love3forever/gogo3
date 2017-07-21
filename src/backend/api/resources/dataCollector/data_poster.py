@@ -146,14 +146,14 @@ def parse_index_data():
         album_li_list = []
         album_li_list.extend(album_list[0].select('li'))
         album_li_list.extend(album_list[1].select('li'))
-        for ablum_li in album_li_list:
-            ablum_data = {}
-            ablum_data['img'] = ablum_li.select('img')[0]['data-src']
-            ablum_data['href'] = ablum_li.select('.f-thide > a')[0]['href']
-            ablum_data['title'] = ablum_li.select('.f-thide > a')[0]['title']
-            ablum_data['artistName'] = ablum_li.select('.s-fc3')[0].string
-            ablum_data['artistHref'] = ablum_li.select('.tit > a')[0]['href']
-            album_data_list.append(ablum_data)
+        for album_li in album_li_list:
+            album_data = {}
+            album_data['img'] = album_li.select('img')[0]['data-src']
+            album_data['href'] = album_li.select('.f-thide > a')[0]['href']
+            album_data['title'] = album_li.select('.f-thide > a')[0]['title']
+            album_data['artistName'] = album_li.select('.s-fc3')[0].string
+            album_data['artistHref'] = album_li.select('.tit > a')[0]['href']
+            album_data_list.append(album_data)
         index_response['newAlbum'] = album_data_list
     else:
         print('no album data')
@@ -550,6 +550,16 @@ def get_album_detail(albumId):
     if album_data:
         album_soup = BeautifulSoup(album_data.content, 'lxml')
         song_list = album_soup.select('#song-list-pre-cache > textarea')
+        song_desc_all = album_soup.select('#album-desc-more > .f-brk')
+        if len(song_desc_all) == 0:
+            song_desc_all = album_soup.select('.n-albdesc > .f-brk')
+        album_desc = ' '.join([x.string for x in song_desc_all])
+        album_blk = album_soup.select('.topblk > .intr')
+        album_singer = album_blk[0].select('a')[0]
+        album_singer_name = album_singer.string
+        album_singer_id = album_singer['href'][11:]
+        album_publish_time = album_blk[1].select('b')[0].next_sibling
+        album_publish_company = album_blk[2].select('b')[0].next_sibling
         if song_list:
             detail_data = json.loads(song_list[0].string)
             result_data = detail_data[0]['album']
@@ -558,6 +568,10 @@ def get_album_detail(albumId):
                 del item['album']
                 del item['alias']
             result_data.setdefault('songs', detail_data)
+            result_data.setdefault('singer', album_singer_name)
+            result_data.setdefault('sniger_id', album_singer_id)
+            result_data.setdefault('publish_time', album_publish_time)
+            result_data.setdefault('publish_company', album_publish_company)
             return result_data
         else:
             return None
@@ -583,4 +597,4 @@ if __name__ == '__main__':
     # print get_user_index('98038167')
     # print get_user_fans('376717241')
     # print get_user_follows('105711803')
-    print json.dumps(get_album_detail('35696416')) 
+    print json.dumps(get_album_detail('35696416'))
