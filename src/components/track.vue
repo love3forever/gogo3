@@ -46,7 +46,7 @@
                 <i>下载</i>
               </a>
               <a href="#" class="btn-cm">
-                <i>{{cmtNumber}}</i>
+                <i>评论</i>
               </a>
               <div class="clear"></div>
             </div>
@@ -105,67 +105,7 @@
             </table>
           </div>
         </div>
-        <div class="playlist-cmt">
-          <div class="u-title">
-            <h3>评论</h3>
-            <span class="u-lft">{{`共${cmtNumber}条评论`}}</span>
-          </div>
-          <div class="iptarea">
-            <img src="http://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=50y50">
-            <div class="area">
-              <!-- onchange、onkeydown、onkeyup为了兼容IE9及以下:onchange="this.value=this.value.substring(0, 140)" onkeydown="this.value=this.value.substring(0, 140)" onkeyup="this.value=this.value.substring(0, 140)"-->
-              <textarea placeholder="评论" v-model="cmtContent" :maxlength="maxlength"></textarea>
-              <div class="btn-wrap">
-                <i class="emj"></i>
-                <i class="at" @click="addAT"></i>
-                <a href="javascript:;">评论</a>
-                <span>{{cmtCount}}</span>
-              </div>
-              <div class="corr">
-                <em>◆</em>
-                <span>◆</span>
-              </div>
-            </div>
-          </div>
-          <div class="u-cmt" v-show="cmts">
-            <h3 >最新评论</h3>
-            <div class="cmt1" v-for="cmt in cmts">
-              <div class="cmt-head">
-                <a href="/#"><img :src="cmt.user.avatarUrl"></a>
-              </div>
-              <div class="cmt-wrap">
-                <div class="cmt-rel">
-                  <a href="">{{cmt.user.nickname}}</a>：{{cmt.content}}
-                </div>
-                <div class="isRpl" v-if="cmt.beReplied.length">
-                  <span>
-                    <i class="bd">◆</i>
-                    <i class="db">◆</i>
-                  </span>
-                  <a href="/#">{{cmt.beReplied[0].user.nickname}}</a>：{{cmt.beReplied[0].content}}
-                </div>
-                <div class="cmt-desc">
-                  <span>{{cmt.time}}</span>
-                  <a href="/#" class="rpl">回复</a>
-                  <a href="/#" class="rpl-ct"><i class="nofav"></i>{{`(${cmt.likedCount})`}}</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="loading" v-show="!cmts">
-            <i></i>
-            加载中...
-          </div> 
-          <div class="cmt-tab" v-if="cmtLength>1"> 
-              <a href="javascript:;" class="frt" :class="{'disa-frt':cmtIndex.first[0].isclick}" @click="cmtClick(-1)">上一页</a>
-              <a href="javascript:;" :class="[cmtIndex.first[0].isclick?'page-cli':'page']" @click="cmtClick(null,0)">{{cmtIndex.first[0].num}}</a>
-              <span v-show="cmtFrontMore">...</span>
-              <a href="javascript:;" :class="[val.isclick?'page-cli':'page']" v-for="(val,index) in cmtIndex.others" @click="cmtClick(null,index+1)">{{val.num}}</a>
-              <span v-show="cmtNextMore">...</span>
-              <a href="javascript:;" :class="[cmtIndex.last[0].isclick?'page-cli':'page']" @click="cmtClick(null,cmtIndex.others.length+1)">{{cmtIndex.last[0].num}}</a>
-              <a href="javascript:;" class="nxt" :class="{'disa-nxt':cmtIndex.last[0].isclick}" @click="cmtClick(1)">下一页</a>
-           </div>
-        </div>
+        <comment :url="cmtUrl"></comment>
       </div>
       <playlistRight></playlistRight> 
     </div>
@@ -178,12 +118,13 @@
 
 <script>
 import playlistRight from './generalRight'
+import comment from './generalComment'
 import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'track',
   components:{
-    playlistRight
+    playlistRight,comment
   },
   data () {
     return {
@@ -194,25 +135,11 @@ export default {
         descDot:null,
         descMore:null,
       },
-      hasCmt:null,//是否返回评论数据
-      maxlength:140,//允许输入的最多字数
-      cmtContent:"",//评论内容
-      cmtNumber:null,//评论总数
-      cmtIndex:{//评论页码
-        first: [{ num: 1, isclick: true}],//第一页
-        others: [],//中间页
-        last: [{ num: null, isclick: false}],//最后一页
-      },
-      cmts:null,
+      listUrl:`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/detail`,
+      cmtUrl:`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/comments/`,
     }
   },
   methods:{
-    //点击@按钮，评论内容中自动加入@字符
-    addAT:function(){
-      if (this.cmtContent.length < this.maxlength){
-        this.cmtContent += "@";
-      }  
-    },
     //歌单介绍-展开/收起按钮点击事件
     tabShowMore:function(){
       this.des.isShowMore = !this.des.isShowMore;
@@ -239,163 +166,30 @@ export default {
         this.plyClick(index);             
       }
     },
-    //评论翻页按钮，改变不同类型按钮的isclick值
-    cmtClearTrue:function(cmt,index,len,val){
-      if (index===0){//第一页
-        cmt.first[0].isclick = val;
-      } else if (index===len-1){//最后一页
-        cmt.last[0].isclick = val;
-      } else {//其它
-        cmt.others[index-1].isclick = val;
-      };
-    },
-    //确定评论翻页后，列表显示的页数（cmtIndex.others）
-    cmtNum:function(cmt,type,diff){
-      if(type){
-        cmt.others.forEach(function(val,ind){
-          val.num = ind+diff;
-        });
-      } else {
-        cmt.others.forEach(function(val){
-          val.num += diff;
-        });
-      };
-    },
-    //确定按下切换评论的按钮之前，已经被按下的按钮索引
-    cmtCalcuCurrent:function(cmt){
-      var clickList = new Array();
-
-      for (let page in cmt){
-        clickList.push(...cmt[page].map(function(val){
-            return val.isclick
-          })
-        );
-      }
-
-      var len = clickList.length;
-      var current = clickList.findIndex(function(val){
-        return val===true;
-      });
-      return { cmt,len,current }
-    },
-    //按钮列表页数改变后，确定应被按下的按钮
-    cmtSetTrue:function(cmt, len, current, index,cmtLength){
-      var diff = null;
-      //再次按中同一个按钮不会触发click事件，因此此处无需加current!==index
-      if (cmtLength<11){ //总页数少于11页时，无需省略页数  
-        this.cmtClearTrue(cmt,index,len,true);
-      } else {
-        if (index===0){
-          diff=2;//2=len-cmt.others.length,指的是第一页+最后一页
-          this.cmtNum(cmt,true,diff);
-          this.cmtClearTrue(cmt,index,len,true);
-        } else if(index===len-1){
-          diff = cmtLength-len+2;//40
-          this.cmtNum(cmt,true,diff);
-          this.cmtClearTrue(cmt,index,len,true);
-        } else {
-          var targetNum = cmt.others[index-1].num;
-          switch (true)
-          {
-            case targetNum<6:
-              diff=2;
-              this.cmtNum(cmt,true,diff);
-              this.cmtClearTrue(cmt,targetNum-1,len,true);
-              break;
-            case targetNum>cmtLength-5:
-              diff = cmtLength-len+2;
-              this.cmtNum(cmt,true,diff);
-              this.cmtClearTrue(cmt,targetNum-diff+1,len,true);
-              break;
-            default:
-              diff = targetNum-cmt.others[3].num;
-              this.cmtNum(cmt,false,diff);
-              cmt.others[3].isclick = true;
-              break;
-          }
-        };
-      };
-    },
-    //切换评论按钮点击事件
-    cmtClick:function(add,index){
-      this.cmts = null;//新一页评论数据返回之前隐藏当前评论
-      var { cmt, len, current} = this.cmtCalcuCurrent(this.cmtIndex);
-      if (add!==null){//上一页、下一页
-        var index = current+add;
-      }
-
-      var pageIndex = null;
-      if (index===0){
-        pageIndex = cmt.first[0].num;
-      } else if (index===len-1) {
-        pageIndex = cmt.last[0].num;
-      } else {
-        pageIndex = cmt.others[index-1].num;
-      };
-
-      this.$http.get(`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/comments/${pageIndex}`)
-        .then(response => {
-          this.cmts = response.data.comments;
-          this.cmtNumber = response.data.total;
-        })
-        .catch(response => {
-          console.log(response)
-      });
-      
-      this.cmtClearTrue(cmt,current,len,false);
-      this.cmtSetTrue(cmt, len, current, index,this.cmtLength);
-    } 
   },
-  beforeCreate:function(){
+  created:function(){
     //请求歌单数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/detail`)
+    this.$http.get(this.listUrl)
       .then(response => {
         this.hasResult = response.data;//初始化全部歌单数据
       })
       .catch(response => {
         console.log(response)
     });
-    //请求评论数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/album/${this.$route.params.id}/comments/1`)
-      .then(response => {
-        this.cmts = response.data.comments;//初始化全部评论数据
-        this.cmtNumber = response.data.total;//初始化评论总数
-      })
-      .catch(response => {
-        console.log(response)
-    });
-  },
-  computed:{
-    //当前还允许继续输入的字数
-    cmtCount:function(){
-      var content = this.cmtContent;
-      return typeof content==="undefined"?this.maxlength:this.maxlength-content.length;
-    },
-    //评论页数（每页20条评论）
-    cmtLength:function(){
-      return this.cmtNumber===null?null:Math.ceil(this.cmtNumber/20);
-    },
-    //第一页之后是否显示...
-    cmtFrontMore:function(){
-      return this.cmtLength>10&&this.cmtIndex.others[0].num>2;
-    },
-    //最后一页之前是否显示...
-    cmtNextMore:function(){
-      var numb = this.cmtIndex.others;
-      return this.cmtLength>10&&numb[numb.length-1].num<this.cmtLength-1;
-    },
   },
   watch:{
     //歌单数据返回后，提取、格式化需要的数据
     hasResult:function(result){
       //解构result.tracks
       var list = new Array();
+      
       for ( let item of result.songs ){ 
         let { duration, mvid, name, id, artists} = item;
 
         duration = mouseBtnEv.changeTime(duration);
         list.push({ duration, mvid, name, id, artists, click:false});
       }
+
       this.songs = list;
       this.des = {
         isShowMore:false,
@@ -403,24 +197,6 @@ export default {
         descMore:result.desc.length>99?result.desc:null,
       };
     },
-    //评论数据返回后，提取、格式化需要的数据
-    cmts:function(result){
-      if (result!==null){
-        for (let cmt of result){
-          cmt.time = mouseBtnEv.setCommentTime(cmt.time)
-        }
-      }
-    },
-    //确定当前评论页数
-    cmtLength:function(newVal,oldVal){
-      if (oldVal===null){//页面打开时初始化
-        var othersLen = newVal<11?newVal-2:7; 
-        for (let i =0;i<othersLen;i++){
-            this.cmtIndex.others.push({num:2+i,isclick: false});
-          }
-      } 
-      this.cmtIndex.last[0].num = newVal;
-    }
   }
 }
 </script>

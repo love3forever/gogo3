@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import { mouseBtnEv } from '../js/generalChangeVal.js'
-
 export default {
   name: 'artistAlbum',
   data () {

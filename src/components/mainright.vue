@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import { mouseBtnEv } from '../js/generalChangeVal.js'
-
 export default {
   name: 'slides',
   props:['rightData'],
@@ -58,7 +56,7 @@ export default {
   }
 }  
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style>  
 a{
   text-decoration:none;
