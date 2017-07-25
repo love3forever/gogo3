@@ -30,11 +30,8 @@ export default {
       albums:null
     }
   },
-  methods:{
-
-  },
-  beforeCreate:function(){
-    //请求歌手数据
+  created:function(){
+    //请求歌手所有专辑数据
     this.$http.get(`http://123.206.211.77:33333/api/v1/artist/${this.$route.params.id}/albums`)
       .then(response => {
         this.albums = response.data.albums;

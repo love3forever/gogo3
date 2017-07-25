@@ -41,10 +41,10 @@
             <div class="disk-scroll">
               <ul class="disk-group" v-for="(group,num) in diskgroup" :style="'left:'+group+'px;'">
                 <li v-for="(top,index) in disk[num%2]">
-                  <div>
+                  <div class="disk-mask0">
                     <img :src="top[0]">
-                    <router-link :to="'/album/'+top[6]" :title="top[1]" class="disk-mask" @mouseover="diskIn(num%2,index)" @mouseout="diskOut(num%2,index)"></router-link>
-                    <a href="/#" title="播放" class="disk-play" v-show="top[3]"></a>
+                    <router-link :to="'/album/'+top[6]" :title="top[1]" class="disk-mask"></router-link>
+                    <a href="/#" title="播放" class="disk-play"></a>
                   </div>
                   <p><router-link :to="'/album/'+top[6]" class="disk-des">{{top[1]}}</router-link></p>
                   <p><router-link :to="'/artist/'+top[4]" class="disk-singer">{{top[2]}}</router-link></p>
@@ -99,25 +99,20 @@ export default {
   props:['leftData'],
   data () {
     return {
-      hotrecommend:[["华语",false],["流行",true],["摇滚",true],["民谣",true],["电子",true]],
-      ulWidth:645,//ul.width
-      diskgroup:null,//645=ul.width
+      hotrecommend: [["华语",false],["流行",true],["摇滚",true],["民谣",true],["电子",true]],
+      ulWidth: 645,//ul.width
+      diskgroup: null,//645=ul.width
     }
   },
   created:function(){
-    this.diskgroup=[-this.ulWidth,0,this.ulWidth,this.ulWidth*2];
+    this.diskgroup = [-this.ulWidth,0,this.ulWidth,this.ulWidth*2];
   },
   methods:{
-    diskIn:function(num,index){
-      mouseBtnEv.setNewVal(this.disk[num][index], 3, true);
-    },
-    diskOut:function(num,index){
-      mouseBtnEv.setNewVal(this.disk[num][index], 3, false);
-    },
     diskSlide:function(type){//
-      var current = this.diskgroup.indexOf(0);//当前显示的ul索引      
-      var count = 0;//setInterval执行次数
-      var dataParm = {};//setInteval参数
+      var current = this.diskgroup.indexOf(0),//当前显示的ul索引      
+          count = 0,//setInterval执行次数
+          dataParm = {};//setInteval参数
+
       if (type == 'left'){
         dataParm.next = current-1;
         dataParm.nextVal = this.ulWidth; 
@@ -377,7 +372,11 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   background-clip: border-box;
   background: url(../assets/coverall.png) no-repeat scroll 0 -570px;
 }
+.disk-mask0:hover .disk-play{
+  display: block;
+}
 .disk-play{
+  display: none;
   position: absolute;
   right: 5px;
   bottom: 5px;

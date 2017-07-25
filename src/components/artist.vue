@@ -93,7 +93,7 @@ export default {
           duration = mouseBtnEv.changeTime(duration);
           list.push({ duration, songId, songName, alias, mvid, albumId, albumName, score, click:false});
         }
-        return {list};
+        return { list };
       } else {
         return null;
       };
