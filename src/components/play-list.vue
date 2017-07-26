@@ -195,6 +195,8 @@ export default {
         duration = mouseBtnEv.changeTime(duration);
         list.push({ id, duration, songName, albName, albId, artName, artId, click:false});
       }
+      //更改页面title
+      document.title = `${result.name} - 网易云音乐`;
       //初始化songs
       this.songs = {
         coverImgUrl:result.coverImgUrl,

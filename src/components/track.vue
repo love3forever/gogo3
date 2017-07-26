@@ -196,6 +196,8 @@ export default {
         descDot:result.desc.substr(0,99),
         descMore:result.desc.length>99?result.desc:null,
       };
+      //更改页面title
+      document.title = `${result.name} - ${result.singer} - 网易云音乐`;
     },
   }
 }

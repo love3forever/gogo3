@@ -42,6 +42,8 @@ export default {
     }
   },
   beforeCreate:function(){
+    document.title = `网易云音乐`;
+    
     this.$http.get('http://123.206.211.77:33333/api/v1/index/detail')
       .then(response => {
         this.result = response.data;

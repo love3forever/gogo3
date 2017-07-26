@@ -154,6 +154,9 @@ export default {
       //解构result.tracks
       var album = result.album,
           artists = result.artists[0];
+      //更改页面title
+      document.title = `${result.name} - ${artists.name} - 网易云音乐`;
+
       this.desInfo = {
         songName:result.name,
         songPic:album.picUrl,

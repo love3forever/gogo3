@@ -2,7 +2,7 @@
   <div class="slides" :style="'background:'+imgData[colorchange][2]">
     <div class="flagwrap">
       <div style="width:100%;height:100%;">
-        <a href="/#" style="display:inline-block;width:100%;height:100%;"> 
+        <a href="javascript:;" class="wrp-a"> 
           <img id="flag" @webkitAnimationIteration="itertation(index)" class="fade" v-for="(item,index) in imgData" :src="item[0]" v-if="item[1]">
         </a>  
         <a class="tabflag tabl" id="tabl" @click="slide('tabl')" href="/#"></a>
@@ -81,7 +81,7 @@ export default {
   },
 }  
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style>  
 .slides{
   height: 336px;
@@ -92,6 +92,11 @@ export default {
   width: 982px;
   height: 100%;
   margin: 0 auto;
+}
+.wrp-a{
+  display:inline-block;
+  width:100%;
+  height:100%;
 }
 #flag{
   position: absolute;
@@ -170,7 +175,7 @@ a.tabbbtn:hover{
     80% {opacity: 1;}
     100% {opacity: 0;}
 }
-#flag:hover{
+#flag:hover, .paused{
   animation-play-state:paused;
   -webkit-animation-play-state:paused;
 }
