@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
   name: 'user',
@@ -55,7 +54,9 @@ export default {
     //请求歌单数据
     this.$http.get(`http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/detail`)
       .then(response => {
-         this.user = response.data.detail;//初始化用户基本信息
+          this.user = response.data.detail;//初始化用户基本信息
+          //更改页面title
+          document.title = `${this.user.name} - 网易云音乐`;
       })
       .catch(response => {
         console.log(response)

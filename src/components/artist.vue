@@ -67,6 +67,8 @@ export default {
     this.$http.get(`http://123.206.211.77:33333/api/v1/artist/${this.$route.params.id}/index`)
       .then(response => {
         this.result = response.data;
+        //更改页面title
+        document.title = `${this.artistName}${this.artistAlias}-网易云音乐`;
       })
       .catch(response => {
         console.log(response)
@@ -93,7 +95,7 @@ export default {
           duration = mouseBtnEv.changeTime(duration);
           list.push({ duration, songId, songName, alias, mvid, albumId, albumName, score, click:false});
         }
-        return {list};
+        return { list };
       } else {
         return null;
       };

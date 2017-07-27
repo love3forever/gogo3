@@ -13,9 +13,9 @@
         </div>
       </div>
       <a href="/#"></a>
-      <div class="wrap" id="logwrap" @mouseover="showLogmethods" @mouseout="hideLogmethods">
-        <a href="">登录</a><span :class="[logHide ? 'logbtnHide' :'logbtnShow']"></span>
-        <div id="logmethods" class="wrap" v-if="!logHide">
+      <div class="wrap" id="logwrap">
+        <a href="">登录</a><span></span>
+        <div id="logmethods" class="wrap">
           <ul>
             <li v-for="item in log">
               <a href="/#">{{item}}</a>
@@ -39,7 +39,6 @@ export default {
   },
   data () {
     return {
-      logHide:true,
       title: [['发现音乐',true],['我的音乐',false],['朋友',false],['商城',false],['音乐人',false],['下载客户端',false]],
       log:['手机号登录','微信登录','QQ登录','新浪微博登录','网易邮箱账号登录']
     }
@@ -53,18 +52,10 @@ export default {
       mouseBtnEv.setNewVal(this.title[current], 1, false);
       mouseBtnEv.setNewVal(this.title[index], 1, true);
     },
-    showLogmethods:function(){
-      mouseBtnEv.setNewVal(this,'logHide', false);
-    },
-    hideLogmethods:function(){
-      //this.logHide = false;
-      mouseBtnEv.setNewVal(this,'logHide', true);
-    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>  
 .topbar{
   height: 70px;
@@ -134,7 +125,6 @@ li.inbl:hover{
   background: none;
   outline:none;
 }
-
 #logwrap{
   position: relative;
   padding-right: 20px;
@@ -145,20 +135,21 @@ li.inbl:hover{
   top: 30%;
   width: 12px;
   height: 7px;
-}
-.logbtnHide{
   background: url(../assets/topbar.png) no-repeat scroll -228px -380px;
 }
-.logbtnShow{
-  background: url(../assets/topbar.png) no-repeat scroll -228px -418px;
+#logwrap:hover span{
+  background-position: -228px -418px;
+}
+#logwrap:hover #logmethods{
+  display: block;
 }
 #logmethods{
-  width: 150px;
   position: absolute;
   top: 10px;
   left: -50px;
+  width: 150px;
   z-index: 100;
-  //background: rgb(51,51,51);
+  display: none;
 }
 #search{
   width: 210px;

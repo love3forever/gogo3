@@ -28,6 +28,15 @@ export default {
     this.$nextTick(function(){  
       window.addEventListener('scroll', ()=>{//箭头函数修正this指针
         this.scrollLength = document.documentElement.scrollTop || document.body.scrollTop; 
+        //控制首页slide组件动画开始/暂停。鼠标滚动使得slide离开页面可视范围时，动画暂停
+        let slide = document.getElementById('flag');
+        if (slide){
+          if (this.scrollLength > 440){
+            slide.classList.add('paused');
+          } else {
+            slide.classList.remove('paused');
+          };
+        }
       });  
     });  
   }
@@ -56,6 +65,10 @@ a{
   color: rgb(102,102,102);
   font-size: 12px;
 }
+body{
+  margin: 0; 
+  min-width: 1130px;
+}
 .back2top{
   position: fixed;
   left: 50%;
@@ -67,6 +80,6 @@ a{
   background: url(./assets/sprite.png) no-repeat scroll -265px -47px;
 }
 .back2top:hover{
-  background: url(./assets/sprite.png) no-repeat scroll -325px -47px;
+  background-position: -325px -47px;
 }
 </style>

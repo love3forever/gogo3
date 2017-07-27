@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="top50">
+    <div v-if="top">
       <div class="artist-addbtn">
         <div class="content-opreation">
           <a href="#" class="btn-play">
@@ -44,7 +44,7 @@
         </tbody>
       </table>
     </div>
-    <div class="loading" v-if="!top50">
+    <div class="loading" v-if="!top">
       <i></i>
       加载中...
     </div> 
@@ -55,21 +55,21 @@
 import { mouseBtnEv } from '../js/generalChangeVal.js'
 
 export default {
-  name: 'track',
+  name: 'artist',
   props:['top'],
   data () {
     return {
       result:null,
+      top50:null,
     }
   },
   methods:{
     //歌单播放按钮点击事件
     plyClick:function(index){
-      var clickList = this.top50.map(function(item){
+      var current = this.top50.map(function(item){
         return item.click;
-      });
+      }).indexOf(true);
 
-      var current = clickList.indexOf(true);
       if (current>-1){
         mouseBtnEv.setNewVal(this.top50[current], 'click', false);
       }
@@ -86,13 +86,9 @@ export default {
       }
     },
   },
-  computed:{
-    top50:function(){
-      return this.top?this.top.list:null;
-    }
-  }
-
-
+  created:function(){
+    this.top50 = this.top.list;
+  },
 }
 </script>
 
