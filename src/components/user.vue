@@ -1,6 +1,6 @@
 <template>
-  <div class="main" v-if="user">
-    <div class="userhome">
+  <div class="main">
+    <div class="userhome" v-if="user">
       <div class="uh-head">
         <img :src="user.img">
         <div class="uh-des">
@@ -47,12 +47,14 @@ export default {
   name: 'user',
   data () {
     return {
-      user:null
+      user:null,
+      userUrl: `http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/detail`,
+      reg: /\d+/g,
     }
   },
-  beforeCreate:function(){
+  created:function(){
     //请求歌单数据
-    this.$http.get(`http://123.206.211.77:33333/api/v1/user/${this.$route.params.id}/detail`)
+    this.$http.get(this.userUrl)
       .then(response => {
           this.user = response.data.detail;//初始化用户基本信息
           //更改页面title
@@ -62,6 +64,27 @@ export default {
         console.log(response)
     });
   },
+  watch:{
+    '$route' (to, from) {
+      var reg = this.reg,
+          toUser = to.path.match(reg),
+          fromUser = from.path.match(reg);
+
+      if (toUser[0] !== fromUser[0]){//从当前用户页面跳转至另一个用户页面
+        this.user = null;
+
+        this.$http.get(`http://123.206.211.77:33333/api/v1/user/${toUser}/detail`)
+          .then(response => {
+              this.user = response.data.detail;//初始化用户基本信息
+              //更改页面title
+              document.title = `${this.user.name} - 网易云音乐`;
+          })
+          .catch(response => {
+            console.log(response)
+          });
+      }
+    }
+  }
 }
 </script>
 
