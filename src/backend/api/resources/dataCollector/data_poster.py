@@ -12,7 +12,7 @@ from params_dicts import get_user_follows_param, get_user_fans_param, \
     get_user_playrecord_week, get_user_playrecord_all, album_comments
 from encrypter import encrypted_request
 
-host_url = 'https://music.163.com/{}'
+host_url = 'https://music.163.com{}'
 indexURL = 'https://music.163.com/discover'
 playlist_URL = 'https://music.163.com/playlist?id={}'
 user_index_URL = 'http://music.163.com/user/home?id={}'
@@ -170,15 +170,16 @@ def mapper_index_recommend_list(data):
         play_list_url = data.find_all('a', class_='msk')[0]['href']
         play_list_title = data.find_all('a', class_='msk')[0]['title']
         play_list_id = data.find_all('a', class_='msk')[0]['data-res-id']
-        #
         play_count = data.find_all('span', class_='nb')[0].string
+        play_list_type = 'djradio' if 'dj' in play_list_url else 'playlist'
 
         return {
             'img': img,
             'playlistURL': host_url.format(play_list_url),
             'playlistTitle': play_list_title,
             'playTimes': play_count,
-            'playlistID': play_list_id
+            'playlistID': play_list_id,
+            'type': play_list_type
         }
     else:
         return Nonesinger_data
