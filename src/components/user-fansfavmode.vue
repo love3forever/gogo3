@@ -10,8 +10,8 @@
           <i class="female"></i>
           <p class="fans-conect">
             <a href="javascript:;">动态<span>{{user.eventCount}}</span></a><span class="line">|</span>
-            <a>关注<span>{{user.followeds}}</span></a><span class="line">|</span>
-            <a href="">粉丝<span>{{user.follows}}</span></a>
+            <router-link :to="'/user/'+user.userId+'/fav'">关注<span>{{user.followeds}}</span></router-link><span class="line">|</span>
+            <router-link :to="'/user/'+user.userId+'/fans'">粉丝<span>{{user.follows}}</span></router-link>
           </p>
         </div>
         <div class="fans-fav">
