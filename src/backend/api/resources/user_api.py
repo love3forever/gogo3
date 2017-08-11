@@ -101,3 +101,45 @@ class UserDetail(Resource):
         else:
             abort(404, description='do request with right user id, \
                 current id:{}'.format(userId))
+
+
+@userAPI.resource('/<string:userId>/follows/page/<int:page>')
+class UserFollowsWithoffset(Resource):
+    """docstring for UserFollowsWithoffset"""
+
+    def get(self, userId, page):
+        if userId:
+            data = data_poster.get_user_follows_withoffset(userId, page)
+            if data:
+                result = {
+                    'user': userId,
+                    'follows': data['follow'],
+                    'code': 200
+                }
+                return output(jsonify(result))
+            else:
+                abort(404, description='user {} follows nobody'.format(userId))
+        else:
+            abort(404, description='do request with right user id, \
+                current id:{}'.format(userId))
+
+
+@userAPI.resource('/<string:userId>/fans/page/<int:page>')
+class UserFansWithoffset(Resource):
+    """docstring for UserFollowsWithoffset"""
+
+    def get(self, userId, page):
+        if userId:
+            data = data_poster.get_user_fans_withoffset(userId, page)
+            if data:
+                result = {
+                    'user': userId,
+                    'follows': data['followeds'],
+                    'code': 200
+                }
+                return output(jsonify(result))
+            else:
+                abort(404, description='user {} follows nobody'.format(userId))
+        else:
+            abort(404, description='do request with right user id, \
+                current id:{}'.format(userId))

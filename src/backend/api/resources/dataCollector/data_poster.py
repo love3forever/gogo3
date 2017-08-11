@@ -9,7 +9,8 @@ from requests import Session
 from bs4 import BeautifulSoup
 from params_dicts import get_user_follows_param, get_user_fans_param, \
     get_playlist_comments_param, get_user_playlist_param, \
-    get_user_playrecord_week, get_user_playrecord_all, album_comments
+    get_user_playrecord_week, get_user_playrecord_all, album_comments,\
+    djradio_comments, follow_and_fans_data
 from encrypter import encrypted_request
 
 host_url = 'https://music.163.com{}'
@@ -29,6 +30,8 @@ artist_index_URL = 'http://music.163.com/artist?id={}'
 artist_album_URL = 'http://music.163.com/artist/album?id={}&limit=200'
 album_detail_URL = 'http://music.163.com/album?id={}'
 album_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/R_AL_3_{}'
+djradio_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/A_DJ_1_{}?csrf_token='
+djradio_detail_URL = 'http://music.163.com/dj?id={}'
 
 session = Session()
 
@@ -259,6 +262,15 @@ def data_poster(uid, postURL, keyword, getparamFunc):
     else:
         print('{} should be callable'.format(str(getparamFunc)))
 
+
+def data_poster_withoffset(post_url, post_content):
+    encrtyed_param = encrypted_request(post_content)
+    response_data = post_data_to_web(post_url, encrtyed_param)
+    data_list = {}
+    if response_data:
+        data_list = response_data
+    return data_list
+
 ##########################################
 # 获取用户相关内容 #########################
 ##########################################
@@ -270,9 +282,29 @@ def get_user_follows(userid):
                        'follow', get_user_follows_param)
 
 
+def get_user_follows_withoffset(userId, page):
+    # 根据用户id和和offset获取关注列表
+    follows_url = user_follows_URL.format(userId)
+    post_data = follow_and_fans_data
+    post_data['userId'] = userId
+    post_data['limit'] = 20
+    post_data['offset'] = (page - 1) * post_data['limit']
+    return data_poster_withoffset(follows_url, post_data)
+
+
 def get_user_fans(userid):
     # 根据用户id获取粉丝列表
     return data_poster(userid, user_fans_URL, 'followeds', get_user_fans_param)
+
+
+def get_user_fans_withoffset(userId, page):
+    # 根据用户id和和offset获取关注列表
+    fans_url = user_fans_URL.format(userId)
+    post_data = follow_and_fans_data
+    post_data['userId'] = userId
+    post_data['limit'] = 20
+    post_data['offset'] = (page - 1) * post_data['limit']
+    return data_poster_withoffset(fans_url, post_data)
 
 
 def get_user_playlist(userid):
@@ -431,16 +463,11 @@ def get_song_comments(songId):
 
 def get_playlist_comments_withoffset(playlistid, page):
     # 根据歌单id和page获取歌单评论
-    data_list = {}
     postURL = playlist_comments_URL.format(playlistid)
     post_param = get_playlist_comments_param(playlistid)
     post_param['offset'] = str((page - 1) * 20)
     post_param['limit'] = str(20)
-    encrtyed_param = encrypted_request(post_param)
-    response_data = post_data_to_web(postURL, encrtyed_param)
-    if response_data:
-        data_list = response_data
-    return data_list
+    return data_poster_withoffset(postURL, post_param)
 
 
 def get_song_comments_withoffset(songId, page):
@@ -586,12 +613,41 @@ def get_album_comments_withoffset(albumId, page):
     post_data = album_comments
     post_data['rid'] = post_data['rid'].format(albumId)
     post_data['offset'] = (page - 1) * post_data['limit']
-    encrtyed_param = encrypted_request(post_data)
-    response_data = post_data_to_web(comments_url, encrtyed_param)
-    data_list = {}
-    if response_data:
-        data_list = response_data
-    return data_list
+    return data_poster_withoffset(comments_url, post_data)
+
+##########################################
+# 获取电台相关内容 #########################
+##########################################
+
+
+def get_djradio_comments_withoffset(djId, page):
+    comments_url = djradio_comments_URL.format(djId)
+    post_data = djradio_comments
+    post_data['rid'] = post_data['rid'].format(djId)
+    post_data['offset'] = (page - 1) * post_data['limit']
+    return data_poster_withoffset(comments_url, post_data)
+
+
+def get_djradio_detail(djId):
+    radio_url = djradio_detail_URL.format(djId)
+    radio_data = get_data_from_web(radio_url)
+    if radio_data:
+        radio_info = dict()
+        try:
+            radio_soup = BeautifulSoup(radio_data.content, 'lxml')
+            radio_img = radio_soup.select('.u-cover-program > img')[0]['src']
+            radio_info.setdefault('img', radio_img)
+            radio_title = radio_soup.select('.f-ff2')[0].string
+            radio_info.setdefault('title', radio_title)
+            radio_rdname = radio_soup.select('.rdiname > a')[0].string
+            radio_info.setdefault('name', radio_rdname)
+            radio_intro = '\n'.join(radio_soup.select(
+                'p#full-description')[0].stripped_strings)
+            radio_info.setdefault('intro', radio_intro)
+        except Exception:
+            return None
+        else:
+            return radio_info
 
 
 if __name__ == '__main__':
@@ -599,4 +655,6 @@ if __name__ == '__main__':
     # print get_user_index('98038167')
     # print get_user_fans('376717241')
     # print get_user_follows('105711803')
-    print json.dumps(get_album_detail('35696416'))
+    # print json.dumps(get_album_detail('35696416'))
+    # print json.dumps(get_djradio_comments_withoffset('908620640', 1))
+    print get_djradio_detail('905617140')

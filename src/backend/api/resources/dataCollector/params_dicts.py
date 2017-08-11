@@ -12,6 +12,14 @@ post_data = {
     "csrf_token": ""
 }
 
+follow_and_fans_data = {
+    "userId": "77159064",
+    "offset": "0",
+    "total": "true",
+    "limit": "100",
+    "csrf_token": ""
+}
+
 playlist_comments = {"rid": "A_PL_0_{}", "offset": "0", "total": "true",
                      "limit": "100", "csrf_token": ""}
 
@@ -60,6 +68,13 @@ album_comments = {
     'limit': 20,
     'offset': 0,
     'rid': "R_AL_3_{}",
+    'total': 'true'
+}
+
+djradio_comments = {
+    'limit': 20,
+    'offset': 0,
+    'rid': "A_DJ_1_{}",
     'total': 'true'
 }
 

@@ -92,8 +92,16 @@ class Test_Playlist_Api(unittest.TestCase):
         rv = self.app.get('/api/v1/user/77159064/follows')
         assert rv.status_code == 200
 
+    def test_user_follows_withoffset(self):
+        rv = self.app.get('/api/v1/user/77159064/follows/page/1')
+        assert rv.status_code == 200
+
     def test_user_fans(self):
         rv = self.app.get('/api/v1/user/77159064/fans')
+        assert rv.status_code == 200
+
+    def test_user_fans_withoffset(self):
+        rv = self.app.get('/api/v1/user/77159064/fans/page/1')
         assert rv.status_code == 200
 
     def test_song_lyric(self):
@@ -142,6 +150,23 @@ class Test_Index_Api(unittest.TestCase):
         rv = self.app.get('/api/v1/index/detail')
         assert rv.status_code == 200
 
+
+class Test_DjRadio(unittest.TestCase):
+    """docstring for Test_DjRadio"""
+
+    def setUp(self):
+        self.app = app.test_client()
+
+    def tearDown(self):
+        pass
+
+    def test_get_djradio_detail(self):
+        rv = self.app.get('/api/v1/djradio/detail/908620640')
+        assert rv.status_code == 200
+
+    def test_get_djradio_comments(self):
+        rv = self.app.get('/api/v1/djradio/comments/908620640/page/1')
+        assert rv.status_code == 200
 
 if __name__ == '__main__':
     unittest.main()
