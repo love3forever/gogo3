@@ -15,74 +15,81 @@
 </template>
 
 <script>
-import slides from './slides'
-import mainleft from './mainleft'
-import mainright from './mainright'
+import slides from "./slides";
+import mainleft from "./mainleft";
+import mainright from "./mainright";
 
 export default {
-  name: 'foot',
-  components:{
-    slides,mainleft,mainright
+  name: "foot",
+  components: {
+    slides,
+    mainleft,
+    mainright
   },
-  data () {
+  data() {
     return {
-      result:null
-    }
+      result: null
+    };
   },
-  methods:{
-    substractId:function(obj,attr){
-      for (let value of obj){
-        let index = value[attr].lastIndexOf('=');
-        if (index!== -1){
-          value[attr] =  value[attr].substring(index+1);
-        } else {
-          value[attr] = null;
-        };
+  methods: {
+    substractId: function(obj, attr) {
+      if (obj) {
+        for (let value of obj) {
+          let index = value[attr].lastIndexOf("=");
+          if (index !== -1) {
+            value[attr] = value[attr].substring(index + 1);
+          } else {
+            value[attr] = null;
+          }
+        }
       }
     }
   },
-  beforeCreate:function(){
+  beforeCreate: function() {
     document.title = `网易云音乐`;
-    
-    this.$http.get('http://123.206.211.77:33333/api/v1/index/detail')
+
+    this.$http
+      .get("http://123.206.211.77:33333/api/v1/index/detail")
       .then(response => {
         this.result = response.data;
+        console.log(this.result);
       })
       .catch(response => {
-        console.log(response)
-    });
+        console.log(response);
+      });
   },
-  computed:{
-    leftData:function(){
-      if (this.result){
+  computed: {
+    leftData: function() {
+      if (this.result) {
         let { blk, newAlbum, recommendList } = this.result;
         //数据(id)格式化
-        for (let item of blk){
-          this.substractId(item.songs,'songHref');
+        for (let item of blk) {
+          this.substractId(item.songs, "songHref");
         }
-        this.substractId(newAlbum,'artistHref');
-        this.substractId(newAlbum,'href');
+        this.substractId(newAlbum, "artistHref");
+        this.substractId(newAlbum, "href");
 
-        return {blk, newAlbum, recommendList};
+        return { blk, newAlbum, recommendList };
       } else {
-        return null
-      };
+        return null;
+      }
     },
-    rightData:function(){
-      if (this.result){
-        let { hotdj, newSinger} = this.result;
+    rightData: function() {
+      if (this.result) {
+        let { hotdj, newSinger } = this.result;
         //数据(id)格式化
-        this.substractId(newSinger,'href');
-        this.substractId(hotdj,'href');
-        
+        this.substractId(newSinger, "href");
+        this.substractId(hotdj, "href");
+
         return { hotdj, newSinger };
       } else {
-        return null
-      };
+        return null;
+      }
     }
   }
-}
+};
 </script>
 
-<style>  
+<style>
+
 </style>

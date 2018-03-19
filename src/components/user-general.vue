@@ -33,7 +33,7 @@
           <h3>{{`${userName}创建的歌单（${playlistCreateCount}）`}}</h3>
         </div>
           <ul id="uh-crtlistwrap" class="hot-item">
-            <li v-for="item in playlistCreate" class="uh-list">
+            <li :key="index" v-for="(item,index) in playlistCreate" class="uh-list">
               <div class="item-wrap">
                 <img :src="item.coverImgUrl" class="creat-wrap">
                 <router-link :to="'/playlist/'+item.playlistId" class="msk"></router-link>
@@ -56,7 +56,7 @@
           <h3>{{`${userName}收藏的歌单（${playlistLikeCount}）`}}</h3>
         </div>
           <ul id="uh-likelistwrap" class="hot-item">
-            <li v-for="item in playlistLike" class="uh-list">
+            <li :key="index" v-for="(item,index) in playlistLike" class="uh-list">
               <div class="item-wrap">
                 <img :src="item.coverImgUrl"  class="creat-wrap">
                 <router-link :to="'/playlist/'+item.playlistId" class="msk"></router-link>

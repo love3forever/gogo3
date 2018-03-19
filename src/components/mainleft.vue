@@ -92,155 +92,189 @@
 </template>
 
 <script>
-import { mouseBtnEv } from '../js/generalChangeVal.js'
+import { mouseBtnEv } from "../js/generalChangeVal.js";
 
 export default {
-  name: 'slides',
-  props:['leftData'],
-  data () {
+  name: "slides",
+  props: ["leftData"],
+  data() {
     return {
-      hotrecommend: [["华语",false],["流行",true],["摇滚",true],["民谣",true],["电子",true]],
-      ulWidth: 645,//ul.width
-      diskgroup: null,//645=ul.width
-    }
+      hotrecommend: [
+        ["华语", false],
+        ["流行", true],
+        ["摇滚", true],
+        ["民谣", true],
+        ["电子", true]
+      ],
+      ulWidth: 645, //ul.width
+      diskgroup: null //645=ul.width
+    };
   },
-  created:function(){
-    this.diskgroup = [-this.ulWidth,0,this.ulWidth,this.ulWidth*2];
+  created: function() {
+    this.diskgroup = [-this.ulWidth, 0, this.ulWidth, this.ulWidth * 2];
   },
-  methods:{
-    diskSlide:function(type){//
-      var current = this.diskgroup.indexOf(0),//当前显示的ul索引      
-          count = 0,//setInterval执行次数
-          dataParm = {};//setInteval参数
+  methods: {
+    diskSlide: function(type) {
+      //
+      var current = this.diskgroup.indexOf(0), //当前显示的ul索引
+        count = 0, //setInterval执行次数
+        dataParm = {}; //setInteval参数
 
-      if (type == 'left'){
-        dataParm.next = current-1;
-        dataParm.nextVal = this.ulWidth; 
-      } else if(type == "right"){
-        dataParm.next = current-3;
-        dataParm.nextVal = -this.ulWidth; 
-      };
+      if (type == "left") {
+        dataParm.next = current - 1;
+        dataParm.nextVal = this.ulWidth;
+      } else if (type == "right") {
+        dataParm.next = current - 3;
+        dataParm.nextVal = -this.ulWidth;
+      }
 
-      var chageLeft = setInterval(()=>{
-        count++;//计次
-        var addVal = count*dataParm.nextVal/50;//切换时元素left增加的值,=当前次数*ul.width/总次数
+      var chageLeft = setInterval(() => {
+        count++; //计次
+        var addVal = count * dataParm.nextVal / 50; //切换时元素left增加的值,=当前次数*ul.width/总次数
         //每20ms改变一次current、next ul的left值
-        mouseBtnEv.setNewVal(this.diskgroup, dataParm.next, addVal-dataParm.nextVal);
+        mouseBtnEv.setNewVal(
+          this.diskgroup,
+          dataParm.next,
+          addVal - dataParm.nextVal
+        );
         mouseBtnEv.setNewVal(this.diskgroup, current, addVal);
         //执行50次后(共1s)停止，并改变备用ul的left值
-        if (count == 50){//总计1000ms=50次*20ms/次
-          mouseBtnEv.setNewVal(this.diskgroup, current-2, -dataParm.nextVal);
+        if (count == 50) {
+          //总计1000ms=50次*20ms/次
+          mouseBtnEv.setNewVal(this.diskgroup, current - 2, -dataParm.nextVal);
           clearInterval(chageLeft);
-        };
-      },20);
-    },
+        }
+      }, 20);
+    }
   },
-  computed:{
-    hotitem:function(){
-      return this.leftData?this.leftData.recommendList:[];
+  computed: {
+    hotitem: function() {
+      return this.leftData ? this.leftData.recommendList : [];
     },
-    billborad:function(){
-      return this.leftData?this.leftData.blk:[];
+    billborad: function() {
+      return this.leftData ? this.leftData.blk : [];
     },
-    disk:function(){
-      if (!this.leftData){//数据未返回
+    disk: function() {
+      if (!this.leftData) {
+        //数据未返回
         return [];
-      } else {//数据已返回
-        var newAlbum = this.leftData.newAlbum;
-        var outputDisk = new Array(new Array(5),new Array(5));
+      } else {
+        //数据已返回\
+        if (this.leftData.newAlbum) {
+          var newAlbum = this.leftData.newAlbum;
+          var outputDisk = new Array(new Array(5), new Array(5));
 
-        for (var i=0;i<newAlbum.length;i++){
-          if (i<5){       
-            outputDisk[0][i] = new Array(6);
-            outputDisk[0][i] = [newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false,newAlbum[i].artistHref,newAlbum[i].artistHref,newAlbum[i].href];
-          } else {
-            outputDisk[1][i-5] = new Array(6);
-            outputDisk[1][i-5]=[newAlbum[i].img,newAlbum[i].title,newAlbum[i].artistName,false,newAlbum[i].artistHref,newAlbum[i].artistHref,newAlbum[i].href];
-          };
-        };
-        return outputDisk;
-      };
+          for (var i = 0; i < newAlbum.length; i++) {
+            if (i < 5) {
+              outputDisk[0][i] = new Array(6);
+              outputDisk[0][i] = [
+                newAlbum[i].img,
+                newAlbum[i].title,
+                newAlbum[i].artistName,
+                false,
+                newAlbum[i].artistHref,
+                newAlbum[i].artistHref,
+                newAlbum[i].href
+              ];
+            } else {
+              outputDisk[1][i - 5] = new Array(6);
+              outputDisk[1][i - 5] = [
+                newAlbum[i].img,
+                newAlbum[i].title,
+                newAlbum[i].artistName,
+                false,
+                newAlbum[i].artistHref,
+                newAlbum[i].artistHref,
+                newAlbum[i].href
+              ];
+            }
+          }
+          return outputDisk;
+        }
+        return [];
+      }
     }
   }
-}  
+};
 </script>
 
-<style>  
-.mainleft{
+<style>
+.mainleft {
   width: 730px;
   height: 100%;
   margin-right: 250px;
-  color: rgb(51,51,51);
+  color: rgb(51, 51, 51);
 }
-.left-content{
+.left-content {
   width: 690px;
   padding: 20px 20px 40px 20px;
 }
-.lefthead{
+.lefthead {
   height: 33px;
   padding: 0 10px 0 34px;
-  border-bottom: 2px solid rgb(193,13,12);
+  border-bottom: 2px solid rgb(193, 13, 12);
   background: url(../assets/index.png) no-repeat scroll -225px -156px;
   background-clip: border-box;
   overflow: hidden;
 }
-.hot-title{
+.hot-title {
   text-decoration: none;
   font-size: 20px;
   line-height: 28px;
   float: left;
   color: inherit;
 }
-.lefthead ul{
+.lefthead ul {
   display: inline-block;
   padding: 0;
   margin: 7px 0 0 10px;
   float: left;
 }
-.lefthead li{
+.lefthead li {
   display: inline-block;
   padding: 0 10px;
   margin: 0;
   font-size: 12px;
 }
-.li-sp{
-  border-left: 1px solid rgb(204,204,204);
+.li-sp {
+  border-left: 1px solid rgb(204, 204, 204);
 }
-a{
+a {
   text-decoration: none;
-  color: rgb(102,102,102);
+  color: rgb(102, 102, 102);
 }
-a.hot-subtitle:hover,a.hot-descrp:hover{
+a.hot-subtitle:hover,
+a.hot-descrp:hover {
   text-decoration: underline;
 }
-.lefthead span{
+.lefthead span {
   display: inline-block;
   font-size: 12px;
   margin-top: 9px;
   float: right;
 }
-.lefthead sub{
+.lefthead sub {
   display: inline-block;
   width: 12px;
   height: 12px;
   margin-left: 4px;
   background: url(../assets/index.png) no-repeat scroll 0 -240px;
 }
-.left-ad{
+.left-ad {
   position: relative;
   width: 689px;
   height: 75px;
   margin-bottom: 35px;
 }
-.lef-ad img{
+.lef-ad img {
   width: 100%;
   height: 100%;
 }
-.item-wrap{
+.item-wrap {
   position: relative;
   height: 140px;
 }
-.msk{
+.msk {
   position: absolute;
   top: 0;
   left: 0;
@@ -248,7 +282,7 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   height: 140px;
   background: url(../assets/coverall.png) no-repeat scroll 0 0;
 }
-.item-bottom{
+.item-bottom {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -257,92 +291,92 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   background: url(../assets/coverall.png) no-repeat scroll 0 -537px;
   text-align: left;
 }
-.ico{
+.ico {
   float: left;
   width: 14px;
   height: 11px;
   margin: 9px 5px 9px 10px;
   background: url(../assets/iconall.png) no-repeat scroll 0 -24px;
 }
-.hot-descrp sub{
+.hot-descrp sub {
   position: relative;
-  top:-1px;
+  top: -1px;
 }
-.hot-num{
+.hot-num {
   float: left;
   margin: 6px 0;
 }
-.hotplay{
+.hotplay {
   float: right;
   width: 16px;
   height: 16px;
   margin: 6px;
   background: url(../assets/iconall.png) no-repeat scroll 0 0;
 }
-.hotplay:hover{
-  background: url(../assets/iconall.png) no-repeat scroll 0 -60px; 
+.hotplay:hover {
+  background: url(../assets/iconall.png) no-repeat scroll 0 -60px;
 }
-.hot-item{
+.hot-item {
   display: inline-block;
   margin: 20px 0 0 -42px;
   padding: 0;
   font-size: 12px;
-  color: rgb(220,220,220);
+  color: rgb(220, 220, 220);
 }
-.hot-item li{
+.hot-item li {
   display: inline-block;
   height: 204px;
   padding: 0 0 30px 42px;
   margin: 0;
   vertical-align: top;
 }
-.hot-item p{
+.hot-item p {
   width: 140px;
   font-size: 14px;
   text-align: left;
 }
-.hot-item sub{
+.hot-item sub {
   display: inline-block;
   width: 35px;
   height: 15px;
   margin-right: 3px;
   background: url(../assets/icon.png) no-repeat scroll -31px -658px;
 }
-.disk{
+.disk {
   height: 184px;
   margin: 20px 0 37px 0;
-  border: 1px solid rgb(211,211,211);
+  border: 1px solid rgb(211, 211, 211);
 }
-.disk-wrap{
+.disk-wrap {
   position: relative;
   height: 182px;
   padding-left: 16px;
   border: 1px solid white;
-  background: rgb(245,245,245);
+  background: rgb(245, 245, 245);
 }
-.disk-tab{
+.disk-tab {
   text-decoration: none;
   display: inline-block;
   width: 17px;
   height: 17px;
   position: absolute;
-  top:71px;
+  top: 71px;
 }
-.disk-left{
+.disk-left {
   left: 4px;
-  background: url(../assets/index.png) no-repeat scroll -260px -75px; 
+  background: url(../assets/index.png) no-repeat scroll -260px -75px;
 }
-.disk-right{
+.disk-right {
   right: 4px;
-  background: url(../assets/index.png) no-repeat scroll -300px -75px; 
+  background: url(../assets/index.png) no-repeat scroll -300px -75px;
 }
-.disk-scroll{
+.disk-scroll {
   width: 645px;
   height: 180px;
   position: relative;
   overflow: hidden;
 }
-.disk-group{
+.disk-group {
   text-decoration: none;
   width: 100%;
   height: 150px;
@@ -350,32 +384,32 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   padding: 0;
   position: absolute;
 }
-.disk-group li{
+.disk-group li {
   display: inline-block;
   width: 118px;
   height: 100%;
   margin-left: 11px;
   vertical-align: top;
 }
-.disk-group div{
+.disk-group div {
   position: relative;
   width: 100px;
   height: 100px;
   margin-bottom: 7px;
 }
-.disk-mask{
+.disk-mask {
   position: absolute;
-  top:0;
+  top: 0;
   left: 0;
   width: 118px;
   height: 100%;
   background-clip: border-box;
   background: url(../assets/coverall.png) no-repeat scroll 0 -570px;
 }
-.disk-mask0:hover .disk-play{
+.disk-mask0:hover .disk-play {
   display: block;
 }
-.disk-play{
+.disk-play {
   display: none;
   position: absolute;
   right: 5px;
@@ -384,7 +418,7 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   height: 22px;
   background: url(../assets/iconall.png) no-repeat scroll 0 -85px;
 }
-.disk-group p{
+.disk-group p {
   width: 90%;
   height: 18px;
   line-height: 18px;
@@ -395,136 +429,139 @@ a.hot-subtitle:hover,a.hot-descrp:hover{
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.disk-des{
+.disk-des {
   color: black;
 }
-a.disk-des:hover,a.hot-artist:hover,a.taba:hover{
+a.disk-des:hover,
+a.hot-artist:hover,
+a.taba:hover {
   text-decoration: underline;
 }
-a.disk-left:hover{
-  cursor:pointer;
-  background: url(../assets/index.png) no-repeat scroll -280px -75px; 
-} 
-a.disk-right:hover{
-  cursor:pointer;
-  background: url(../assets/index.png) no-repeat scroll -320px -75px; 
+a.disk-left:hover {
+  cursor: pointer;
+  background: url(../assets/index.png) no-repeat scroll -280px -75px;
 }
-.song-list{
+a.disk-right:hover {
+  cursor: pointer;
+  background: url(../assets/index.png) no-repeat scroll -320px -75px;
+}
+.song-list {
   width: 100%;
   height: 472px;
-  margin-top:20px;
+  margin-top: 20px;
   background: url(../assets/index_bill.png) no-repeat scroll 0 0;
 }
-.bill{
+.bill {
   float: left;
   width: 230px;
   height: 100%;
   margin: 0;
 }
-.bill-top{
+.bill-top {
   display: block;
   height: 100px;
   position: relative;
   padding: 20px 0 0 20px;
   text-align: left;
 }
-.billtop-des{
+.billtop-des {
   position: relative;
   display: inline-block;
   width: 80px;
   height: 80px;
 }
-.billtop-des img,.billtop-des a{
+.billtop-des img,
+.billtop-des a {
   width: 100%;
   height: 100%;
   position: absolute;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
 }
-.billtop-des a{
-  background: url(../assets/coverall.png) no-repeat scroll -145px -57px; 
+.billtop-des a {
+  background: url(../assets/coverall.png) no-repeat scroll -145px -57px;
 }
-.billtop-title{
+.billtop-title {
   position: absolute;
-  top:20px;
+  top: 20px;
   left: 100px;
   width: 114px;
   height: 51px;
   margin: 6px 0 23px 10px;
 }
-.billtop-title h3{
+.billtop-title h3 {
   margin: 0 0 10px 0;
-  color: rgb(51,51,51);
+  color: rgb(51, 51, 51);
   font-size: 14px;
 }
-a.bill-title:hover,a.song-item:hover,a.view-allsong:hover{
+a.bill-title:hover,
+a.song-item:hover,
+a.view-allsong:hover {
   text-decoration: underline;
 }
-.bill-play{
+.bill-play {
   display: inline-block;
   width: 22px;
   height: 22px;
   margin-right: 5px;
-  background: url(../assets/index.png) no-repeat scroll -267px -205px; 
+  background: url(../assets/index.png) no-repeat scroll -267px -205px;
 }
-.bill-play:hover{
-  background: url(../assets/index.png) no-repeat scroll -267px -235px; 
+.bill-play:hover {
+  background: url(../assets/index.png) no-repeat scroll -267px -235px;
 }
-.bill-collect{
+.bill-collect {
   display: inline-block;
   width: 22px;
   height: 22px;
   margin-right: 5px;
-  background: url(../assets/index.png) no-repeat scroll -300px -205px; 
+  background: url(../assets/index.png) no-repeat scroll -300px -205px;
 }
-.bill-collect:hover{
-  background: url(../assets/index.png) no-repeat scroll -300px -235px; 
+.bill-collect:hover {
+  background: url(../assets/index.png) no-repeat scroll -300px -235px;
 }
-dd{
+dd {
   margin: 0;
 }
-dd ol{
+dd ol {
   margin: 0 0 0 50px;
   padding: 0;
   width: auto;
-  list-style:none;
+  list-style: none;
 }
-dd li{
+dd li {
   height: 32px;
   font-size: 12px;
   text-align: left;
-
 }
-dd div{
+dd div {
   height: 32px;
-  margin-right:32px;
-  line-height: 32px; 
+  margin-right: 32px;
+  line-height: 32px;
   text-align: right;
 }
-.song-num{
+.song-num {
   display: inline-block;
   width: 35px;
   height: 32px;
-  margin-left:-35px;
+  margin-left: -35px;
   line-height: 32px;
   font-size: 16px;
   position: relative;
   float: left;
   text-align: center;
-  color: rgb(51,51,51);
-
+  color: rgb(51, 51, 51);
 }
-.song-numtop{
-  color: rgb(193,13,12);
+.song-numtop {
+  color: rgb(193, 13, 12);
 }
-.song-item{
+.song-item {
   float: left;
   width: 170px;
   height: 32px;
   line-height: 32px;
-  color: rgb(51,51,51);
+  color: rgb(51, 51, 51);
 }
-.view-allsong{
+.view-allsong {
   text-align: right;
   font-size: 12px;
   color: inherit;

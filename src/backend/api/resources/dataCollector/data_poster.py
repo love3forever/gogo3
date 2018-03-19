@@ -33,7 +33,23 @@ album_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/R_AL_3_{}'
 djradio_comments_URL = 'http://music.163.com/weapi/v1/resource/comments/A_DJ_1_{}?csrf_token='
 djradio_detail_URL = 'http://music.163.com/dj?id={}'
 
+
+agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.86 Safari/537.36'
+accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+connection = "keep-alive"
+cache_control = "no-cache"
+upgrade_insecure_requests = 1
+host = 'music.163.com'
+headers = {
+    'User-Agent': agent,
+    'Host': host,
+    'Accept': accept,
+    'Cache-Control': cache_control,
+    'Connection': connection,
+}
+
 session = Session()
+session.headers = headers
 
 
 def get_data_from_web(url):

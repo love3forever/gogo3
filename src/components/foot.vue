@@ -4,7 +4,7 @@
       <div class="foot-content">
         <div class="copyright">
           <p>
-            <a class="about" :href="item[1]" target="_blank" :class="{'about-first':item[2]}" v-for="item in about">{{item[0]}}</a>
+            <a class="about" :href="item[1]" target="_blank" :class="{'about-first':item[2]}" :key="index" v-for="(item,index) in about">{{item[0]}}</a>
           </p>
           <p>
             <span class="copy">网易公司版权所有©1997-2017</span>
@@ -13,7 +13,7 @@
           </p>
         </div>
         <ul class="enter">
-          <li v-for="item in enter">
+          <li :key="index" v-for="(item,index) in enter">
             <a :href="item[1]" target="_blank" :style="item[2]">{{item[0]}}</a>
           </li>
         </ul>
